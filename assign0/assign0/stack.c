@@ -1,9 +1,14 @@
-#include stack.h
-#include da.h
+#include <stdio.h>
+#include <stdlib.h>
+#include"stack.h"
+#include"da.h"
 
 STACK *
 newSTACK(void(*d)(FILE *, void *))	//d is the display function
 {
+	//The constructor is passed a function that knows how to display the generic value stored in a linked list node. 
+	//That function is stored in a display field of the STACK object: 
+
 	STACK *items = malloc(sizeof(STACK));
 
 	assert(items > 0);
@@ -17,13 +22,15 @@ newSTACK(void(*d)(FILE *, void *))	//d is the display function
 void
 push(STACK *items, void *value)
 {
-
+	//The push method runs in constant or amortized constant time. 
 
 }
 
 void *
 pop(STACK *items)
 {
+	//The pop method runs in constant or amortized constant time. 
+
 	assert(items->size > 0);
 
 }
@@ -31,6 +38,8 @@ pop(STACK *items)
 int
 peekSTACK(STACK *items)
 {
+	//The peek method returns the value ready to come off the stack, but leaves the stack unchanged.
+	//It runs in constant time.
 	assert(items->size > 0);
 
 }
@@ -38,13 +47,17 @@ peekSTACK(STACK *items)
 int 
 sizeSTACK(STACK *items)
 {
-
+	//The size method returns the number of items stored in the list. 
+	//It runs in amortized constant time. 
 
 }
 
 void
 displaySTACK(FILE *, STACK *items)
 {
+	//The display method prints the items stored in the stack. If the integers 5, 6, 2, 9, and 1 are pushed in the order given, the method would generate this output:
+	// | 5, 6, 2, 9, 1 |
+	// with no preceding or following whitespace.An empty stack displays as || .
 
 
 }
@@ -52,6 +65,6 @@ displaySTACK(FILE *, STACK *items)
 void
 displaySTACKds(FILE *, STACK *items)
 {
-
+	//This display method simply calls the display method of the data structure upon which the stack is based.
 
 }

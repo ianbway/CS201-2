@@ -3,7 +3,16 @@
 
 #include <stdio.h>
 
-typedef struct CDA CDA;
+typedef struct CDA
+{
+	int size;
+	int startIndex;
+	int endIndex;
+	int capacity;
+	void *store[1];
+	int factor;
+	void(*display) (FILE *, void *);
+} CDA;
 
 extern CDA *newCDA(void(*d)(FILE *, void *));
 extern void insertCDAFront(CDA *items, int index, void *value);

@@ -3,7 +3,17 @@
 
 #include <stdio.h>
 
-typedef struct DA DA;
+typedef struct DA
+{
+	int size;
+	int front;
+	int back;
+	int capacity;
+	void *store[1];
+	int factor;
+	void (*display) (FILE *, void *);
+
+} DA;
 
 extern DA *newDA(void(*d)(FILE *, void *));
 extern void insertDA(DA *items, void *value);
