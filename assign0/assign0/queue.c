@@ -12,9 +12,8 @@ newQUEUE(void(*d)(FILE *, void *))	//d is the display function
 	QUEUE *items = malloc(sizeof(QUEUE));
 
 	assert(items > 0);
+	items->store = newCDA(d);
 
-	items->size = 0;
-	items->display = d;
 	return items;
 
 }
@@ -24,6 +23,7 @@ enqueue(QUEUE *items, void *value)
 {
 	//The enqueue method runs in constant or amortized constant time. 
 
+	insertCDABack(items->store, sizeCDA(items->store) + 1, value);
 }
 
 void *
@@ -31,7 +31,9 @@ dequeue(QUEUE *items)
 {
 	//The dequeue method runs in constant or amortized constant time. 
 
-	assert(items->size > 0);
+	assert(sizeCDA(items->store) > 0);
+
+	return removeCDAFront(items->store, 0);
 
 }
 
@@ -41,8 +43,9 @@ peekQUEUE(QUEUE *items)
 	//The peek method returns the value ready to come off the queue, but leaves the queue unchanged. 
 	//It runs in constant time. 
 
-	assert(items->size > 0);
+	assert(sizeCDA(items->store) > 0);
 
+	return getCDA(items->store, 0);
 }
 
 int 
@@ -51,20 +54,42 @@ sizeQUEUE(QUEUE *items)
 	//The size method returns the number of items stored in the list. 
 	//It runs in amortized constant time. 
 
+	return sizeCDA(items->store);
+
 }
 
 void
-displayQUEUE(FILE *, QUEUE *items)
+displayQUEUE(FILE *file, QUEUE *items)
 {
 	//This display method prints the items stored in the queue. 
 	//If the integers 5, 6, 2, 9, and 1 are enqueued in the order given, the method would generate this output: <5, 6, 2, 9, 1>
 	//	with no preceding or following whitespace.An empty queue displays as <>.
 
+	int i;
+	int length = sizeof(items->store);
+
+	fprintf(file, "<");
+	for (i = 0; i < length; i = i + 1)
+	{
+		if (i < length - 1)
+		{
+			fprintf(file, strcat("%d", items->store[i], ", "));
+		}
+
+		else
+		{
+			fprintf(file, "%d", items->store[i]);
+		}
+	}
+
+	fprintf(file, ">");
+
 }
 
 void
-displayQUEUEds(FILE *, QUEUE *items)
+displayQUEUEds(FILE *file, QUEUE *items)
 {
 	// This display method simply calls the display method of the data structure upon which the queue is based.
 
+	displayCDA(file, items->store);
 }

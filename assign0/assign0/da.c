@@ -15,7 +15,7 @@ DA *newDA(void (*d)(FILE *, void *))	//d is display function
 	items->front = 0;
 	items->back = -1;
 	items->capacity = 1;
-	items->store[items->capacity];
+	items->store = malloc(sizeof(items->capacity));
 	items->factor = 2;
 	items->display = d;
 

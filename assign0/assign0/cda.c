@@ -16,7 +16,7 @@ newCDA(void(*d)(FILE *, void *))	//d is the display function
 	items->startIndex = 0;
 	items->endIndex = 0;
 	items->capacity = 1;
-	items->store[items->capacity];
+	items->store = malloc(sizeof(items->capacity));
 	items->factor = 2;
 	items->display = d;
 	
@@ -35,8 +35,10 @@ insertCDAFront(CDA *items, int index, void *value)
 		items->capacity = items->capacity * items->factor;
 	}
 
+	items->store[0] = value;
 
-
+	items->size++;
+	return;
 }
 
 void
@@ -51,6 +53,10 @@ insertCDABack(CDA *items, int index, void *value)
 		items->capacity = items->capacity * items->factor;
 	}
 
+	items->store[items->size] = value;
+
+	items->size++;
+	return;
 }
 
 void *
@@ -66,6 +72,10 @@ removeCDAFront(CDA *items, int index)
 		items->capacity = items->capacity / items->factor;
 	}
 
+	items->store[0] = 0;
+
+	items->size--;
+	return;
 }
 
 void *
@@ -81,6 +91,10 @@ removeCDABack(CDA *items, int index)
 		items->capacity = items->capacity / items->factor;
 	}
 
+	items->store[items->size] = 0;
+
+	items->size--;
+	return;
 }
 
 void
@@ -95,13 +109,12 @@ unionCDA(CDA *recipient, CDA *donor)
 	int donorLen = sizeof(donor);
 	for (i = 0; i < donorLen; i = i + 1)
 	{
-		insertCDA(recipient, getDA(donor, i));
-
+		insertCDABack(recipient, sizeCDA(recipient), getCDA(donor, i));
 	}
 
 	for (i = 0; i < donorLen; i = i + 1)
 	{
-		removeCDA(donor);
+		removeCDAFront(donor, 0);
 	}
 
 	return;
@@ -133,6 +146,26 @@ setCDA(CDA *items, int index, void *value)
 	assert(index >= -1);
 	assert(index <= items->size);
 
+	if (index == items->size) 
+	{
+		insertCDABack(items, index, value);
+	}
+
+	else if (index == -1) 
+	{
+		insertCDAFront(items, index, value);
+	}
+
+	else if (getCDA(items, index) != 0)
+	{
+		getCDA(items, index);
+	}
+
+	else 
+	{
+		return 0; 
+	}
+
 }
 
 int
@@ -149,4 +182,26 @@ displayCDA(FILE *file, CDA *items)
 	//If the integers 5, 6, 2, 9, and 1 are stored in the array (listed from index 0 upwards) and the array has capacity 8, the method would generate this output: (5, 6, 2, 9, 1)(3)
 	//with no preceding or following whitespace.An empty array with capacity 1 displays as()(1).
 
+	int i;
+	int length = sizeof(items->store);
+
+	fprintf(file, "(");
+	for (i = 0; i < length; i = i + 1)
+	{
+		if (i < length - 1)
+		{
+			fprintf(file, strcat("%d", items->store[i], ", "));
+		}
+
+		else
+		{
+			fprintf(file, "%d", items->store[i]);
+		}
+	}
+
+	fprintf(file, ")");
+	fprintf(file, "(");
+	int unfillReg = items->capacity - items->size;
+	fprintf(file, "%d", unfillReg);
+	fprintf(file, ")");
 }

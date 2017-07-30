@@ -30,6 +30,9 @@
     <ClInclude Include="queue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="integer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="da.c">
@@ -42,6 +45,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="queue.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test-da.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="integer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

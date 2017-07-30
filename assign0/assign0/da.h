@@ -9,7 +9,7 @@ typedef struct DA
 	int front;
 	int back;
 	int capacity;
-	void *store[1];
+	void **store;
 	int factor;
 	void (*display) (FILE *, void *);
 

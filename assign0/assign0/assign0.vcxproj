@@ -77,14 +77,17 @@
   <ItemGroup>
     <ClInclude Include="cda.h" />
     <ClInclude Include="da.h" />
+    <ClInclude Include="integer.h" />
     <ClInclude Include="queue.h" />
     <ClInclude Include="stack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cda.c" />
     <ClCompile Include="da.c" />
+    <ClCompile Include="integer.c" />
     <ClCompile Include="queue.c" />
     <ClCompile Include="stack.c" />
+    <ClCompile Include="test-da.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

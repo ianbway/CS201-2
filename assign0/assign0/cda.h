@@ -9,7 +9,7 @@ typedef struct CDA
 	int startIndex;
 	int endIndex;
 	int capacity;
-	void *store[1];
+	void **store;
 	int factor;
 	void(*display) (FILE *, void *);
 } CDA;
