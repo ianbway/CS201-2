@@ -10,16 +10,16 @@ static void showItems(CDA *items)
 	printf(".\n");
 }
 
-int main(int argc, char **argv)
+int main()
 {
 	CDA *items = newCDA(displayInteger);
 	showItems(items);
-	insertCDA(items, 0, newInteger(3));                   //insert at front
-	insertCDA(items, sizeCDA(items), newInteger(2));      //insert at back
-	insertCDA(items, 1, newInteger(1));                   //insert at middle
+	insertCDAFront(items, newInteger(3));                   //insert at front
+	insertCDABack(items, newInteger(1));                   //insert at middle
+	insertCDABack(items, newInteger(2));      //insert at back
 	showItems(items);
 	printf("The value ");
-	displayInteger(stdout, removeCDA(items, 0));          //remove from front
+	displayInteger(stdout, removeCDAFront(items));          //remove from front
 	printf(" was removed.\n");
 	showItems(items);
 	int x = getInteger((INTEGER *)getCDA(items, 0));    //get the first item

@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
+#include <string.h>
 #include "cda.h"
 
 CDA *
@@ -10,7 +12,7 @@ newCDA(void(*d)(FILE *, void *))	//d is the display function
 	
 	CDA *items = malloc(sizeof(CDA));
 
-	assert(items > 0);
+	assert(sizeof(items) != 0);
 
 	items->size = 0;
 	items->startIndex = 0;
@@ -24,11 +26,13 @@ newCDA(void(*d)(FILE *, void *))	//d is the display function
 }
 
 void
-insertCDAFront(CDA *items, int index, void *value)
+insertCDAFront(CDA *items, void *value)
 {
 	//This insert method places the item in the slot just prior to the first item in the filled region. 
 	//If there is no room for the insertion, the array grows by doubling. 
 	//It runs in amortized constant time. 
+
+	assert(sizeof(items) != 0);
 
 	if (items->size == items->capacity)
 	{
@@ -42,11 +46,13 @@ insertCDAFront(CDA *items, int index, void *value)
 }
 
 void
-insertCDABack(CDA *items, int index, void *value)
+insertCDABack(CDA *items, void *value)
 {
 	//This insert method places the item in the slot just after the last item in the filled region. 
 	//If there is no room for the insertion, the array grows by doubling. 
 	//It runs in amortized constant time. 
+
+	assert(sizeof(items) != 0);
 
 	if (items->size == items->capacity)
 	{
@@ -60,12 +66,14 @@ insertCDABack(CDA *items, int index, void *value)
 }
 
 void *
-removeCDAFront(CDA *items, int index)
+removeCDAFront(CDA *items)
 {
 	//This remove method removes the first item in the filled region. 
 	//If the ratio of the size to the capacity drops below 25%, the array shrinks by half. 
 	//The array should never shrink below a capacity of 1. 
 	//It runs in amortized constant time. 
+
+	assert(items->size > 0);
 
 	if ((items->size * 4 >= items->capacity) && items->capacity != 1)
 	{
@@ -79,12 +87,14 @@ removeCDAFront(CDA *items, int index)
 }
 
 void *
-removeCDABack(CDA *items, int index)
+removeCDABack(CDA *items)
 {
 	//This remove method removes the last item in the filled region.
 	//If the ratio of the size to the capacity drops below 25 % , the array shrinks by half.
 	//The array should never shrink below a capacity of 1. 
 	//It runs in amortized constant time.
+
+	assert(items->size > 0);
 
 	if ((items->size * 4 >= items->capacity) && items->capacity != 1)
 	{
@@ -168,6 +178,26 @@ setCDA(CDA *items, int index, void *value)
 
 }
 
+void **
+extractCDA(CDA *items)
+{
+	//The extract method returns the underlying C array. 
+	//The array is shrunk to an exact fit prior to being returned. 
+	//The CDA object gets a new array of capacity zero and size one. 
+	assert(sizeof(items) != 0);
+
+	void **returnList = realloc(items->store, sizeCDA(items->store));
+
+	items->capacity = 0;
+	items->size = 1;
+	items->store = malloc(sizeof(items->capacity));
+
+	free(items);
+
+	return returnList;
+
+}
+
 int
 sizeCDA(CDA *items)
 {
@@ -176,7 +206,7 @@ sizeCDA(CDA *items)
 }
 
 void
-displayCDA(FILE *file, CDA *items)
+visualizeCDA(FILE *fp, CDA *items)
 {
 	//The display method prints out the filled region, enclosed in brackets and separated by commas, followed by the size of the unfilled region, enclosed in brackets. 
 	//If the integers 5, 6, 2, 9, and 1 are stored in the array (listed from index 0 upwards) and the array has capacity 8, the method would generate this output: (5, 6, 2, 9, 1)(3)
@@ -185,23 +215,48 @@ displayCDA(FILE *file, CDA *items)
 	int i;
 	int length = sizeof(items->store);
 
-	fprintf(file, "(");
+	fprintf(fp, "(");
 	for (i = 0; i < length; i = i + 1)
 	{
 		if (i < length - 1)
 		{
-			fprintf(file, strcat("%d", items->store[i], ", "));
+			fprintf(fp, strcat("%d", items->store[i], ", "));
 		}
 
 		else
 		{
-			fprintf(file, "%d", items->store[i]);
+			fprintf(fp, "%d", items->store[i]);
 		}
 	}
 
-	fprintf(file, ")");
-	fprintf(file, "(");
+	fprintf(fp, ")");
+	fprintf(fp, "(");
 	int unfillReg = items->capacity - items->size;
-	fprintf(file, "%d", unfillReg);
-	fprintf(file, ")");
+	fprintf(fp, "%d", unfillReg);
+	fprintf(fp, ")");
+}
+
+void
+displayCDA(FILE *fp, CDA *items)
+{
+	//The display method is similar to the visualize method, except the parenthesized size of the unfilled region is not printed.
+
+	int i;
+	int length = sizeof(items->store);
+
+	fprintf(fp, "(");
+	for (i = 0; i < length; i = i + 1)
+	{
+		if (i < length - 1)
+		{
+			fprintf(fp, strcat("%d", items->store[i], ", "));
+		}
+
+		else
+		{
+			fprintf(fp, "%d", items->store[i]);
+		}
+	}
+
+	fprintf(fp, ")");
 }

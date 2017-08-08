@@ -53,5 +53,14 @@
     <ClCompile Include="integer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test-cda.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test-stack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test-queue.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

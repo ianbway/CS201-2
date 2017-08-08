@@ -87,7 +87,10 @@
     <ClCompile Include="integer.c" />
     <ClCompile Include="queue.c" />
     <ClCompile Include="stack.c" />
+    <ClCompile Include="test-cda.c" />
     <ClCompile Include="test-da.c" />
+    <ClCompile Include="test-queue.c" />
+    <ClCompile Include="test-stack.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

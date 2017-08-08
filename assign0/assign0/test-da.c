@@ -9,17 +9,21 @@ static void showItems(DA *items)
 	displayDA(stdout, items);
 	printf(".\n");
 }
-
-int main(int argc, char **argv)
+//int argc, char **argv
+int main()
 {
+	//printf("WE IN MAIN\n");
 	DA *items = newDA(displayInteger);
+	//printf("DECLARED ITEMS\n");
 	showItems(items);
-	insertDA(items, 0, newInteger(3));                   //insert at front
-	insertDA(items, sizeDA(items), newInteger(2));      //insert at back
-	insertDA(items, 1, newInteger(1));                   //insert at middle
+	//printf("WE DID SHOW\n");
+	insertDA(items, newInteger(3));					//insert first
+	//printf("WE INSERTED\n");
+	insertDA(items, newInteger(2));					//insert second
+	insertDA(items, newInteger(1));					//insert third
 	showItems(items);
 	printf("The value ");
-	displayInteger(stdout, removeDA(items, 0));          //remove from front
+	displayInteger(stdout, removeDA(items));          //remove
 	printf(" was removed.\n");
 	showItems(items);
 	int x = getInteger((INTEGER *)getDA(items, 0));    //get the first item

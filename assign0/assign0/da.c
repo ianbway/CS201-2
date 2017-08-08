@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
+#include <string.h>
 #include "da.h"
 
 DA *newDA(void (*d)(FILE *, void *))	//d is display function
@@ -9,7 +11,7 @@ DA *newDA(void (*d)(FILE *, void *))	//d is display function
 
 	DA *items = malloc(sizeof(DA));
 
-	assert(items > 0);
+	assert(sizeof(items) != 0);
 
 	items->size = 0;
 	items->front = 0;
@@ -29,6 +31,8 @@ insertDA(DA *items, void *value)
 	//If there is no room for the insertion, the array grows by doubling. 
 	//It runs in amortized constant time. 
 
+	assert(sizeof(items) != 0);
+
 	if (items->size == items->capacity)
 	{
 		items->capacity = items->capacity * items->factor;
@@ -47,15 +51,17 @@ removeDA(DA *items)
 	//If the ratio of the size to the capacity drops below 25%, the array shrinks by half. 
 	//The array should never shrink below a capacity of 1. It runs in amortized constant time. 
 
-	if ((items->size * 4 >= items->capacity) && items->capacity != 1)
+	assert(items->size > 0);
+
+	int size = items->size;
+
+	if ((size * 4 >= items->capacity) && items->capacity != 1)
 	{
 		items->capacity = items->capacity / items->factor;
 	}
 
-	items->store[items->size - 1] = 0;
-
-	items->size--;
-	return;
+	--items->size;
+	return items->store[size - 1];
 }
 
 void
@@ -115,6 +121,27 @@ setDA(DA *items, int index, void *value)
 	return oldVal;
 }
 
+void **
+extractDA(DA *items)
+{
+	//The extract method returns the underlying C array. 
+	//The array is shrunk to an exact fit prior to being returned. 
+	//The DA object gets a new array of capacity zero and size one. 
+
+	assert(sizeof(items) != 0);
+
+	void **returnList = realloc(items->store, sizeof(items));
+
+	items->capacity = 0;
+	items->size = 1;
+	items->store = malloc(sizeof(items->capacity));
+
+	free(items);
+
+	return returnList;
+
+}
+
 int
 sizeDA(DA *items)
 {
@@ -124,34 +151,51 @@ sizeDA(DA *items)
 }
 
 void
-displayDA(FILE *file, DA *items)
+visualizeDA(FILE *fp, DA *items)
 {
-	//The display method prints out the filled region, enclosed in brackets and separated by commas, followed by the size of the unfilled region, enclosed in brackets. 
-	//If the integers 5, 6, 2, 9, and 1 are stored in the array (listed from index 0 upwards) and the array has capacity 8, the method would generate this output:
+	//The visualize method prints out the filled region, enclosed in brackets and separated by commas, 
+	//followed by the size of the unfilled region, enclosed in brackets. If the integers 5, 6, 2, 9, and 1 are stored in the array (listed from index 0 upwards) and the array has capacity 8, 
+	//the method would generate this output:
 	//[5, 6, 2, 9, 1][3]
-	//with no preceding or following whitespace.
-	//An empty array with capacity 1 displays as[][1].
+	//	with no preceding or following whitespace.An empty array with capacity 1 displays as[][1].
 
 	int i;
 	int length = sizeof(items->store);
 
-	fprintf(file, "[");
+	fprintf(fp, "[");
 	for (i = 0; i < length; i = i + 1)
 	{
-		if (i < length - 1)
+		items->display(fp, items->store[i]);
+		if (items->size > 1 && i != items->size)
 		{
-			fprintf(file, strcat("%d", items->store[i], ", "));
-		}
-
-		else
-		{
-			fprintf(file, "%d", items->store[i]);
+			fprintf(fp, ",");
 		}
 	}
 
-	fprintf(file, "]");
-	fprintf(file, "[");
+	fprintf(fp, "]");
+	fprintf(fp, "[");
 	int unfillReg = items->capacity - items->size;
-	fprintf(file, "%d", unfillReg);
-	fprintf(file, "]");
+	fprintf(fp, "%d", unfillReg);
+	fprintf(fp, "]");
+}
+
+void
+displayDA(FILE *fp, DA *items)
+{
+	//The display method is similar to the visualize method, except the bracketed size of the unfilled region is not printed.
+	int i;
+	//int length = sizeof(items->store);
+
+	fprintf(fp, "[");
+	for (i = 0; i < items->size; i = i + 1)
+	{
+		items->display(fp, items->store[i]);
+		if (items->size > 1 && i != items->size-1)
+		{
+			fprintf(fp, ",");
+		}
+	}
+
+	fprintf(fp, "]");
+	
 }

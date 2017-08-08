@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
+#include <string.h>
 #include "queue.h"
 #include "cda.h"
 
@@ -11,7 +13,7 @@ newQUEUE(void(*d)(FILE *, void *))	//d is the display function
 
 	QUEUE *items = malloc(sizeof(QUEUE));
 
-	assert(items > 0);
+	assert(sizeof(items) > 0);
 	items->store = newCDA(d);
 
 	return items;
@@ -37,7 +39,7 @@ dequeue(QUEUE *items)
 
 }
 
-int 
+void * 
 peekQUEUE(QUEUE *items)
 {
 	//The peek method returns the value ready to come off the queue, but leaves the queue unchanged. 
@@ -59,7 +61,7 @@ sizeQUEUE(QUEUE *items)
 }
 
 void
-displayQUEUE(FILE *file, QUEUE *items)
+displayQUEUE(FILE *fp, QUEUE *items)
 {
 	//This display method prints the items stored in the queue. 
 	//If the integers 5, 6, 2, 9, and 1 are enqueued in the order given, the method would generate this output: <5, 6, 2, 9, 1>
@@ -68,28 +70,28 @@ displayQUEUE(FILE *file, QUEUE *items)
 	int i;
 	int length = sizeof(items->store);
 
-	fprintf(file, "<");
+	fprintf(fp, "<");
 	for (i = 0; i < length; i = i + 1)
 	{
 		if (i < length - 1)
 		{
-			fprintf(file, strcat("%d", items->store[i], ", "));
+			fprintf(fp, strcat("%d", items->store[i], ", "));
 		}
 
 		else
 		{
-			fprintf(file, "%d", items->store[i]);
+			fprintf(fp, "%d", items->store[i]);
 		}
 	}
 
-	fprintf(file, ">");
+	fprintf(fp, ">");
 
 }
 
 void
-displayQUEUEds(FILE *file, QUEUE *items)
+visualizeQUEUE(FILE *fp, QUEUE *items)
 {
 	// This display method simply calls the display method of the data structure upon which the queue is based.
 
-	displayCDA(file, items->store);
+	displayCDA(fp, items->store);
 }

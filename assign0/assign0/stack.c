@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
+#include <string.h>
 #include"stack.h"
 #include"da.h"
 
@@ -11,7 +13,7 @@ newSTACK(void(*d)(FILE *, void *))	//d is the display function
 
 	STACK *items = malloc(sizeof(STACK));
 
-	assert(items > 0);
+	assert(sizeof(items) > 0);
 	items->store = newDA(d);
 	
 	return items;
@@ -37,7 +39,7 @@ pop(STACK *items)
 
 }
 
-int
+void *
 peekSTACK(STACK *items)
 {
 	//The peek method returns the value ready to come off the stack, but leaves the stack unchanged.
@@ -59,7 +61,7 @@ sizeSTACK(STACK *items)
 }
 
 void
-displaySTACK(FILE *file, STACK *items)
+displaySTACK(FILE *fp, STACK *items)
 {
 	//The display method prints the items stored in the stack. If the integers 5, 6, 2, 9, and 1 are pushed in the order given, the method would generate this output:
 	// | 5, 6, 2, 9, 1 |
@@ -68,29 +70,29 @@ displaySTACK(FILE *file, STACK *items)
 	int i;
 	int length = sizeof(items->store);
 
-	fprintf(file, "|");
+	fprintf(fp, "|");
 	for (i = 0; i < length; i = i + 1)
 	{
 		if (i < length - 1)
 		{
-			fprintf(file, strcat("%d", items->store[i], ", "));
+			fprintf(fp, strcat("%d", items->store[i], ", "));
 		}
 
 		else
 		{
-			fprintf(file, "%d", items->store[i]);
+			fprintf(fp, "%d", items->store[i]);
 		}
 	}
 
-	fprintf(file, "|");
+	fprintf(fp, "|");
 
 }
 
 void
-displaySTACKds(FILE *file, STACK *items)
+visualizeSTACK(FILE *fp, STACK *items)
 {
-	//This display method simply calls the display method of the data structure upon which the stack is based.
+	//The visualize method simply calls the display method of the data structure upon which the stack is based.
 
-	displayDA(file, items->store);
+	displayDA(fp, items->store);
 
 }
