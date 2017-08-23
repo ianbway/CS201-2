@@ -4,7 +4,8 @@
 #include <string.h>
 #include "da.h"
 
-DA *newDA(void (*d)(FILE *, void *))	//d is display function
+DA *
+newDA(void (*d)(FILE *, void *))	//d is display function
 {
 	//The constructor is passed a function that knows how to display the generic value stored in an array slot. 
 	//That function is stored in a display field of the DA object. 
@@ -160,13 +161,12 @@ visualizeDA(FILE *fp, DA *items)
 	//	with no preceding or following whitespace.An empty array with capacity 1 displays as[][1].
 
 	int i;
-	int length = sizeof(items->store);
 
 	fprintf(fp, "[");
-	for (i = 0; i < length; i = i + 1)
+	for (i = 0; items->size; i = i + 1)
 	{
 		items->display(fp, items->store[i]);
-		if (items->size > 1 && i != items->size)
+		if (items->size > 1 && i != items->size-1)
 		{
 			fprintf(fp, ",");
 		}
@@ -184,7 +184,6 @@ displayDA(FILE *fp, DA *items)
 {
 	//The display method is similar to the visualize method, except the bracketed size of the unfilled region is not printed.
 	int i;
-	//int length = sizeof(items->store);
 
 	fprintf(fp, "[");
 	for (i = 0; i < items->size; i = i + 1)

@@ -39,9 +39,9 @@ insertCDAFront(CDA *items, void *value)
 		items->capacity = items->capacity * items->factor;
 	}
 
-	items->store[0] = value;
+	items->store[items->startIndex] = value;
 
-	items->size++;
+	++items->size;
 	return;
 }
 
@@ -52,16 +52,18 @@ insertCDABack(CDA *items, void *value)
 	//If there is no room for the insertion, the array grows by doubling. 
 	//It runs in amortized constant time. 
 
+	printf("INSERT BACK CALLED\n");
+
 	assert(sizeof(items) != 0);
 
 	if (items->size == items->capacity)
 	{
 		items->capacity = items->capacity * items->factor;
 	}
-
-	items->store[items->size] = value;
-
-	items->size++;
+	printf("BEFORE SET\n");
+	items->store[items->endIndex] = value;
+	printf("AFTER SET\n");
+	++items->size;
 	return;
 }
 
@@ -82,8 +84,8 @@ removeCDAFront(CDA *items)
 
 	items->store[0] = 0;
 
-	items->size--;
-	return;
+	--items->size;
+	return items->store[0];
 }
 
 void *
@@ -103,8 +105,8 @@ removeCDABack(CDA *items)
 
 	items->store[items->size] = 0;
 
-	items->size--;
-	return;
+	--items->size;
+	return items->store[items->size];
 }
 
 void
@@ -119,12 +121,12 @@ unionCDA(CDA *recipient, CDA *donor)
 	int donorLen = sizeof(donor);
 	for (i = 0; i < donorLen; i = i + 1)
 	{
-		insertCDABack(recipient, sizeCDA(recipient), getCDA(donor, i));
+		insertCDABack(recipient, getCDA(donor, i));
 	}
 
 	for (i = 0; i < donorLen; i = i + 1)
 	{
-		removeCDAFront(donor, 0);
+		removeCDAFront(donor);
 	}
 
 	return;
@@ -158,12 +160,12 @@ setCDA(CDA *items, int index, void *value)
 
 	if (index == items->size) 
 	{
-		insertCDABack(items, index, value);
+		insertCDABack(items, value);
 	}
 
 	else if (index == -1) 
 	{
-		insertCDAFront(items, index, value);
+		insertCDAFront(items, value);
 	}
 
 	else if (getCDA(items, index) != 0)
@@ -171,10 +173,7 @@ setCDA(CDA *items, int index, void *value)
 		getCDA(items, index);
 	}
 
-	else 
-	{
-		return 0; 
-	}
+	return 0; 
 
 }
 
@@ -186,7 +185,7 @@ extractCDA(CDA *items)
 	//The CDA object gets a new array of capacity zero and size one. 
 	assert(sizeof(items) != 0);
 
-	void **returnList = realloc(items->store, sizeCDA(items->store));
+	void **returnList = realloc(items->store, sizeof(items));
 
 	items->capacity = 0;
 	items->size = 1;
@@ -213,19 +212,14 @@ visualizeCDA(FILE *fp, CDA *items)
 	//with no preceding or following whitespace.An empty array with capacity 1 displays as()(1).
 
 	int i;
-	int length = sizeof(items->store);
 
 	fprintf(fp, "(");
-	for (i = 0; i < length; i = i + 1)
+	for (i = 0; items->size; i = i + 1)
 	{
-		if (i < length - 1)
+		items->display(fp, items->store[i]);
+		if (items->size > 1 && i != items->size - 1)
 		{
-			fprintf(fp, strcat("%d", items->store[i], ", "));
-		}
-
-		else
-		{
-			fprintf(fp, "%d", items->store[i]);
+			fprintf(fp, ",");
 		}
 	}
 
@@ -242,19 +236,16 @@ displayCDA(FILE *fp, CDA *items)
 	//The display method is similar to the visualize method, except the parenthesized size of the unfilled region is not printed.
 
 	int i;
-	int length = sizeof(items->store);
 
 	fprintf(fp, "(");
-	for (i = 0; i < length; i = i + 1)
+	printf("Display loop about to start\n");
+	for (i = 0; items->size; i = i + 1)
 	{
-		if (i < length - 1)
+		printf("Made it into the loop\n");
+		items->display(fp, items->store[i]);
+		if (items->size > 1 && i != items->size - 1)
 		{
-			fprintf(fp, strcat("%d", items->store[i], ", "));
-		}
-
-		else
-		{
-			fprintf(fp, "%d", items->store[i]);
+			fprintf(fp, ",");
 		}
 	}
 
