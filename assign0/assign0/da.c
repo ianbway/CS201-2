@@ -163,9 +163,8 @@ visualizeDA(FILE *fp, DA *items)
 
 	int i;
 	fprintf(fp, "[");
-	for (i = 0; items->size; i = i + 1)
+	for (i = 0; i < items->size; i = i + 1)
 	{
-		fprintf(fp, "We're in");
 		items->display(fp, items->store[i]);
 		if (items->size > 1 && i != items->size-1)
 		{
@@ -174,9 +173,7 @@ visualizeDA(FILE *fp, DA *items)
 	}
 
 	fprintf(fp, "]");
-	fprintf(fp, "We're in2");
 	fprintf(fp, "[");
-	fprintf(fp, "Do we fail here");
 	int unfillReg = items->capacity - items->size;
 	fprintf(fp, "%d", unfillReg);
 	fprintf(fp, "]");

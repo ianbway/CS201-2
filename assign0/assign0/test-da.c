@@ -25,6 +25,12 @@ int main()
 	insertDA(items, newInteger(2));					//insert second
 	insertDA(items, newInteger(1));					//insert third
 	showItems(items);
+	int size = sizeDA(items);
+	printf("The array is %d long.\n", size);
+	setDA(items, 3, newInteger(4));
+
+	//setDA(items, 6, newInteger(4));
+
 	printf("The value ");
 	displayInteger(stdout, removeDA(items));          //remove
 	printf(" was removed.\n");
