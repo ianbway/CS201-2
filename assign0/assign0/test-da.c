@@ -27,15 +27,27 @@ int main()
 	showItems(items);
 	int size = sizeDA(items);
 	printf("The array is %d long.\n", size);
-	setDA(items, 3, newInteger(4));
-
-	//setDA(items, 6, newInteger(4));
-
+	setDA(items, 2, newInteger(4));
+	showItems(items);
+	setDA(items, 3, newInteger(5));
+	showItems(items);
 	printf("The value ");
 	displayInteger(stdout, removeDA(items));          //remove
 	printf(" was removed.\n");
 	showItems(items);
 	int x = getInteger((INTEGER *)getDA(items, 0));    //get the first item
 	printf("The first item is %d.\n", x);
+	DA *donor = newDA(displayInteger);
+	insertDA(donor, newInteger(4));
+	insertDA(donor, newInteger(5));
+	insertDA(donor, newInteger(6));
+	DA *recipient = newDA(displayInteger);
+	insertDA(recipient, newInteger(1));
+	insertDA(recipient, newInteger(2));
+	insertDA(recipient, newInteger(3));
+	unionDA(recipient, donor);
+	showItems(recipient);
+	//extractDA(items);
+	//showItems(items);
 	return 0;
 }

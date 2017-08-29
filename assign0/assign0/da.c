@@ -42,7 +42,7 @@ insertDA(DA *items, void *value)
 	items->store[items->size] = value;
 
 	++items->size;
-	items->store = realloc(items->store, sizeof(items->capacity));
+	//items->store = realloc(items->store, sizeof(items->capacity));
 	return;
 }
 
@@ -57,7 +57,7 @@ removeDA(DA *items)
 
 	int size = items->size;
 
-	if ((size * 4 >= items->capacity) && items->capacity != 1)
+	if ((size * 4 < items->capacity) && items->capacity != 1)
 	{
 		items->capacity = items->capacity / items->factor;
 	}
@@ -74,7 +74,7 @@ unionDA(DA *recipient, DA *donor)
 	//The union method runs in linear time. 
 
 	int i;
-	int donorLen = sizeof(donor);
+	int donorLen = donor->size;
 	for (i = 0; i < donorLen; i = i + 1)
 	{
 		insertDA(recipient, getDA(donor,i));
@@ -113,13 +113,15 @@ setDA(DA *items, int index, void *value)
 	assert(index >= 0);
 	assert(index <= items->size);
 
-	if (index != items->size)
+	if (index == items->size)
 	{
+		insertDA(items, value);
 		return 0;
 	}
 
 	void *oldVal = getDA(items, index);
-	insertDA(items, value);
+	items->store[index] = value;
+
 	return oldVal;
 }
 
@@ -132,7 +134,8 @@ extractDA(DA *items)
 
 	assert(items != 0);
 
-	void **returnList = realloc(items->store, sizeof(items));
+	//void **returnList = realloc(items->store, sizeof(items));
+	void **returnList = items->store;
 
 	items->capacity = 0;
 	items->size = 1;

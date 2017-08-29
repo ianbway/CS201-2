@@ -21,7 +21,7 @@ integer.o : integer.c integer.h
 #	$(CC) $(OPTS) -c cda.c
 
 #stack.o : stack.c stack.h
-#        $(CC) $(OPTS) -c stack.c
+#	$(CC) $(OPTS) -c stack.c
 
 #queue.o : queue.c queue.h
 #        $(CC) $(OPTS) -c queue.c
