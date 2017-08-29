@@ -12,7 +12,7 @@ newCDA(void(*d)(FILE *, void *))	//d is the display function
 	
 	CDA *items = malloc(sizeof(CDA));
 
-	assert(sizeof(items) != 0);
+	assert(items != 0);
 
 	items->size = 0;
 	items->startIndex = 0;
@@ -32,7 +32,7 @@ insertCDAFront(CDA *items, void *value)
 	//If there is no room for the insertion, the array grows by doubling. 
 	//It runs in amortized constant time. 
 
-	assert(sizeof(items) != 0);
+	assert(items != 0);
 
 	if (items->size == items->capacity)
 	{
@@ -54,7 +54,7 @@ insertCDABack(CDA *items, void *value)
 
 	printf("INSERT BACK CALLED\n");
 
-	assert(sizeof(items) != 0);
+	assert(items != 0);
 
 	if (items->size == items->capacity)
 	{
@@ -183,7 +183,7 @@ extractCDA(CDA *items)
 	//The extract method returns the underlying C array. 
 	//The array is shrunk to an exact fit prior to being returned. 
 	//The CDA object gets a new array of capacity zero and size one. 
-	assert(sizeof(items) != 0);
+	assert(items != 0);
 
 	void **returnList = realloc(items->store, sizeof(items));
 

@@ -13,7 +13,7 @@ newSTACK(void(*d)(FILE *, void *))	//d is the display function
 
 	STACK *items = malloc(sizeof(STACK));
 
-	assert(sizeof(items) > 0);
+	assert(items > 0);
 	items->store = newDA(d);
 	
 	return items;

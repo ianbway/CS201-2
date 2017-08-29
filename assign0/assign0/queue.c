@@ -13,7 +13,7 @@ newQUEUE(void(*d)(FILE *, void *))	//d is the display function
 
 	QUEUE *items = malloc(sizeof(QUEUE));
 
-	assert(sizeof(items) > 0);
+	assert(items > 0);
 	items->store = newCDA(d);
 
 	return items;

@@ -8,6 +8,9 @@ static void showItems(DA *items)
 	printf("The items are ");
 	displayDA(stdout, items);
 	printf(".\n");
+	printf("Items with space left are ");
+	visualizeDA(stdout, items);
+	printf(".\n");
 }
 //int argc, char **argv
 int main()

@@ -12,7 +12,7 @@ newDA(void (*d)(FILE *, void *))	//d is display function
 
 	DA *items = malloc(sizeof(DA));
 
-	assert(sizeof(items) != 0);
+	assert(items != 0);
 
 	items->size = 0;
 	items->front = 0;
@@ -32,7 +32,7 @@ insertDA(DA *items, void *value)
 	//If there is no room for the insertion, the array grows by doubling. 
 	//It runs in amortized constant time. 
 
-	assert(sizeof(items) != 0);
+	assert(items != 0);
 
 	if (items->size == items->capacity)
 	{
@@ -41,7 +41,8 @@ insertDA(DA *items, void *value)
 
 	items->store[items->size] = value;
 
-	items->size++;
+	++items->size;
+	items->store = realloc(items->store, sizeof(items->capacity));
 	return;
 }
 
@@ -129,7 +130,7 @@ extractDA(DA *items)
 	//The array is shrunk to an exact fit prior to being returned. 
 	//The DA object gets a new array of capacity zero and size one. 
 
-	assert(sizeof(items) != 0);
+	assert(items != 0);
 
 	void **returnList = realloc(items->store, sizeof(items));
 
@@ -161,10 +162,10 @@ visualizeDA(FILE *fp, DA *items)
 	//	with no preceding or following whitespace.An empty array with capacity 1 displays as[][1].
 
 	int i;
-
 	fprintf(fp, "[");
 	for (i = 0; items->size; i = i + 1)
 	{
+		fprintf(fp, "We're in");
 		items->display(fp, items->store[i]);
 		if (items->size > 1 && i != items->size-1)
 		{
@@ -173,7 +174,9 @@ visualizeDA(FILE *fp, DA *items)
 	}
 
 	fprintf(fp, "]");
+	fprintf(fp, "We're in2");
 	fprintf(fp, "[");
+	fprintf(fp, "Do we fail here");
 	int unfillReg = items->capacity - items->size;
 	fprintf(fp, "%d", unfillReg);
 	fprintf(fp, "]");
