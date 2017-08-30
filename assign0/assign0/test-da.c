@@ -47,7 +47,7 @@ int main()
 	showItems(recipient);
 	int y = getInteger((INTEGER *)getDA(recipient, 0));    //get the first item
 	printf("The first item is %d.\n", y);
-	//extractDA(items);
-	//showItems(items);
+	extractDA(recipient);
+	showItems(recipient);
 	return 0;
 }

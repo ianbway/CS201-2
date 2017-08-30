@@ -15,10 +15,8 @@ newDA(void (*d)(FILE *, void *))	//d is display function
 	assert(items != 0);
 
 	items->size = 0;
-	items->front = 0;
-	items->back = -1;
 	items->capacity = 1;
-	items->store = malloc(sizeof(items->capacity));
+	items->store = malloc(sizeof(void *) * items->capacity);
 	items->factor = 2;
 	items->display = d;
 
@@ -37,13 +35,12 @@ insertDA(DA *items, void *value)
 	if (items->size == items->capacity)
 	{
 		items->capacity = items->capacity * items->factor;
-		//items->store = realloc(items->store, sizeof(items->capacity));
+		items->store = realloc(items->store, sizeof(void *) * items->capacity);
 	}
 
 	items->store[items->size] = value;
 
 	++items->size;
-	//items->store = realloc(items->store, sizeof(items->capacity));
 	return;
 }
 
@@ -61,7 +58,7 @@ removeDA(DA *items)
 	if ((size * 4 < items->capacity) && items->capacity != 1)
 	{
 		items->capacity = items->capacity / items->factor;
-		//items->store = realloc(items->store, sizeof(items->capacity));
+		items->store = realloc(items->store, sizeof(void *) * items->capacity);
 	}
 
 	--items->size;
@@ -137,14 +134,12 @@ extractDA(DA *items)
 
 	assert(items != 0);
 
-	//void **returnList = realloc(items->store, sizeof(items));
+	items->store = realloc(items->store, sizeof(void *) * items->size);
 	void **returnList = items->store;
 
 	items->capacity = 0;
 	items->size = 1;
-	items->store = malloc(sizeof(items->capacity));
-
-	free(items);
+	items->store = malloc(sizeof(void *) * items->capacity);
 
 	return returnList;
 
