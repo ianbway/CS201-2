@@ -37,6 +37,7 @@ insertDA(DA *items, void *value)
 	if (items->size == items->capacity)
 	{
 		items->capacity = items->capacity * items->factor;
+		//items->store = realloc(items->store, sizeof(items->capacity));
 	}
 
 	items->store[items->size] = value;
@@ -60,6 +61,7 @@ removeDA(DA *items)
 	if ((size * 4 < items->capacity) && items->capacity != 1)
 	{
 		items->capacity = items->capacity / items->factor;
+		//items->store = realloc(items->store, sizeof(items->capacity));
 	}
 
 	--items->size;
@@ -75,6 +77,7 @@ unionDA(DA *recipient, DA *donor)
 
 	int i;
 	int donorLen = donor->size;
+
 	for (i = 0; i < donorLen; i = i + 1)
 	{
 		insertDA(recipient, getDA(donor,i));

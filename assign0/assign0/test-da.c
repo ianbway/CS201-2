@@ -15,13 +15,9 @@ static void showItems(DA *items)
 //int argc, char **argv
 int main()
 {
-	//printf("WE IN MAIN\n");
 	DA *items = newDA(displayInteger);
-	//printf("DECLARED ITEMS\n");
 	showItems(items);
-	//printf("WE DID SHOW\n");
 	insertDA(items, newInteger(3));					//insert first
-	//printf("WE INSERTED\n");
 	insertDA(items, newInteger(2));					//insert second
 	insertDA(items, newInteger(1));					//insert third
 	showItems(items);
@@ -41,12 +37,16 @@ int main()
 	insertDA(donor, newInteger(4));
 	insertDA(donor, newInteger(5));
 	insertDA(donor, newInteger(6));
+	showItems(donor);
 	DA *recipient = newDA(displayInteger);
 	insertDA(recipient, newInteger(1));
 	insertDA(recipient, newInteger(2));
 	insertDA(recipient, newInteger(3));
+	showItems(recipient);
 	unionDA(recipient, donor);
 	showItems(recipient);
+	int y = getInteger((INTEGER *)getDA(recipient, 0));    //get the first item
+	printf("The first item is %d.\n", y);
 	//extractDA(items);
 	//showItems(items);
 	return 0;
