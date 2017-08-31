@@ -8,6 +8,7 @@
 typedef struct stack
 {
 	DA *stackItems;
+	void(*display) (FILE *, void *);
 
 } STACK;
 
@@ -23,6 +24,7 @@ newSTACK(void(*d)(FILE *, void *))	//d is the display function
 
 	assert(items != 0);
 	items->stackItems = newDA(d);
+	items->display = d;
 	
 	return items;
 }
@@ -76,12 +78,13 @@ displaySTACK(FILE *fp, STACK *items)
 	// with no preceding or following whitespace.An empty stack displays as || .
 
 	int i;
+	int size = sizeDA(items->stackItems);
 
 	fprintf(fp, "|");
-	for (i = 0; i < sizeDA(items); i = i + 1)
+	for (i = 0; i < size; i = i + 1)
 	{
-		items->stackItems->display(fp, items->stackItems[i]);
-		if (sizeDA(items) > 1 && i != sizeDA(items)-1)
+		items->display(fp, getDA(items,i));
+		if (size > 1 && i != size-1)
 		{
 			fprintf(fp, ",");
 		}
