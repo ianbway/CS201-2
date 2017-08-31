@@ -3,10 +3,7 @@
 
 #include <stdio.h>
 
-typedef struct stack
-{
-	void **store;
-} STACK;
+typedef struct stack STACK;
 
 extern STACK *newSTACK(void(*d)(FILE *, void *));
 extern void push(STACK *items, void *value);

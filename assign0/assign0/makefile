@@ -3,17 +3,17 @@ DA_OBJS = integer.o da.o test-da.o
 #CDA_OBJS = integer.o cda.o test-cda.o
 STACK_OBJS = integer.o stack.o test-stack.o
 #QUEUE_OBJS = integer.o queue.o test-queue.o
-OPTS = -Wall -Wextra -std=c99 -g -c
-LOPTS = -Wall -Wextra -g
+OPTS = -Wall -Wextra -std=c99 -g -c 
+LOPTS = -Wall -Wextra -std=c99 -g
 CC = gcc
 
 all : test-da test-stack
 
 test-da : $(DA_OBJS)
-	$(CC) $(OPTS) $(DA_OBJS) -o test-da
+	$(CC) $(LOPTS) $(DA_OBJS) -o test-da
 
 test-stack : $(STACK_OBJS)
-	$(CC) $(OPTS) $(STACK_OBJS) -o test-stack
+	$(CC) $(LOPTS) $(STACK_OBJS) -o test-stack
 
 da.o : da.c da.h
 	$(CC) $(OPTS) da.c

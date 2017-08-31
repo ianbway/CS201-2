@@ -5,6 +5,14 @@
 #include"stack.h"
 #include"da.h"
 
+typedef struct stack
+{
+	DA *store;
+
+} STACK;
+
+/****** public methods ******/
+
 STACK *
 newSTACK(void(*d)(FILE *, void *))	//d is the display function
 {
@@ -13,7 +21,7 @@ newSTACK(void(*d)(FILE *, void *))	//d is the display function
 
 	STACK *items = malloc(sizeof(STACK));
 
-	assert(items > 0);
+	assert(items != 0);
 	items->store = newDA(d);
 	
 	return items;
@@ -68,20 +76,16 @@ displaySTACK(FILE *fp, STACK *items)
 	// with no preceding or following whitespace.An empty stack displays as || .
 
 	int i;
-	int length = sizeof(items->store);
 
 	fprintf(fp, "|");
-	for (i = 0; i < length; i = i + 1)
+	for (i = 0; i < items->size; i = i + 1)
 	{
-		if (i < length - 1)
+		items->display(fp, items->store[i]);
+		if (items->size > 1 && i != items->size-1)
 		{
-			fprintf(fp, strcat("%d", items->store[i], ", "));
+			fprintf(fp, ",");
 		}
 
-		else
-		{
-			fprintf(fp, "%d", items->store[i]);
-		}
 	}
 
 	fprintf(fp, "|");

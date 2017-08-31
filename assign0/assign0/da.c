@@ -4,6 +4,20 @@
 #include <string.h>
 #include "da.h"
 
+typedef struct da
+{
+	int size;
+	int front;
+	int back;
+	int capacity;
+	void **store;
+	int factor;
+	void (*display) (FILE *, void *);
+
+} DA;
+
+/******public methods******/
+
 DA *
 newDA(void (*d)(FILE *, void *))	//d is display function
 {
