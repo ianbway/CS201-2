@@ -7,8 +7,7 @@
 
 typedef struct stack
 {
-	DA *store;
-	void(*display) (FILE *, void *);
+	DA *stackItems;
 
 } STACK;
 
@@ -23,8 +22,7 @@ newSTACK(void(*d)(FILE *, void *))	//d is the display function
 	STACK *items = malloc(sizeof(STACK));
 
 	assert(items != 0);
-	items->store;
-	items->display = d;
+	items->stackItems = newDA(d);
 	
 	return items;
 }
@@ -34,7 +32,7 @@ push(STACK *items, void *value)
 {
 	//The push method runs in constant or amortized constant time. 
 
-	insertDA(items->store, value);
+	insertDA(items->stackItems, value);
 
 }
 
@@ -43,9 +41,9 @@ pop(STACK *items)
 {
 	//The pop method runs in constant or amortized constant time. 
 
-	assert(sizeDA(items->store) > 0);
+	assert(sizeDA(items->stackItems) > 0);
 
-	return removeDA(items->store);
+	return removeDA(items->stackItems);
 
 }
 
@@ -54,9 +52,9 @@ peekSTACK(STACK *items)
 {
 	//The peek method returns the value ready to come off the stack, but leaves the stack unchanged.
 	//It runs in constant time.
-	assert(sizeDA(items->store) > 0);
+	assert(sizeDA(items->stackItems) > 0);
 
-	return getDA(items->store, sizeDA(items->store));
+	return getDA(items->stackItems, sizeDA(items->stackItems));
 
 }
 
@@ -66,7 +64,7 @@ sizeSTACK(STACK *items)
 	//The size method returns the number of items stored in the list. 
 	//It runs in amortized constant time. 
 
-	return sizeDA(items->store);
+	return sizeDA(items->stackItems);
 
 }
 
@@ -82,7 +80,7 @@ displaySTACK(FILE *fp, STACK *items)
 	fprintf(fp, "|");
 	for (i = 0; i < sizeDA(items); i = i + 1)
 	{
-		items->display(fp, items->store[i]);
+		items->stackItems->display(fp, items->stackItems[i]);
 		if (sizeDA(items) > 1 && i != sizeDA(items)-1)
 		{
 			fprintf(fp, ",");
@@ -99,6 +97,6 @@ visualizeSTACK(FILE *fp, STACK *items)
 {
 	//The visualize method simply calls the display method of the data structure upon which the stack is based.
 
-	displayDA(fp, items->store);
+	displayDA(fp, items->stackItems);
 
 }
