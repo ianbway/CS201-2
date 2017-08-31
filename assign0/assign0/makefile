@@ -1,33 +1,37 @@
 # makefile for assignment 0
-TARGET = test-da
-OBJS = *.o
+DA_OBJS = integer.o da.o test-da.o
+#CDA_OBJS = integer.o cda.o test-cda.o
+STACK_OBJS = integer.o stack.o test-stack.o
+#QUEUE_OBJS = integer.o queue.o test-queue.o
 OPTS = -Wall -Wextra -std=c99 -g -c
 LOPTS = -Wall -Wextra -g
 CC = gcc
 
-$(TARGET) : $(TARGET).o da.o integer.o
-	$(CC)  $(LOPTS)  $(OBJS) -o $(TARGET)
+all : test-da test-stack
 
-$(TARGET).o : $(TARGET).c
-	$(CC) $(OPTS) -c $(TARGET).c
+test-da : $(DA_OBJS)
+	$(CC) $(OPTS) $(DA_OBJS) -o test-da
+
+test-stack : $(STACK_OBJS)
+	$(CC) $(OPTS) $(STACK_OBJS) -o test-stack
 
 da.o : da.c da.h
-	$(CC) $(OPTS) -c da.c
+	$(CC) $(OPTS) da.c
 
 integer.o : integer.c integer.h
-	$(CC) $(OPTS) -c integer.c
+	$(CC) $(OPTS) integer.c
 
 #cda.o : cda.c cda.h
-#	$(CC) $(OPTS) -c cda.c
+#	$(CC) $(OPTS) cda.c
 
-#stack.o : stack.c stack.h
-#	$(CC) $(OPTS) -c stack.c
+stack.o : stack.c stack.h
+	$(CC) $(OPTS) stack.c
 
 #queue.o : queue.c queue.h
-#        $(CC) $(OPTS) -c queue.c
+#        $(CC) $(OPTS) queue.c
 
 clean :
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(DA_OBJS) $(STACK_OBJS)
 
 test :
-	./$(TARGET)
+	./all

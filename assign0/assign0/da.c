@@ -137,8 +137,8 @@ extractDA(DA *items)
 	items->store = realloc(items->store, sizeof(void *) * items->size);
 	void **returnList = items->store;
 
-	items->capacity = 0;
-	items->size = 1;
+	items->capacity = 1;
+	items->size = 0;
 	items->store = malloc(sizeof(void *) * items->capacity);
 
 	return returnList;
