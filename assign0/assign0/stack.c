@@ -8,6 +8,7 @@
 typedef struct stack
 {
 	DA *store;
+	void(*display) (FILE *, void *);
 
 } STACK;
 
@@ -22,7 +23,8 @@ newSTACK(void(*d)(FILE *, void *))	//d is the display function
 	STACK *items = malloc(sizeof(STACK));
 
 	assert(items != 0);
-	items->store = newDA(d);
+	items->store;
+	items->display = d;
 	
 	return items;
 }
@@ -78,10 +80,10 @@ displaySTACK(FILE *fp, STACK *items)
 	int i;
 
 	fprintf(fp, "|");
-	for (i = 0; i < items->size; i = i + 1)
+	for (i = 0; i < sizeDA(items); i = i + 1)
 	{
 		items->display(fp, items->store[i]);
-		if (items->size > 1 && i != items->size-1)
+		if (sizeDA(items) > 1 && i != sizeDA(items)-1)
 		{
 			fprintf(fp, ",");
 		}

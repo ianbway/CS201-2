@@ -5,6 +5,13 @@
 #include "queue.h"
 #include "cda.h"
 
+typedef struct queue
+{
+	void **store;
+} QUEUE;
+
+/******public methods******/
+
 QUEUE *
 newQUEUE(void(*d)(FILE *, void *))	//d is the display function
 {

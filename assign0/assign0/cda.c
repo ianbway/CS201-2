@@ -4,6 +4,19 @@
 #include <string.h>
 #include "cda.h"
 
+typedef struct cda
+{
+	int size;
+	int startIndex;
+	int endIndex;
+	int capacity;
+	void **store;
+	int factor;
+	void(*display) (FILE *, void *);
+} CDA;
+
+/******public methods******/
+
 CDA *
 newCDA(void(*d)(FILE *, void *))	//d is the display function
 {
@@ -109,6 +122,18 @@ removeCDABack(CDA *items)
 	return items->store[items->size];
 }
 
+static void
+grow(CDA *items)
+{
+
+}
+
+static void
+shrink(CDA *items)
+{
+
+}
+
 void
 unionCDA(CDA *recipient, CDA *donor)
 {
@@ -141,7 +166,7 @@ getCDA(CDA *items, int index)
 	
 	assert(index >= 0);
 	assert(index < items->size);
-
+	//modify to, either through condition or modulo, give the correct value that is asked
 	return items->store[index];
 
 }

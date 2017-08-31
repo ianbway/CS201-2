@@ -3,10 +3,7 @@
 
 #include <stdio.h>
 
-typedef struct queue
-{
-	void **store;
-} QUEUE;
+typedef struct queue QUEUE;
 
 extern QUEUE *newQUEUE(void(*d)(FILE *, void *));
 extern void enqueue(QUEUE *items, void *value);

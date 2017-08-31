@@ -32,6 +32,3 @@ stack.o : stack.c stack.h
 
 clean :
 	rm -f $(DA_OBJS) $(STACK_OBJS)
-
-test :
-	./all

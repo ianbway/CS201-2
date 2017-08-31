@@ -7,8 +7,6 @@
 typedef struct da
 {
 	int size;
-	int front;
-	int back;
 	int capacity;
 	void **store;
 	int factor;
