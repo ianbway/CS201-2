@@ -7,7 +7,9 @@
 
 typedef struct queue
 {
-	void **store;
+	CDA *queueItems;
+	void(*display) (FILE *, void *);
+
 } QUEUE;
 
 /******public methods******/
@@ -21,7 +23,8 @@ newQUEUE(void(*d)(FILE *, void *))	//d is the display function
 	QUEUE *items = malloc(sizeof(QUEUE));
 
 	assert(items != 0);
-	items->store = newCDA(d);
+	items->queueItems = newCDA(d);
+	items->display = d;
 
 	return items;
 
@@ -32,7 +35,7 @@ enqueue(QUEUE *items, void *value)
 {
 	//The enqueue method runs in constant or amortized constant time. 
 
-	insertCDABack(items->store, sizeCDA(items->store) + 1, value);
+	insertCDABack(items->queueItems, sizeCDA(items->queueItems) + 1, value);
 }
 
 void *
@@ -40,9 +43,9 @@ dequeue(QUEUE *items)
 {
 	//The dequeue method runs in constant or amortized constant time. 
 
-	assert(sizeCDA(items->store) > 0);
+	assert(sizeCDA(items->queueItems) > 0);
 
-	return removeCDAFront(items->store, 0);
+	return removeCDAFront(items->queueItems, 0);
 
 }
 
@@ -52,9 +55,9 @@ peekQUEUE(QUEUE *items)
 	//The peek method returns the value ready to come off the queue, but leaves the queue unchanged. 
 	//It runs in constant time. 
 
-	assert(sizeCDA(items->store) > 0);
+	assert(sizeCDA(items->queueItems) > 0);
 
-	return getCDA(items->store, 0);
+	return getCDA(items->queueItems, 0);
 }
 
 int 
@@ -63,7 +66,7 @@ sizeQUEUE(QUEUE *items)
 	//The size method returns the number of items stored in the list. 
 	//It runs in amortized constant time. 
 
-	return sizeCDA(items->store);
+	return sizeCDA(items->queueItems);
 
 }
 
@@ -75,20 +78,17 @@ displayQUEUE(FILE *fp, QUEUE *items)
 	//	with no preceding or following whitespace.An empty queue displays as <>.
 
 	int i;
-	int length = sizeof(items->store);
+	int size = sizeCDA(items->queueItems);
 
 	fprintf(fp, "<");
-	for (i = 0; i < length; i = i + 1)
+	for (i = 0; i < size; i = i + 1)
 	{
-		if (i < length - 1)
+		items->display(fp, getCDA(items->queueItems, i));
+		if (size > 1 && i != size - 1)
 		{
-			fprintf(fp, strcat("%d", items->store[i], ", "));
+			fprintf(fp, ",");
 		}
 
-		else
-		{
-			fprintf(fp, "%d", items->store[i]);
-		}
 	}
 
 	fprintf(fp, ">");
@@ -100,5 +100,5 @@ visualizeQUEUE(FILE *fp, QUEUE *items)
 {
 	// This display method simply calls the display method of the data structure upon which the queue is based.
 
-	displayCDA(fp, items->store);
+	displayCDA(fp, items->queueItems);
 }

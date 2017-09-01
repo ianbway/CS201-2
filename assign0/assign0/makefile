@@ -1,8 +1,8 @@
 # makefile for assignment 0
 DA_OBJS = integer.o da.o test-da.o
 #CDA_OBJS = integer.o cda.o test-cda.o
-STACK_OBJS = integer.o stack.o test-stack.o
-#QUEUE_OBJS = integer.o queue.o test-queue.o
+STACK_OBJS = integer.o da.o stack.o test-stack.o
+#QUEUE_OBJS = integer.o cda.o queue.o test-queue.o
 OPTS = -Wall -Wextra -std=c99 -g -c 
 LOPTS = -Wall -Wextra -std=c99 -g
 CC = gcc

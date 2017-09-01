@@ -31,7 +31,7 @@ newCDA(void(*d)(FILE *, void *))	//d is the display function
 	items->startIndex = 0;
 	items->endIndex = 0;
 	items->capacity = 1;
-	items->store = malloc(sizeof(items->capacity));
+	items->store = malloc(sizeof(void *) * items->capacity));
 	items->factor = 2;
 	items->display = d;
 	
@@ -65,17 +65,13 @@ insertCDABack(CDA *items, void *value)
 	//If there is no room for the insertion, the array grows by doubling. 
 	//It runs in amortized constant time. 
 
-	printf("INSERT BACK CALLED\n");
-
 	assert(items != 0);
 
 	if (items->size == items->capacity)
 	{
 		items->capacity = items->capacity * items->factor;
 	}
-	printf("BEFORE SET\n");
 	items->store[items->endIndex] = value;
-	printf("AFTER SET\n");
 	++items->size;
 	return;
 }
@@ -125,13 +121,23 @@ removeCDABack(CDA *items)
 static void
 grow(CDA *items)
 {
-
+	int i;
+	void *newArray;
+	for (i = 0; i < items->size; ++i)
+	{
+		newArray[i] = getCDA(items, i);
+	}
 }
 
 static void
 shrink(CDA *items)
 {
-
+	int i;
+	void *newArray;
+	for (i = 0; i < items->size; ++i)
+	{
+		newArray[i] = getCDA(items, i);
+	}
 }
 
 void
@@ -210,13 +216,12 @@ extractCDA(CDA *items)
 	//The CDA object gets a new array of capacity zero and size one. 
 	assert(items != 0);
 
+	//shrink call
 	void **returnList = realloc(items->store, sizeof(items));
 
-	items->capacity = 0;
-	items->size = 1;
-	items->store = malloc(sizeof(items->capacity));
-
-	free(items);
+	items->capacity = 1;
+	items->size = 0;
+	items->store = malloc(sizeof(void *) * items->capacity);
 
 	return returnList;
 
@@ -263,10 +268,8 @@ displayCDA(FILE *fp, CDA *items)
 	int i;
 
 	fprintf(fp, "(");
-	printf("Display loop about to start\n");
 	for (i = 0; items->size; i = i + 1)
 	{
-		printf("Made it into the loop\n");
 		items->display(fp, items->store[i]);
 		if (items->size > 1 && i != items->size - 1)
 		{

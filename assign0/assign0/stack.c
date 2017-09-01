@@ -56,7 +56,7 @@ peekSTACK(STACK *items)
 	//It runs in constant time.
 	assert(sizeDA(items->stackItems) > 0);
 
-	return getDA(items->stackItems, sizeDA(items->stackItems));
+	return getDA(items->stackItems, sizeDA(items->stackItems) - 1);
 
 }
 
@@ -83,7 +83,7 @@ displaySTACK(FILE *fp, STACK *items)
 	fprintf(fp, "|");
 	for (i = 0; i < size; i = i + 1)
 	{
-		items->display(fp, getDA(items,i));
+		items->display(fp, getDA(items->stackItems,i));
 		if (size > 1 && i != size-1)
 		{
 			fprintf(fp, ",");
