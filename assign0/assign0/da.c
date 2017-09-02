@@ -67,7 +67,7 @@ removeDA(DA *items)
 
 	int size = items->size;
 
-	if ((size * 4 < items->capacity) && items->capacity != 1)
+	if (( 0.25 > items->size / items->capacity) && items->capacity != 1)
 	{
 		items->capacity = items->capacity / items->factor;
 		items->store = realloc(items->store, sizeof(void *) * items->capacity);

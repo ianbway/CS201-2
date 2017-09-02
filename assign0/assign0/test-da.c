@@ -16,7 +16,29 @@ static void showItems(DA *items)
 int main()
 {
 	DA *items = newDA(displayInteger);
-	showItems(items);
+
+	DA *longerItems = newDA(displayInteger);
+	showItems(longerItems);
+	insertDA(longerItems, newInteger(1));					//insert first
+	insertDA(longerItems, newInteger(2));					//insert second
+	insertDA(longerItems, newInteger(3));					//insert third
+	insertDA(longerItems, newInteger(4));					//insert fourth
+	insertDA(longerItems, newInteger(5));					//insert fifth
+	insertDA(longerItems, newInteger(6));					//insert sixth
+	insertDA(longerItems, newInteger(7));					//insert seventh
+	insertDA(longerItems, newInteger(8));					//insert eighth
+	insertDA(longerItems, newInteger(9));					//insert ninth
+	showItems(longerItems);
+	removeDA(longerItems);
+	removeDA(longerItems);
+	removeDA(longerItems);
+	removeDA(longerItems);
+	removeDA(longerItems);
+	removeDA(longerItems);
+	showItems(longerItems);
+
+	//**********************************//
+	showItems(items);								//seeing if shrinking works
 	insertDA(items, newInteger(3));					//insert first
 	insertDA(items, newInteger(2));					//insert second
 	insertDA(items, newInteger(1));					//insert third

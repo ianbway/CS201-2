@@ -8,16 +8,19 @@ static void showItems(CDA *items)
 	printf("The items are ");
 	displayCDA(stdout, items);
 	printf(".\n");
+	printf("Items with space left are ");
+	visualizeCDA(stdout, items);
+	printf(".\n");
 }
 
 int main()
 {
 	CDA *items = newCDA(displayInteger);
 	showItems(items);
-	insertCDAFront(items, newInteger(3));                   //insert at front
+	insertCDABack(items, newInteger(2));                   //insert at back
 	showItems(items);
-	insertCDABack(items, newInteger(1));                   //insert at middle
-	insertCDABack(items, newInteger(2));      //insert at back
+	insertCDAFront(items, newInteger(1));                   //insert at front
+	insertCDABack(items, newInteger(3));      //insert at back
 	showItems(items);
 	printf("The value ");
 	displayInteger(stdout, removeCDAFront(items));          //remove from front
