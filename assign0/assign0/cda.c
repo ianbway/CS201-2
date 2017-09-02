@@ -38,50 +38,65 @@ newCDA(void(*d)(FILE *, void *))	//d is the display function
 	return items;
 }
 
-static int
-incrementIndex(CDA *items, int index)
-{
-	index = index + 1;
-	if (index > items->capacity) 
-	{
-		index = index - items->capacity;
-	}
-	return index;
-}
+//static int
+//incrementIndex(CDA *items, int index)
+//{
+//	index = index + 1;
+//	if (index > items->capacity) 
+//	{
+//		index = index - items->capacity;
+//	}
+//	return index;
+//}
+//
+//static int
+//decrementIndex(CDA *items, int index)
+//{
+//	index = index - 1;
+//	if (index < 0)
+//	{
+//		index = index + items->capacity;
+//	}
+//	return index;
+//}
 
 static int
-decrementIndex(CDA *items, int index)
+correctIndex(CDA *items, int index)
 {
-	index = index - 1;
-	if (index < 0)
-	{
-		index = index + items->capacity;
-	}
-	return index;
+	int correctedIndex = ((index + items->capacity) % items->capacity);
+	return correctedIndex;
 }
 
 static void
 grow(CDA *items)
 {
+	int newCapacity = items->capacity * items->factor;
+	items->startIndex = 0;
 	int i;
-	void **newArray = malloc(sizeof(void *) * items->capacity);
+	void **newArray = malloc(sizeof(void *) * newCapacity);
 	for (i = 0; i < items->size; ++i)
 	{
-		newArray[i] = getCDA(items, i);
+		newArray[i] = getCDA(items, items->startIndex);
+		items->startIndex = correctIndex(items, items->startIndex + 1);
 	}
 	items->store = newArray;
+	items->capacity = newCapacity;
 }
 
 static void
 shrink(CDA *items)
 {
+	int newCapacity = items->capacity / items->factor;
+	items->startIndex = 0;
 	int i;
-	void **newArray = malloc(sizeof(void *) * items->capacity);
+	void **newArray = malloc(sizeof(void *) * newCapacity);
 	for (i = 0; i < items->size; ++i)
 	{
 		newArray[i] = getCDA(items, i);
+		items->startIndex = correctIndex(items, items->startIndex + 1);
 	}
 	items->store = newArray;
+	items->capacity = newCapacity;
 }
 
 void
@@ -100,11 +115,10 @@ insertCDAFront(CDA *items, void *value)
 
 	if (items->size == items->capacity)
 	{
-		items->capacity = items->capacity * items->factor;
 		grow(items);
 	}
 
-	items->startIndex = decrementIndex(items, items->startIndex);
+	items->startIndex = correctIndex(items, items->startIndex - 1);
 	items->store[items->startIndex] = value;
 
 	++items->size;
@@ -122,11 +136,10 @@ insertCDABack(CDA *items, void *value)
 
 	if (items->size == items->capacity)
 	{
-		items->capacity = items->capacity * items->factor;
 		grow(items);
 	}
 	items->store[items->endIndex] = value;
-	items->endIndex = incrementIndex(items, items->endIndex);
+	items->endIndex = correctIndex(items, items->endIndex + 1);
 
 	++items->size;
 	return;
@@ -144,11 +157,10 @@ removeCDAFront(CDA *items)
 
 	if ((0.25 > items->size / items->capacity) && items->capacity != 1)
 	{
-		items->capacity = items->capacity / items->factor;
 		shrink(items);
 	}
 
-	items->startIndex = incrementIndex(items, items->startIndex);
+	items->startIndex = correctIndex(items, items->startIndex - 1);
 
 	--items->size;
 	return items->store[0];
@@ -166,11 +178,10 @@ removeCDABack(CDA *items)
 
 	if ((0.25 > items->size / items->capacity) && items->capacity != 1)
 	{
-		items->capacity = items->capacity / items->factor;
 		shrink(items);
 	}
 
-	items->endIndex = decrementIndex(items, items->endIndex);
+	items->endIndex = correctIndex(items, items->endIndex + 1);
 
 	--items->size;
 	return items->store[items->size];
@@ -186,12 +197,12 @@ unionCDA(CDA *recipient, CDA *donor)
 
 	int i;
 	int donorLen = donor->size;
-	for (i = 0; i < donorLen; i = i + 1)
+	for (i = 0; i < donorLen; ++i)
 	{
 		insertCDABack(recipient, getCDA(donor, i));
 	}
 
-	for (i = 0; i < donorLen; i = i + 1)
+	for (i = 0; i < donorLen; ++i)
 	{
 		removeCDAFront(donor);
 	}
@@ -209,7 +220,8 @@ getCDA(CDA *items, int index)
 	assert(index >= 0);
 	assert(index < items->size);
 	//modify to, either through condition or modulo, give the correct value that is asked
-	return items->store[index];
+	int correctedIndex = correctIndex(items, index + items->startIndex);
+	return items->store[correctedIndex];
 
 }
 
@@ -228,19 +240,19 @@ setCDA(CDA *items, int index, void *value)
 	if (index == items->size) 
 	{
 		insertCDABack(items, value);
+		return 0;
 	}
 
 	else if (index == -1) 
 	{
 		insertCDAFront(items, value);
+		return 0;
 	}
 
-	else if (getCDA(items, index) != 0)
-	{
-		getCDA(items, index);
-	}
+	void *oldVal = getCDA(items, index);
+	items->store[index] = value;
 
-	return 0; 
+	return oldVal;
 
 }
 
@@ -280,7 +292,7 @@ visualizeCDA(FILE *fp, CDA *items)
 	int i;
 
 	fprintf(fp, "(");
-	for (i = 0; items->size; i = i + 1)
+	for (i = 0; i < items->size; ++i)
 	{
 		items->display(fp, items->store[i]);
 		if (items->size > 1 && i != items->size - 1)
@@ -304,7 +316,7 @@ displayCDA(FILE *fp, CDA *items)
 	int i;
 
 	fprintf(fp, "(");
-	for (i = 0; items->size; i = i + 1)
+	for (i = 0; i < items->size; ++i)
 	{
 		items->display(fp, items->store[i]);
 		if (items->size > 1 && i != items->size - 1)

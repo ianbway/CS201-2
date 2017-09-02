@@ -20,6 +20,7 @@ int main()
 	insertCDABack(items, newInteger(2));                   //insert at back
 	showItems(items);
 	insertCDAFront(items, newInteger(1));                   //insert at front
+	showItems(items);
 	insertCDABack(items, newInteger(3));      //insert at back
 	showItems(items);
 	printf("The value ");
