@@ -64,6 +64,7 @@ static int
 correctIndex(CDA *items, int index)
 {
 	int correctedIndex = ((index + items->capacity) % items->capacity);
+	fprintf(stdout, "correctedIndex %d, index %d\n", correctedIndex, index);
 	return correctedIndex;
 }
 
@@ -77,8 +78,9 @@ grow(CDA *items)
 	for (i = 0; i < items->size; ++i)
 	{
 		newArray[i] = getCDA(items, items->startIndex);
-		items->startIndex = correctIndex(items, items->startIndex + 1);
+		//items->startIndex = correctIndex(items, items->startIndex + 1);
 	}
+	items->endIndex = items->size;
 	items->store = newArray;
 	items->capacity = newCapacity;
 }
@@ -93,8 +95,9 @@ shrink(CDA *items)
 	for (i = 0; i < items->size; ++i)
 	{
 		newArray[i] = getCDA(items, i);
-		items->startIndex = correctIndex(items, items->startIndex + 1);
+		//items->startIndex = correctIndex(items, items->startIndex + 1);
 	}
+	items->endIndex = items->size;
 	items->store = newArray;
 	items->capacity = newCapacity;
 }

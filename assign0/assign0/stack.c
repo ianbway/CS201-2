@@ -74,17 +74,17 @@ void
 displaySTACK(FILE *fp, STACK *items)
 {
 	//The display method prints the items stored in the stack. If the integers 5, 6, 2, 9, and 1 are pushed in the order given, the method would generate this output:
-	// | 5, 6, 2, 9, 1 |
+	// | 1, 9, 2, 6, 5 |
 	// with no preceding or following whitespace.An empty stack displays as || .
 
 	int i;
 	int size = sizeDA(items->stackItems);
 
 	fprintf(fp, "|");
-	for (i = 0; i < size; i = i + 1)
+	for (i = size - 1; i >= 0; i = i - 1)
 	{
 		items->display(fp, getDA(items->stackItems,i));
-		if (size > 1 && i != size-1)
+		if (i < size && i != 0)
 		{
 			fprintf(fp, ",");
 		}

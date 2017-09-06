@@ -19,6 +19,8 @@ int main()
 {
 	STACK *items = newSTACK(displayInteger);
 	showItems(items);
+	push(items, newInteger(5));
+	push(items, newInteger(4));
 	push(items, newInteger(3));                   //insert at front
 	push(items, newInteger(2));      //insert at back
 	push(items, newInteger(1));                   //insert at middle
