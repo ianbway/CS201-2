@@ -5,12 +5,12 @@
 #include"stack.h"
 #include"da.h"
 
-typedef struct stack
+struct stack
 {
 	DA *stackItems;
 	void(*display) (FILE *, void *);
 
-} STACK;
+};
 
 /****** public methods ******/
 

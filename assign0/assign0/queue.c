@@ -5,12 +5,12 @@
 #include "queue.h"
 #include "cda.h"
 
-typedef struct queue
+struct queue
 {
 	CDA *queueItems;
 	void(*display) (FILE *, void *);
 
-} QUEUE;
+};
 
 /******public methods******/
 

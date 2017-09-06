@@ -4,7 +4,7 @@
 #include <string.h>
 #include "cda.h"
 
-typedef struct cda
+struct cda
 {
 	int size;
 	int startIndex;
@@ -13,7 +13,7 @@ typedef struct cda
 	void **store;
 	int factor;
 	void(*display) (FILE *, void *);
-} CDA;
+};
 
 /******public methods******/
 
@@ -32,6 +32,9 @@ newCDA(void(*d)(FILE *, void *))	//d is the display function
 	items->endIndex = 0;
 	items->capacity = 1;
 	items->store = malloc(sizeof(void *) * items->capacity);
+	
+	assert(items->store != 0);
+
 	items->factor = 2;
 	items->display = d;
 	
@@ -64,7 +67,7 @@ static int
 correctIndex(CDA *items, int index)
 {
 	int correctedIndex = ((index + items->capacity) % items->capacity);
-	fprintf(stdout, "correctedIndex %d, index %d\n", correctedIndex, index);
+	//fprintf(stdout, "correctedIndex %d, index %d, startindex %d, endindex %d\n", correctedIndex, index, items->startIndex, items->endIndex);
 	return correctedIndex;
 }
 
@@ -72,32 +75,39 @@ static void
 grow(CDA *items)
 {
 	int newCapacity = items->capacity * items->factor;
-	items->startIndex = 0;
 	int i;
 	void **newArray = malloc(sizeof(void *) * newCapacity);
+	
+	assert(newArray != 0);
+
 	for (i = 0; i < items->size; ++i)
 	{
-		newArray[i] = getCDA(items, items->startIndex);
-		//items->startIndex = correctIndex(items, items->startIndex + 1);
+		newArray[i] = getCDA(items, i);
 	}
-	items->endIndex = items->size;
+	items->startIndex = 0;
+	items->endIndex = items->size-1;
 	items->store = newArray;
 	items->capacity = newCapacity;
+	printf("in grow: ");
+	visualizeCDA(stdout, items);
+	printf("\n");
 }
 
 static void
 shrink(CDA *items)
 {
 	int newCapacity = items->capacity / items->factor;
-	items->startIndex = 0;
 	int i;
 	void **newArray = malloc(sizeof(void *) * newCapacity);
+	
+	assert(newArray != 0);
+
 	for (i = 0; i < items->size; ++i)
 	{
 		newArray[i] = getCDA(items, i);
-		//items->startIndex = correctIndex(items, items->startIndex + 1);
 	}
-	items->endIndex = items->size;
+	items->startIndex = 0;
+	items->endIndex = items->size-1;
 	items->store = newArray;
 	items->capacity = newCapacity;
 }
@@ -108,6 +118,8 @@ insertCDAFront(CDA *items, void *value)
 	//This insert method places the item in the slot just prior to the first item in the filled region. 
 	//If there is no room for the insertion, the array grows by doubling. 
 	//It runs in amortized constant time. 
+
+	printf("In insertFront, my start index is: %d\n", items->startIndex);
 
 	assert(items != 0);
 
@@ -120,11 +132,14 @@ insertCDAFront(CDA *items, void *value)
 	{
 		grow(items);
 	}
-
+	
+	//items->startIndex = items->startIndex - 1;
 	items->startIndex = correctIndex(items, items->startIndex - 1);
 	items->store[items->startIndex] = value;
 
 	++items->size;
+
+	printf("In insertFront, my start index has been changed to: %d\n", items->startIndex);
 	return;
 }
 
@@ -158,7 +173,7 @@ removeCDAFront(CDA *items)
 
 	assert(items->size > 0);
 
-	if ((0.25 > items->size / items->capacity) && items->capacity != 1)
+	if ((0.25 > items->size /(double) items->capacity) && items->capacity != 1)
 	{
 		shrink(items);
 	}
@@ -179,7 +194,7 @@ removeCDABack(CDA *items)
 
 	assert(items->size > 0);
 
-	if ((0.25 > items->size / items->capacity) && items->capacity != 1)
+	if ((0.25 > items->size /(double) items->capacity) && items->capacity != 1)
 	{
 		shrink(items);
 	}
@@ -253,7 +268,8 @@ setCDA(CDA *items, int index, void *value)
 	}
 
 	void *oldVal = getCDA(items, index);
-	items->store[index] = value;
+	int correctedIndex = correctIndex(items, index + items->startIndex);
+	items->store[correctedIndex] = value;
 
 	return oldVal;
 
@@ -273,6 +289,8 @@ extractCDA(CDA *items)
 	items->capacity = 1;
 	items->size = 0;
 	items->store = malloc(sizeof(void *) * items->capacity);
+	
+	assert(items->store != 0);
 
 	return returnList;
 
@@ -297,7 +315,7 @@ visualizeCDA(FILE *fp, CDA *items)
 	fprintf(fp, "(");
 	for (i = 0; i < items->size; ++i)
 	{
-		items->display(fp, items->store[i]);
+		items->display(fp, getCDA(items, i));
 		if (items->size > 1 && i != items->size - 1)
 		{
 			fprintf(fp, ",");
@@ -321,7 +339,7 @@ displayCDA(FILE *fp, CDA *items)
 	fprintf(fp, "(");
 	for (i = 0; i < items->size; ++i)
 	{
-		items->display(fp, items->store[i]);
+		items->display(fp, getCDA(items, i));
 		if (items->size > 1 && i != items->size - 1)
 		{
 			fprintf(fp, ",");

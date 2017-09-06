@@ -22,12 +22,16 @@ int main()
 	insertCDAFront(items, newInteger(1));                   //insert at front
 	showItems(items);
 	insertCDABack(items, newInteger(3));      //insert at back
+	insertCDABack(items, newInteger(4));
+	insertCDABack(items, newInteger(5));
 	showItems(items);
-	printf("The value ");
+	/*printf("The value ");
 	displayInteger(stdout, removeCDAFront(items));          //remove from front
 	printf(" was removed.\n");
 	showItems(items);
 	int x = getInteger((INTEGER *)getCDA(items, 0));    //get the first item
 	printf("The first item is %d.\n", x);
+	
+	*/
 	return 0;
 }

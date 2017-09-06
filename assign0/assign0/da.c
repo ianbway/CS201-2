@@ -4,7 +4,7 @@
 #include <string.h>
 #include "da.h"
 
-typedef struct da
+struct da
 {
 	int size;
 	int capacity;
@@ -12,7 +12,7 @@ typedef struct da
 	int factor;
 	void (*display) (FILE *, void *);
 
-} DA;
+};
 
 /******public methods******/
 
@@ -29,6 +29,9 @@ newDA(void (*d)(FILE *, void *))	//d is display function
 	items->size = 0;
 	items->capacity = 1;
 	items->store = malloc(sizeof(void *) * items->capacity);
+	
+	assert(items->store != 0);
+
 	items->factor = 2;
 	items->display = d;
 
@@ -48,6 +51,7 @@ insertDA(DA *items, void *value)
 	{
 		items->capacity = items->capacity * items->factor;
 		items->store = realloc(items->store, sizeof(void *) * items->capacity);
+		assert(items->store != 0);
 	}
 
 	items->store[items->size] = value;
@@ -71,6 +75,7 @@ removeDA(DA *items)
 	{
 		items->capacity = items->capacity / items->factor;
 		items->store = realloc(items->store, sizeof(void *) * items->capacity);
+		assert(items->store != 0);
 	}
 
 	--items->size;
@@ -147,11 +152,14 @@ extractDA(DA *items)
 	assert(items != 0);
 
 	items->store = realloc(items->store, sizeof(void *) * items->size);
+	assert(items->store != 0);
+
 	void **returnList = items->store;
 
 	items->capacity = 1;
 	items->size = 0;
 	items->store = malloc(sizeof(void *) * items->capacity);
+	assert(items->store != 0);
 
 	return returnList;
 
