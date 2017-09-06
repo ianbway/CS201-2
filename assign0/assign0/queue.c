@@ -35,7 +35,7 @@ enqueue(QUEUE *items, void *value)
 {
 	//The enqueue method runs in constant or amortized constant time. 
 
-	insertCDABack(items->queueItems, sizeCDA(items->queueItems) + 1, value);
+	insertCDABack(items->queueItems, value);
 }
 
 void *
@@ -45,7 +45,7 @@ dequeue(QUEUE *items)
 
 	assert(sizeCDA(items->queueItems) > 0);
 
-	return removeCDAFront(items->queueItems, 0);
+	return removeCDAFront(items->queueItems);
 
 }
 

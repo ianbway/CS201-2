@@ -2,12 +2,12 @@
 DA_OBJS = integer.o da.o test-da.o
 CDA_OBJS = integer.o cda.o test-cda.o
 STACK_OBJS = integer.o da.o stack.o test-stack.o
-#QUEUE_OBJS = integer.o cda.o queue.o test-queue.o
+QUEUE_OBJS = integer.o cda.o queue.o test-queue.o
 OPTS = -Wall -Wextra -std=c99 -g -c 
 LOPTS = -Wall -Wextra -std=c99 -g
 CC = gcc
 
-all : test-da test-stack test-cda
+all : test-da test-stack test-cda test-queue
 
 test-da : $(DA_OBJS)
 	$(CC) $(LOPTS) $(DA_OBJS) -o test-da
@@ -18,8 +18,8 @@ test-stack : $(STACK_OBJS)
 test-cda : $(CDA_OBJS)
 	$(CC) $(LOPTS) $(CDA_OBJS) -o test-cda
 
-#test-queue : $(QUEUE_OBJS)
-#	$(CC) $(LOPTS) $(QUEUE_OBJS) -o test-queue
+test-queue : $(QUEUE_OBJS)
+	$(CC) $(LOPTS) $(QUEUE_OBJS) -o test-queue
 
 da.o : da.c da.h
 	$(CC) $(OPTS) da.c
@@ -33,8 +33,8 @@ cda.o : cda.c cda.h
 stack.o : stack.c stack.h
 	$(CC) $(OPTS) stack.c
 
-#queue.o : queue.c queue.h
-#        $(CC) $(OPTS) queue.c
+queue.o : queue.c queue.h
+	$(CC) $(OPTS) queue.c
 
 clean :
-	rm -f $(DA_OBJS) $(STACK_OBJS) $(CDA_OBJS)
+	rm -f $(DA_OBJS) $(STACK_OBJS) $(CDA_OBJS) $(QUEUE_OBJS)

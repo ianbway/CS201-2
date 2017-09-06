@@ -28,8 +28,8 @@ newCDA(void(*d)(FILE *, void *))	//d is the display function
 	assert(items != 0);
 
 	items->size = 0;
-	items->startIndex = 0;
-	items->endIndex = 0;
+	items->startIndex = 0; //first, leftmost element
+	items->endIndex = 0;  //first open slot
 	items->capacity = 1;
 	items->store = malloc(sizeof(void *) * items->capacity);
 	
@@ -85,7 +85,7 @@ grow(CDA *items)
 		newArray[i] = getCDA(items, i);
 	}
 	items->startIndex = 0;
-	items->endIndex = items->size-1;
+	items->endIndex = items->size;
 	items->store = newArray;
 	items->capacity = newCapacity;
 	printf("in grow: ");
@@ -107,9 +107,12 @@ shrink(CDA *items)
 		newArray[i] = getCDA(items, i);
 	}
 	items->startIndex = 0;
-	items->endIndex = items->size-1;
+	items->endIndex = items->size;
 	items->store = newArray;
 	items->capacity = newCapacity;
+	printf("in shrink: ");
+	visualizeCDA(stdout, items);
+	printf("\n");
 }
 
 void
@@ -126,6 +129,7 @@ insertCDAFront(CDA *items, void *value)
 	if (items->size == 0)
 	{
 		insertCDABack(items, value);
+		return;
 	}
 
 	if (items->size == items->capacity)
@@ -150,6 +154,8 @@ insertCDABack(CDA *items, void *value)
 	//If there is no room for the insertion, the array grows by doubling. 
 	//It runs in amortized constant time. 
 
+	printf("In insertBack, my end index is: %d\n", items->endIndex);
+
 	assert(items != 0);
 
 	if (items->size == items->capacity)
@@ -160,6 +166,8 @@ insertCDABack(CDA *items, void *value)
 	items->endIndex = correctIndex(items, items->endIndex + 1);
 
 	++items->size;
+
+	printf("In insertBack, my end index has been changed to: %d\n", items->endIndex);
 	return;
 }
 
@@ -178,10 +186,12 @@ removeCDAFront(CDA *items)
 		shrink(items);
 	}
 
-	items->startIndex = correctIndex(items, items->startIndex - 1);
+	void* returnItem = getCDA(items, 0);
+
+	items->startIndex = correctIndex(items, items->startIndex + 1);
 
 	--items->size;
-	return items->store[0];
+	return returnItem;
 }
 
 void *
@@ -199,10 +209,12 @@ removeCDABack(CDA *items)
 		shrink(items);
 	}
 
-	items->endIndex = correctIndex(items, items->endIndex + 1);
+	void* returnItem = getCDA(items, items->size - 1);
+
+	items->endIndex = correctIndex(items, items->endIndex - 1);
 
 	--items->size;
-	return items->store[items->size];
+	return returnItem;
 }
 
 void
