@@ -1,3 +1,5 @@
+// Ian Braudaway
+// Implementation file for cda class
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -15,13 +17,15 @@ struct cda
 	void(*display) (FILE *, void *);
 };
 
-/******public methods******/
+/****** public methods ******/
 
 CDA *
 newCDA(void(*d)(FILE *, void *))	//d is the display function
 {
-	//The constructor is passed a function that knows how to display the generic value stored in an array slot. 
-	//That function is stored in a display field of the CDA object. 
+	/*
+	The constructor is passed a function that knows how to display the generic value stored in an array slot. 
+	That function is stored in a display field of the CDA object. 
+	*/
 	
 	CDA *items = malloc(sizeof(CDA));
 
@@ -41,39 +45,20 @@ newCDA(void(*d)(FILE *, void *))	//d is the display function
 	return items;
 }
 
-//static int
-//incrementIndex(CDA *items, int index)
-//{
-//	index = index + 1;
-//	if (index > items->capacity) 
-//	{
-//		index = index - items->capacity;
-//	}
-//	return index;
-//}
-//
-//static int
-//decrementIndex(CDA *items, int index)
-//{
-//	index = index - 1;
-//	if (index < 0)
-//	{
-//		index = index + items->capacity;
-//	}
-//	return index;
-//}
-
 static int
 correctIndex(CDA *items, int index)
 {
+	// Index correction private method
+
 	int correctedIndex = ((index + items->capacity) % items->capacity);
-	//fprintf(stdout, "correctedIndex %d, index %d, startindex %d, endindex %d\n", correctedIndex, index, items->startIndex, items->endIndex);
 	return correctedIndex;
 }
 
 static void
 grow(CDA *items)
 {
+	// Private method which grows array to new capacity, effectively a realloc()
+
 	int newCapacity = items->capacity * items->factor;
 	int i;
 	void **newArray = malloc(sizeof(void *) * newCapacity);
@@ -88,14 +73,13 @@ grow(CDA *items)
 	items->endIndex = items->size;
 	items->store = newArray;
 	items->capacity = newCapacity;
-	//printf("in grow: ");
-	//visualizeCDA(stdout, items);
-	//printf("\n");
 }
 
 static void
 shrink(CDA *items)
 {
+	// Private method which shrinks array to new capacity, effectively a realloc()
+
 	int newCapacity = items->capacity / items->factor;
 	int i;
 	void **newArray = malloc(sizeof(void *) * newCapacity);
@@ -110,25 +94,22 @@ shrink(CDA *items)
 	items->endIndex = items->size;
 	items->store = newArray;
 	items->capacity = newCapacity;
-	//printf("in shrink: ");
-	//visualizeCDA(stdout, items);
-	//printf("\n");
 }
 
 void
-insertCDAFront(CDA *items, void *value)
+insertCDAfront(CDA *items, void *value)
 {
-	//This insert method places the item in the slot just prior to the first item in the filled region. 
-	//If there is no room for the insertion, the array grows by doubling. 
-	//It runs in amortized constant time. 
-
-	//printf("In insertFront, my start index is: %d\n", items->startIndex);
+	/*
+	This insert method places the item in the slot just prior to the first item in the filled region. 
+	If there is no room for the insertion, the array grows by doubling. 
+	It runs in amortized constant time. 
+	*/
 
 	assert(items != 0);
 
 	if (items->size == 0)
 	{
-		insertCDABack(items, value);
+		insertCDAback(items, value);
 		return;
 	}
 
@@ -137,24 +118,21 @@ insertCDAFront(CDA *items, void *value)
 		grow(items);
 	}
 	
-	//items->startIndex = items->startIndex - 1;
 	items->startIndex = correctIndex(items, items->startIndex - 1);
 	items->store[items->startIndex] = value;
 
 	++items->size;
-
-	//printf("In insertFront, my start index has been changed to: %d\n", items->startIndex);
 	return;
 }
 
 void
-insertCDABack(CDA *items, void *value)
+insertCDAback(CDA *items, void *value)
 {
-	//This insert method places the item in the slot just after the last item in the filled region. 
-	//If there is no room for the insertion, the array grows by doubling. 
-	//It runs in amortized constant time. 
-
-	//printf("In insertBack, my end index is: %d\n", items->endIndex);
+	/*
+	This insert method places the item in the slot just after the last item in the filled region. 
+	If there is no room for the insertion, the array grows by doubling. 
+	It runs in amortized constant time. 
+	*/
 
 	assert(items != 0);
 
@@ -166,18 +144,18 @@ insertCDABack(CDA *items, void *value)
 	items->endIndex = correctIndex(items, items->endIndex + 1);
 
 	++items->size;
-
-	//printf("In insertBack, my end index has been changed to: %d\n", items->endIndex);
 	return;
 }
 
 void *
-removeCDAFront(CDA *items)
+removeCDAfront(CDA *items)
 {
-	//This remove method removes the first item in the filled region. 
-	//If the ratio of the size to the capacity drops below 25%, the array shrinks by half. 
-	//The array should never shrink below a capacity of 1. 
-	//It runs in amortized constant time. 
+	/*
+	This remove method removes the first item in the filled region. 
+	If the ratio of the size to the capacity drops below 25%, the array shrinks by half. 
+	The array should never shrink below a capacity of 1. 
+	It runs in amortized constant time. 
+	*/
 
 	assert(items->size > 0);
 
@@ -195,12 +173,14 @@ removeCDAFront(CDA *items)
 }
 
 void *
-removeCDABack(CDA *items)
+removeCDAback(CDA *items)
 {
-	//This remove method removes the last item in the filled region.
-	//If the ratio of the size to the capacity drops below 25 % , the array shrinks by half.
-	//The array should never shrink below a capacity of 1. 
-	//It runs in amortized constant time.
+	/*
+	This remove method removes the last item in the filled region.
+	If the ratio of the size to the capacity drops below 25 % , the array shrinks by half.
+	The array should never shrink below a capacity of 1. 
+	It runs in amortized constant time.
+	*/
 
 	assert(items->size > 0);
 
@@ -220,36 +200,38 @@ removeCDABack(CDA *items)
 void
 unionCDA(CDA *recipient, CDA *donor)
 {
-	//The union method takes two array and moves all the items in the donor array to the recipient array. 
-	//Suppose the recipient array has the items [3,4,5] in the filled portion and the donor array has the items [1,2] in the filled portion, 
-	//After the union, the donor array will be empty and recipient array will have the items [3,4,5,1,2] in the filled portion. 
-	//The union method runs in linear time. 
+	/*
+	The union method takes two array and moves all the items in the donor array to the recipient array. 
+	Suppose the recipient array has the items [3,4,5] in the filled portion and the donor array has the items [1,2] in the filled portion, 
+	After the union, the donor array will be empty and recipient array will have the items [3,4,5,1,2] in the filled portion. 
+	The union method runs in linear time. 
+	*/
 
 	int i;
 	int donorLen = donor->size;
 	for (i = 0; i < donorLen; ++i)
 	{
-		insertCDABack(recipient, getCDA(donor, i));
+		insertCDAback(recipient, getCDA(donor, i));
 	}
 
 	for (i = 0; i < donorLen; ++i)
 	{
-		removeCDAFront(donor);
+		removeCDAfront(donor);
 	}
 
 	return;
-
 }
 
 void *
 getCDA(CDA *items, int index)
 {
-	//The get method returns the value at the given index. 
-	//It runs in constant time.
-	
+	/*
+	The get method returns the value at the given index. 
+	It runs in constant time.
+	*/
 	assert(index >= 0);
 	assert(index < items->size);
-	//modify to, either through condition or modulo, give the correct value that is asked
+
 	int correctedIndex = correctIndex(items, index + items->startIndex);
 	return items->store[correctedIndex];
 
@@ -258,24 +240,26 @@ getCDA(CDA *items, int index)
 void *
 setCDA(CDA *items, int index, void *value)
 {
-	//The set method updates the value at the given index. 
-	//If the given index is equal to the size, the value is inserted via the insertCDABack method. 
-	//If the given index is equal to -1, the value is inserted via the insertCDAFront method. 
-	//The method returns the replaced value or zero if no value was replaced. 
-	//It runs in constant time if the array does not need to grow and amortized constant time if it does.
+	/*
+	The set method updates the value at the given index. 
+	If the given index is equal to the size, the value is inserted via the insertCDABack method. 
+	If the given index is equal to -1, the value is inserted via the insertCDAFront method. 
+	The method returns the replaced value or zero if no value was replaced. 
+	It runs in constant time if the array does not need to grow and amortized constant time if it does.
+	*/
 
 	assert(index >= -1);
 	assert(index <= items->size);
 
 	if (index == items->size) 
 	{
-		insertCDABack(items, value);
+		insertCDAback(items, value);
 		return 0;
 	}
 
 	else if (index == -1) 
 	{
-		insertCDAFront(items, value);
+		insertCDAfront(items, value);
 		return 0;
 	}
 
@@ -284,15 +268,17 @@ setCDA(CDA *items, int index, void *value)
 	items->store[correctedIndex] = value;
 
 	return oldVal;
-
 }
 
 void **
 extractCDA(CDA *items)
 {
-	//The extract method returns the underlying C array. 
-	//The array is shrunk to an exact fit prior to being returned. 
-	//The CDA object gets a new array of capacity zero and size one. 
+	/*
+	The extract method returns the underlying C array. 
+	The array is shrunk to an exact fit prior to being returned. 
+	The CDA object gets a new array of capacity zero and size one. 
+	*/
+
 	assert(items != 0);
 
 	shrink(items);
@@ -305,7 +291,6 @@ extractCDA(CDA *items)
 	assert(items->store != 0);
 
 	return returnList;
-
 }
 
 int
@@ -318,9 +303,11 @@ sizeCDA(CDA *items)
 void
 visualizeCDA(FILE *fp, CDA *items)
 {
-	//The display method prints out the filled region, enclosed in brackets and separated by commas, followed by the size of the unfilled region, enclosed in brackets. 
-	//If the integers 5, 6, 2, 9, and 1 are stored in the array (listed from index 0 upwards) and the array has capacity 8, the method would generate this output: (5, 6, 2, 9, 1)(3)
-	//with no preceding or following whitespace.An empty array with capacity 1 displays as()(1).
+	/*
+	The display method prints out the filled region, enclosed in brackets and separated by commas, followed by the size of the unfilled region, enclosed in brackets. 
+	If the integers 5, 6, 2, 9, and 1 are stored in the array (listed from index 0 upwards) and the array has capacity 8, the method would generate this output: (5, 6, 2, 9, 1)(3)
+	with no preceding or following whitespace.An empty array with capacity 1 displays as()(1).
+	*/
 
 	int i;
 

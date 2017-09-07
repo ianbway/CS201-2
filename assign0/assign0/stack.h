@@ -1,3 +1,5 @@
+// Ian Braudaway
+// Header file for stack class
 #ifndef __STACK_INCLUDED__
 #define __STACK_INCLUDED__
 

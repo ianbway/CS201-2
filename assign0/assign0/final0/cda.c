@@ -116,7 +116,7 @@ shrink(CDA *items)
 }
 
 void
-insertCDAFront(CDA *items, void *value)
+insertCDAfront(CDA *items, void *value)
 {
 	//This insert method places the item in the slot just prior to the first item in the filled region. 
 	//If there is no room for the insertion, the array grows by doubling. 
@@ -128,7 +128,7 @@ insertCDAFront(CDA *items, void *value)
 
 	if (items->size == 0)
 	{
-		insertCDABack(items, value);
+		insertCDAback(items, value);
 		return;
 	}
 
@@ -148,7 +148,7 @@ insertCDAFront(CDA *items, void *value)
 }
 
 void
-insertCDABack(CDA *items, void *value)
+insertCDAback(CDA *items, void *value)
 {
 	//This insert method places the item in the slot just after the last item in the filled region. 
 	//If there is no room for the insertion, the array grows by doubling. 
@@ -172,7 +172,7 @@ insertCDABack(CDA *items, void *value)
 }
 
 void *
-removeCDAFront(CDA *items)
+removeCDAfront(CDA *items)
 {
 	//This remove method removes the first item in the filled region. 
 	//If the ratio of the size to the capacity drops below 25%, the array shrinks by half. 
@@ -195,7 +195,7 @@ removeCDAFront(CDA *items)
 }
 
 void *
-removeCDABack(CDA *items)
+removeCDAback(CDA *items)
 {
 	//This remove method removes the last item in the filled region.
 	//If the ratio of the size to the capacity drops below 25 % , the array shrinks by half.
@@ -229,12 +229,12 @@ unionCDA(CDA *recipient, CDA *donor)
 	int donorLen = donor->size;
 	for (i = 0; i < donorLen; ++i)
 	{
-		insertCDABack(recipient, getCDA(donor, i));
+		insertCDAback(recipient, getCDA(donor, i));
 	}
 
 	for (i = 0; i < donorLen; ++i)
 	{
-		removeCDAFront(donor);
+		removeCDAfront(donor);
 	}
 
 	return;
@@ -269,13 +269,13 @@ setCDA(CDA *items, int index, void *value)
 
 	if (index == items->size) 
 	{
-		insertCDABack(items, value);
+		insertCDAback(items, value);
 		return 0;
 	}
 
 	else if (index == -1) 
 	{
-		insertCDAFront(items, value);
+		insertCDAfront(items, value);
 		return 0;
 	}
 

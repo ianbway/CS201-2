@@ -1,3 +1,5 @@
+// Ian Braudaway
+// Tester file for cda class
 #include <stdio.h>
 #include <stdlib.h>
 #include "cda.h"
@@ -17,12 +19,12 @@ int main()
 {
 	CDA *items = newCDA(displayInteger);
 	showItems(items);
-	insertCDABack(items, newInteger(2));                   //insert at back
-	insertCDAFront(items, newInteger(1));                   //insert at front
-	insertCDABack(items, newInteger(3));      //insert at back
+	insertCDAback(items, newInteger(2));                   //insert at back
+	insertCDAfront(items, newInteger(1));                   //insert at front
+	insertCDAback(items, newInteger(3));      //insert at back
 	showItems(items);
 	printf("The value ");
-	displayInteger(stdout, removeCDAFront(items));          //remove from front
+	displayInteger(stdout, removeCDAfront(items));          //remove from front
 	printf(" was removed.\n");
 	showItems(items);
 	int x = getInteger((INTEGER *)getCDA(items, 0));    //get the first item
@@ -35,28 +37,28 @@ int main()
 
 	CDA *donor = newCDA(displayInteger);
 	showItems(donor);
-	insertCDAFront(donor, newInteger(1));                   //insert at front
-	insertCDAFront(donor, newInteger(2));                   //insert at front
-	insertCDABack(donor, newInteger(3));                   //insert at back
-	insertCDAFront(donor, newInteger(4));                   //insert at front
-	removeCDAFront(donor);
-	removeCDAFront(donor);
-	removeCDABack(donor);
-	removeCDABack(donor);
+	insertCDAfront(donor, newInteger(1));                   //insert at front
+	insertCDAfront(donor, newInteger(2));                   //insert at front
+	insertCDAback(donor, newInteger(3));                   //insert at back
+	insertCDAfront(donor, newInteger(4));                   //insert at front
+	removeCDAfront(donor);
+	removeCDAfront(donor);
+	removeCDAback(donor);
+	removeCDAback(donor);
 	showItems(donor);
-	insertCDAFront(donor, newInteger(5));                   //insert at front
-	insertCDAFront(donor, newInteger(6));                   //insert at front
-	insertCDABack(donor, newInteger(3));                   //insert at back
-	insertCDAFront(donor, newInteger(6));                   //insert at front
+	insertCDAfront(donor, newInteger(5));                   //insert at front
+	insertCDAfront(donor, newInteger(6));                   //insert at front
+	insertCDAback(donor, newInteger(3));                   //insert at back
+	insertCDAfront(donor, newInteger(6));                   //insert at front
 	showItems(donor);
-	removeCDAFront(donor);
+	removeCDAfront(donor);
 	showItems(donor);
 
 	CDA *recipient = newCDA(displayInteger);
 	showItems(recipient);
-	insertCDABack(recipient, newInteger(80));                   //insert at back
-	insertCDABack(recipient, newInteger(90));                   //insert at back
-	insertCDABack(recipient, newInteger(100));                   //insert at back
+	insertCDAback(recipient, newInteger(80));                   //insert at back
+	insertCDAback(recipient, newInteger(90));                   //insert at back
+	insertCDAback(recipient, newInteger(100));                   //insert at back
 	showItems(recipient);
 	unionCDA(recipient, donor);
 	showItems(recipient);

@@ -6,10 +6,10 @@
 typedef struct cda CDA;
 
 extern CDA *newCDA(void(*d)(FILE *, void *));
-extern void insertCDAFront(CDA *items, void *value);
-extern void insertCDABack(CDA *items, void *value);
-extern void *removeCDAFront(CDA *items);
-extern void *removeCDABack(CDA *items);
+extern void insertCDAfront(CDA *items, void *value);
+extern void insertCDAback(CDA *items, void *value);
+extern void *removeCDAfront(CDA *items);
+extern void *removeCDAback(CDA *items);
 extern void unionCDA(CDA *recipient, CDA *donor);
 extern void *getCDA(CDA *items, int index);
 extern void *setCDA(CDA *items, int index, void *value);
