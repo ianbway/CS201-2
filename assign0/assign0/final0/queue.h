@@ -1,3 +1,5 @@
+// Ian Braudaway
+// Header file for queue class
 #ifndef __QUEUE_INCLUDED__
 #define __QUEUE_INCLUDED__
 

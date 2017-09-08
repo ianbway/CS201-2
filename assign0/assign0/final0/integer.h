@@ -1,3 +1,5 @@
+// Ian Braudaway, based off of Dr. Lusth's integer class and header
+// Header file for integer class
 #include <stdio.h>
 
 #ifndef __INTEGER_INCLUDED__

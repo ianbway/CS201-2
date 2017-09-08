@@ -1,3 +1,5 @@
+// Ian Braudaway
+// Tester file for stack class
 #include <stdio.h>
 #include <stdlib.h>
 #include "da.h"
@@ -14,7 +16,6 @@ static void showItems(STACK *items)
 	printf(".\n");
 }
 
-//int argc, char **argv
 int main()
 {
 	STACK *items = newSTACK(displayInteger);

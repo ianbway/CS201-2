@@ -1,3 +1,5 @@
+// Ian Braudaway
+// Tester file for da class
 #include <stdio.h>
 #include <stdlib.h>
 #include "da.h"
@@ -12,7 +14,7 @@ static void showItems(DA *items)
 	visualizeDA(stdout, items);
 	printf(".\n");
 }
-//int argc, char **argv
+
 int main()
 {
 	DA *items = newDA(displayInteger);

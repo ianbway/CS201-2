@@ -1,3 +1,5 @@
+// Ian Braudaway
+// Header file for cda class
 #ifndef __CDA_INCLUDED__
 #define __CDA_INCLUDED__
 

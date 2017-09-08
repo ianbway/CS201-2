@@ -1,3 +1,5 @@
+// Ian Braudaway
+// Tester file for queue class
 #include <stdio.h>
 #include <stdlib.h>
 #include "queue.h"
@@ -13,7 +15,7 @@ static void showItems(QUEUE *items)
 	printf(".\n");
 }
 
-int main(int argc, char **argv)
+int main()
 {
 	QUEUE *items = newQUEUE(displayInteger);
 	showItems(items);
