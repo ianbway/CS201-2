@@ -19,14 +19,60 @@ int main()
 {
 	CDA *items = newCDA(displayInteger);
 	showItems(items);
-	insertCDAback(items, newInteger(2));                   //insert at back
-	insertCDAfront(items, newInteger(1));                   //insert at front
-	insertCDAback(items, newInteger(3));      //insert at back
-	showItems(items);
-	printf("The value ");
-	displayInteger(stdout, removeCDAfront(items));          //remove from front
-	printf(" was removed.\n");
-	showItems(items);
+	insertCDAback(items, newInteger(2));
+	insertCDAfront(items, newInteger(1));
+	insertCDAback(items, newInteger(3));
+	insertCDAback(items, newInteger(4));
+	insertCDAback(items, newInteger(5));
+	insertCDAback(items, newInteger(6));
+	insertCDAback(items, newInteger(7));
+	insertCDAback(items, newInteger(8));
+	insertCDAback(items, newInteger(9));
+	visualizeCDA(stdout, items);
+	printf("\n");
+	removeCDAfront(items);
+	visualizeCDA(stdout, items);
+	printf("\n");
+	removeCDAback(items);
+	visualizeCDA(stdout, items);
+	printf("\n");
+	removeCDAfront(items);
+	visualizeCDA(stdout, items);
+	printf("\n");
+	removeCDAback(items);
+	visualizeCDA(stdout, items);
+	printf("\n");
+	removeCDAback(items);
+	visualizeCDA(stdout, items);
+	printf("\n");
+	removeCDAback(items);
+	visualizeCDA(stdout, items);
+	printf("\n");
+	removeCDAback(items);
+	visualizeCDA(stdout, items);
+	printf("\n");
+	removeCDAback(items);
+	visualizeCDA(stdout, items);
+	printf("\n");
+	removeCDAback(items);
+	visualizeCDA(stdout, items);
+	printf("\n");
+	insertCDAback(items, newInteger(2));
+	visualizeCDA(stdout, items);
+	printf("\n");
+	removeCDAback(items);
+	visualizeCDA(stdout, items);
+	printf("\n");
+
+	insertCDAback(items, newInteger(2));
+	//insertCDAback(items, newInteger(2));                   //insert at back
+	//insertCDAfront(items, newInteger(1));                   //insert at front
+	//insertCDAback(items, newInteger(3));      //insert at back
+	//showItems(items);
+	//printf("The value ");
+	//displayInteger(stdout, removeCDAfront(items));          //remove from front
+	//printf(" was removed.\n");
+	//showItems(items);
 	int x = getInteger((INTEGER *)getCDA(items, 0));    //get the first item
 	printf("The first item is %d.\n", x);
 	setCDA(items, 0, newInteger(25));
