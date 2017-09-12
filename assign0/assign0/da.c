@@ -52,15 +52,15 @@ insertDA(DA *items, void *value)
 
 	assert(items != 0);
 
-	items->store[items->size] = value;
-	++items->size;
-
 	if (items->size == items->capacity)
 	{
 		items->capacity = items->capacity * items->factor;
 		items->store = realloc(items->store, sizeof(void *) * items->capacity);
 		assert(items->store != 0);
 	}
+
+	items->store[items->size] = value;
+	++items->size;
 
 	return;
 }
@@ -77,6 +77,7 @@ removeDA(DA *items)
 	assert(items->size > 0);
 
 	int size = items->size;
+	void* returnStore = items->store[size - 1];
 	--items->size;
 
 	if ((0.25 > (double) items->size / items->capacity) && items->capacity != 1)
@@ -86,7 +87,7 @@ removeDA(DA *items)
 		assert(items->store != 0);
 	}
 
-	return items->store[size - 1];
+	return returnStore;
 }
 
 void

@@ -113,15 +113,15 @@ insertCDAfront(CDA *items, void *value)
 		return;
 	}
 
-	items->startIndex = correctIndex(items, items->startIndex - 1);
-	items->store[items->startIndex] = value;
-	++items->size;
-
 	if (items->size == items->capacity)
 	{
 		grow(items);
 	}
-	
+
+	items->startIndex = correctIndex(items, items->startIndex - 1);
+	items->store[items->startIndex] = value;
+	++items->size;
+
 	return;
 }
 
@@ -136,14 +136,14 @@ insertCDAback(CDA *items, void *value)
 
 	assert(items != 0);
 
-	items->store[items->endIndex] = value;
-	items->endIndex = correctIndex(items, items->endIndex + 1);
-	++items->size;
-
 	if (items->size == items->capacity)
 	{
 		grow(items);
 	}
+
+	items->store[items->endIndex] = value;
+	items->endIndex = correctIndex(items, items->endIndex + 1);
+	++items->size;
 	
 	return;
 }
