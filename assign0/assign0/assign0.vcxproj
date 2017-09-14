@@ -79,14 +79,18 @@
     <ClInclude Include="da.h" />
     <ClInclude Include="integer.h" />
     <ClInclude Include="queue.h" />
+    <ClInclude Include="real.h" />
     <ClInclude Include="stack.h" />
+    <ClInclude Include="string.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cda.c" />
     <ClCompile Include="da.c" />
     <ClCompile Include="integer.c" />
     <ClCompile Include="queue.c" />
+    <ClCompile Include="real.c" />
     <ClCompile Include="stack.c" />
+    <ClCompile Include="string.c" />
     <ClCompile Include="test-cda.c" />
     <ClCompile Include="test-da.c" />
     <ClCompile Include="test-queue.c" />

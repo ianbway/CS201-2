@@ -81,6 +81,7 @@
     <Text Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bst.h" />
     <ClInclude Include="cda.h" />
     <ClInclude Include="da.h" />
     <ClInclude Include="integer.h" />
@@ -89,6 +90,7 @@
     <ClInclude Include="stack.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bst.c" />
     <ClCompile Include="cda.c" />
     <ClCompile Include="da.c" />
     <ClCompile Include="integer.c" />

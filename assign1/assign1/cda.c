@@ -117,11 +117,11 @@ insertCDAfront(CDA *items, void *value)
 	{
 		grow(items);
 	}
-	
+
 	items->startIndex = correctIndex(items, items->startIndex - 1);
 	items->store[items->startIndex] = value;
-
 	++items->size;
+
 	return;
 }
 
@@ -140,10 +140,11 @@ insertCDAback(CDA *items, void *value)
 	{
 		grow(items);
 	}
+
 	items->store[items->endIndex] = value;
 	items->endIndex = correctIndex(items, items->endIndex + 1);
-
 	++items->size;
+	
 	return;
 }
 
@@ -158,17 +159,17 @@ removeCDAfront(CDA *items)
 	*/
 
 	assert(items->size > 0);
+	
+	void* returnItem = getCDA(items, 0);
+	--items->size;
 
-	if ((0.25 > items->size /(double) items->capacity) && items->capacity != 1)
+	items->startIndex = correctIndex(items, items->startIndex + 1);
+
+	if ((0.25 > (double) items->size / items->capacity) && items->capacity != 1)
 	{
 		shrink(items);
 	}
 
-	void* returnItem = getCDA(items, 0);
-
-	items->startIndex = correctIndex(items, items->startIndex + 1);
-
-	--items->size;
 	return returnItem;
 }
 
@@ -184,16 +185,15 @@ removeCDAback(CDA *items)
 
 	assert(items->size > 0);
 
-	if ((0.25 > items->size /(double) items->capacity) && items->capacity != 1)
+	void* returnItem = getCDA(items, items->size - 1);
+	--items->size;
+	items->endIndex = correctIndex(items, items->endIndex - 1);
+
+	if ((0.25 > (double) items->size / items->capacity) && items->capacity != 1)
 	{
 		shrink(items);
 	}
-
-	void* returnItem = getCDA(items, items->size - 1);
-
-	items->endIndex = correctIndex(items, items->endIndex - 1);
-
-	--items->size;
+	
 	return returnItem;
 }
 
