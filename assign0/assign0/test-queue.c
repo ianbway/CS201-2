@@ -17,17 +17,17 @@ static void showItems(QUEUE *items)
 
 int main()
 {
-	QUEUE *items = newQUEUE(displayInteger);
+	QUEUE *items = newQUEUE(displayINTEGER);
 	showItems(items);
-	enqueue(items, newInteger(3));                   //insert at front
-	enqueue(items, newInteger(2));      //insert at back
-	enqueue(items, newInteger(1));                   //insert at middle
+	enqueue(items, newINTEGER(3));                   //insert at front
+	enqueue(items, newINTEGER(2));      //insert at back
+	enqueue(items, newINTEGER(1));                   //insert at middle
 	showItems(items);
 	printf("The value ");
-	displayInteger(stdout, dequeue(items));          //remove from front
+	displayINTEGER(stdout, dequeue(items));          //remove from front
 	printf(" was removed.\n");
 	showItems(items);
-	int x = getInteger((INTEGER *)peekQUEUE(items));    //get the first item
+	int x = getINTEGER((INTEGER *)peekQUEUE(items));    //get the first item
 	printf("The first item is %d.\n", x);
 	int size = sizeQUEUE(items);
 	printf("The queue is %d long. \n", size);

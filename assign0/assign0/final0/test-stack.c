@@ -18,19 +18,19 @@ static void showItems(STACK *items)
 
 int main()
 {
-	STACK *items = newSTACK(displayInteger);
+	STACK *items = newSTACK(displayINTEGER);
 	showItems(items);
-	push(items, newInteger(5));
-	push(items, newInteger(4));
-	push(items, newInteger(3));                   //insert at front
-	push(items, newInteger(2));      //insert at back
-	push(items, newInteger(1));                   //insert at middle
+	push(items, newINTEGER(5));
+	push(items, newINTEGER(4));
+	push(items, newINTEGER(3));                   //insert at front
+	push(items, newINTEGER(2));      //insert at back
+	push(items, newINTEGER(1));                   //insert at middle
 	showItems(items);
 	printf("The value ");
-	displayInteger(stdout, pop(items));          //remove from front
+	displayINTEGER(stdout, pop(items));          //remove from front
 	printf(" was removed.\n");
 	showItems(items);
-	int x = getInteger((INTEGER *)peekSTACK(items));    //get the first item
+	int x = getINTEGER((INTEGER *)peekSTACK(items));    //get the first item
 	printf("The first item is %d.\n", x);
 	int size = sizeSTACK(items);
 	printf("The stack is %d long. \n", size);

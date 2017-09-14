@@ -6,7 +6,7 @@
 #include "integer.h"
 
 INTEGER *
-newInteger(int x)
+newINTEGER(int x)
 {
 	INTEGER *p = malloc(sizeof(INTEGER));
 	if (p == 0)
@@ -19,13 +19,13 @@ newInteger(int x)
 }
 
 int
-getInteger(INTEGER * v)
+getINTEGER(INTEGER * v)
 {
 	return v->value;
 }
 
 int
-setInteger(INTEGER * v, int x)
+setINTEGER(INTEGER * v, int x)
 {
 	int old = v->value;
 	v->value = x;
@@ -33,19 +33,19 @@ setInteger(INTEGER * v, int x)
 }
 
 void
-displayInteger(FILE * fp, void *v)
+displayINTEGER(FILE * fp, void *v)
 {
-	fprintf(fp, "%d", getInteger((INTEGER *)v));
+	fprintf(fp, "%d", getINTEGER((INTEGER *)v));
 }
 
 int
-compareInteger(void *v, void *w)
+compareINTEGER(void *v, void *w)
 {
 	return ((INTEGER *)v)->value - ((INTEGER *)w)->value;
 }
 
 void
-freeInteger(INTEGER * v)
+freeINTEGER(INTEGER * v)
 {
 	free(v);
 }
