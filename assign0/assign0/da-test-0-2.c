@@ -14,14 +14,14 @@ main(void)
     printf("you can retrieve this test with:\n");
     printf("wget beastie.cs.ua.edu/cs201/testing/0/da-test-0-2.c\n");
     printf("\noutput:\n\n");
-    /*DA *d = newDA(displaySTRING);
+    DA *d = newDA(displaySTRING);
     insertDA(d,newSTRING("VWQ"));
     insertDA(d,newSTRING("TYS"));
     insertDA(d,newSTRING("KRG"));
     insertDA(d,newSTRING("SED"));
     insertDA(d,newSTRING("LWP"));
     insertDA(d,newSTRING("MVF"));
-    visualizeDA(stdout,d);*/
+    visualizeDA(stdout,d);
     printf("\n");
     return 0;
     }

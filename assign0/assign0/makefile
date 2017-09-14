@@ -1,44 +1,44 @@
 # Ian Braudaway
 # makefile for assignment 0
-DA_OBJS = integer.o real.o da.o test-da.o
-CDA_OBJS = integer.o real.o cda.o test-cda.o
-STACK_OBJS = integer.o real.o da.o stack.o test-stack.o
-QUEUE_OBJS = integer.o real.o cda.o queue.o test-queue.o
-DA0 = integer.o real.o da.o da-test-0-0.o
-DA1 = integer.o real.o da.o da-test-0-1.o
-DA2 = integer.o real.o da.o da-test-0-2.o
-DA3 = integer.o real.o da.o da-test-0-3.o
-DA4 = integer.o real.o da.o da-test-0-4.o
-DA5 = integer.o real.o da.o da-test-0-5.o
-DA6 = integer.o real.o da.o da-test-0-6.o
-DA7 = integer.o real.o da.o da-test-0-7.o
-DA8 = integer.o real.o da.o da-test-0-8.o
-DA9 = integer.o real.o da.o da-test-0-9.o
-CDA0 = integer.o real.o cda.o cda-test-0-0.o
-CDA1 = integer.o real.o cda.o cda-test-0-1.o
-CDA2 = integer.o real.o cda.o cda-test-0-2.o
-CDA3 = integer.o real.o cda.o cda-test-0-3.o
-CDA4 = integer.o real.o cda.o cda-test-0-4.o
-CDA5 = integer.o real.o cda.o cda-test-0-5.o
-CDA6 = integer.o real.o cda.o cda-test-0-6.o
-CDA7 = integer.o real.o cda.o cda-test-0-7.o
-CDA8 = integer.o real.o cda.o cda-test-0-8.o
-CDA9 = integer.o real.o cda.o cda-test-0-9.o
-CDA10 = integer.o real.o cda.o cda-test-0-10.o
-STACK0 = integer.o real.o da.o stack.o stack-test-0-0.o
-STACK1 = integer.o real.o da.o stack.o stack-test-0-1.o
-STACK2 = integer.o real.o da.o stack.o stack-test-0-2.o
-STACK3 = integer.o real.o da.o stack.o stack-test-0-3.o
-STACK4 = integer.o real.o da.o stack.o stack-test-0-4.o
-STACK5 = integer.o real.o da.o stack.o stack-test-0-5.o
-STACK6 = integer.o real.o da.o stack.o stack-test-0-6.o
-QUEUE0 = integer.o real.o cda.o queue.o queue-test-0-0.o
-QUEUE1 = integer.o real.o cda.o queue.o queue-test-0-1.o
-QUEUE2 = integer.o real.o cda.o queue.o queue-test-0-2.o
-QUEUE3 = integer.o real.o cda.o queue.o queue-test-0-3.o
-QUEUE4 = integer.o real.o cda.o queue.o queue-test-0-4.o
-QUEUE5 = integer.o real.o cda.o queue.o queue-test-0-5.o
-QUEUE6 = integer.o real.o cda.o queue.o queue-test-0-6.o
+DA_OBJS = integer.o real.o string.o da.o test-da.o
+CDA_OBJS = integer.o real.o string.o cda.o test-cda.o
+STACK_OBJS = integer.o real.o string.o da.o stack.o test-stack.o
+QUEUE_OBJS = integer.o real.o string.o cda.o queue.o test-queue.o
+DA0 = integer.o real.o string.o da.o da-test-0-0.o
+DA1 = integer.o real.o string.o da.o da-test-0-1.o
+DA2 = integer.o real.o string.o da.o da-test-0-2.o
+DA3 = integer.o real.o string.o da.o da-test-0-3.o
+DA4 = integer.o real.o string.o da.o da-test-0-4.o
+DA5 = integer.o real.o string.o da.o da-test-0-5.o
+DA6 = integer.o real.o string.o da.o da-test-0-6.o
+DA7 = integer.o real.o string.o da.o da-test-0-7.o
+DA8 = integer.o real.o string.o da.o da-test-0-8.o
+DA9 = integer.o real.o string.o da.o da-test-0-9.o
+CDA0 = integer.o real.o string.o cda.o cda-test-0-0.o
+CDA1 = integer.o real.o string.o cda.o cda-test-0-1.o
+CDA2 = integer.o real.o string.o cda.o cda-test-0-2.o
+CDA3 = integer.o real.o string.o cda.o cda-test-0-3.o
+CDA4 = integer.o real.o string.o cda.o cda-test-0-4.o
+CDA5 = integer.o real.o string.o cda.o cda-test-0-5.o
+CDA6 = integer.o real.o string.o cda.o cda-test-0-6.o
+CDA7 = integer.o real.o string.o cda.o cda-test-0-7.o
+CDA8 = integer.o real.o string.o cda.o cda-test-0-8.o
+CDA9 = integer.o real.o string.o cda.o cda-test-0-9.o
+CDA10 = integer.o real.o string.o cda.o cda-test-0-10.o
+STACK0 = integer.o real.o string.o da.o stack.o stack-test-0-0.o
+STACK1 = integer.o real.o string.o da.o stack.o stack-test-0-1.o
+STACK2 = integer.o real.o string.o da.o stack.o stack-test-0-2.o
+STACK3 = integer.o real.o string.o da.o stack.o stack-test-0-3.o
+STACK4 = integer.o real.o string.o da.o stack.o stack-test-0-4.o
+STACK5 = integer.o real.o string.o da.o stack.o stack-test-0-5.o
+STACK6 = integer.o real.o string.o da.o stack.o stack-test-0-6.o
+QUEUE0 = integer.o real.o string.o cda.o queue.o queue-test-0-0.o
+QUEUE1 = integer.o real.o string.o cda.o queue.o queue-test-0-1.o
+QUEUE2 = integer.o real.o string.o cda.o queue.o queue-test-0-2.o
+QUEUE3 = integer.o real.o string.o cda.o queue.o queue-test-0-3.o
+QUEUE4 = integer.o real.o string.o cda.o queue.o queue-test-0-4.o
+QUEUE5 = integer.o real.o string.o cda.o queue.o queue-test-0-5.o
+QUEUE6 = integer.o real.o string.o cda.o queue.o queue-test-0-6.o
 OPTS = -Wall -Wextra -std=c99 -g -c 
 LOPTS = -Wall -Wextra -std=c99 -g
 CC = gcc
@@ -168,8 +168,8 @@ real.o : real.c real.h
 integer.o : integer.c integer.h
 	$(CC) $(OPTS) integer.c
 
-#string.o : string.c string.h
-#	$(CC) $(OPTS) string.c
+string.o : string.c string.h
+	$(CC) $(OPTS) string.c
 
 da.o : da.c da.h
 	$(CC) $(OPTS) da.c

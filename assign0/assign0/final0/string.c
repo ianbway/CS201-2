@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <limits.h>
 #include "string.h"
 
 struct string
 {
-	char value;
+	char* value;
 };
 
 STRING *
-newSTRING(char x)
+newSTRING(char* x)
 {
 	STRING *p = malloc(sizeof(STRING));
 	if (p == 0) { fprintf(stderr, "out of memory\n"); exit(1); }
@@ -17,16 +18,16 @@ newSTRING(char x)
 	return p;
 }
 
-char
+char*
 getSTRING(STRING *v)
 {
 	return v->value;
 }
 
-char
-setSTRING(STRING *v, char x)
+char*
+setSTRING(STRING *v, char* x)
 {
-	double old = v->value;
+	char* old = v->value;
 	v->value = x;
 	return old;
 }
