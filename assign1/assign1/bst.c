@@ -6,13 +6,13 @@
 #include <string.h>
 #include "bst.h"
 
-typedef struct BSTNODE
+struct BSTNODE
 {
 	struct BSTNODE *left;
 	struct BSTNODE *right;
 	struct BSTNODE *parent;
 	void *value;
-} bstNode;
+};
 
 struct BST 
 {
@@ -51,6 +51,22 @@ insertBST(BST *tree, void *key, void *value)
 
 	assert(tree != 0);
 
+	BSTNODE *node = malloc(sizeof(BSTNODE));
+	BSTNODE *current = 0;
+	BSTNODE *parent = 0;
+
+	assert(node != 0);
+
+	node->value = value;
+	node->left = 0;
+	node->right = 0;
+
+	if (tree->root == 0)
+	{
+		tree->root = node;
+	}
+
+
 }
 
 void *
@@ -71,6 +87,7 @@ sizeBST(BST *tree)
 	The size method returns the number of items stored in the tree. 
 	*/
 
+	return tree->size;
 }
 
 void 

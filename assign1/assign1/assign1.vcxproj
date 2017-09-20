@@ -86,17 +86,22 @@
     <ClInclude Include="da.h" />
     <ClInclude Include="integer.h" />
     <ClInclude Include="queue.h" />
+    <ClInclude Include="real.h" />
     <ClInclude Include="scanner.h" />
     <ClInclude Include="stack.h" />
+    <ClInclude Include="string.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bst.c" />
     <ClCompile Include="cda.c" />
     <ClCompile Include="da.c" />
     <ClCompile Include="integer.c" />
+    <ClCompile Include="matilda.c" />
     <ClCompile Include="queue.c" />
+    <ClCompile Include="real.c" />
     <ClCompile Include="scanner.c" />
     <ClCompile Include="stack.c" />
+    <ClCompile Include="string.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

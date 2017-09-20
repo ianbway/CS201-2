@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 
+typedef struct BSTNODE BSTNODE;
 typedef struct BST BST;
 
 extern BST *newBST(void(*display)(FILE *, void *, void *), int(*comparator)(void *, void *));
