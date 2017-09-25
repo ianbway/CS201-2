@@ -9,6 +9,7 @@
 #include "integer.h"
 #include "real.h"
 #include "string.h"
+#include "comparator.h"
 
 int main(int argc, char **argv)
 {
@@ -34,20 +35,14 @@ int main(int argc, char **argv)
 			case 'v':
 				printAuthorOption = 1;
 				break;
-			case 'd':
-				cmp = compareInteger;
-				prt = displayInteger;
+			case 'i':
 				break;
-			case 'r':
-				cmp = compareReal;
-				prt = displayReal;
+			case 'p':
 				break;
-			case 's':
-				cmp = compareString;
-				prt = displayString;
+			case 'b':
 				break;
 			default:
-				Fatal("unknown flag '%s', valid flags are -d, -r, -s and -v\n", arg);
+				Fatal("unknown flag '%s', valid flags are -i, -p, -b and -v\n", arg);
 			}
 		}
 		else

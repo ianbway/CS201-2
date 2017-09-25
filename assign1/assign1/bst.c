@@ -11,6 +11,7 @@ struct BSTNODE
 	struct BSTNODE *left;
 	struct BSTNODE *right;
 	struct BSTNODE *parent;
+	void *key;
 	void *value;
 };
 
@@ -18,7 +19,7 @@ struct BST
 {
 	BSTNODE *root;
 	int size;
-	void(*display) (FILE *, void *);
+	void(*display) (FILE *, void *, void *);
 	int(*compare) (void *, void *);
 };
 
@@ -58,6 +59,7 @@ insertBST(BST *tree, void *key, void *value)
 	assert(node != 0);
 
 	node->value = value;
+	node->key = key;
 	node->left = 0;
 	node->right = 0;
 
@@ -66,7 +68,40 @@ insertBST(BST *tree, void *key, void *value)
 		tree->root = node;
 	}
 
+	else
+	{
+		current = tree->root;
+		parent = 0;
+	}
 
+	while(1)
+	{
+		parent = current;
+		//go to the left of the tree
+		if (tree->compare(node->key, parent->key))
+		{
+			current = current->left;
+
+			if (current == 0)
+			{
+				parent->left = node;
+				break;
+			}	
+		}	
+		//go to the right of the tree
+		else
+		{
+			current = current->right;
+
+			if (current == 0)
+			{
+				parent->right = node;
+				break;
+			}
+		}
+	}
+
+	tree->size++;
 }
 
 void *
@@ -76,8 +111,30 @@ findBST(BST *tree, void *key)
 	The find method returns the value associated with the given key. 
 	The method returns a null pointer if the key is not in the tree.
 	*/
+	BSTNODE *current = tree->root;
 
-
+	while(current->key != key)
+	{
+		if (current != 0)
+		{
+			//go to the left tree
+			if (tree->compare(current->key, key))
+			{
+				current = current->left;
+			}
+			//go to the right tree
+			else
+			{
+				current = current->right;
+			}
+			//not found
+			if (current == 0)
+			{
+				return 0;
+			}
+		}
+	}
+	return current->value;
 }
 
 int 
@@ -90,6 +147,21 @@ sizeBST(BST *tree)
 	return tree->size;
 }
 
+static void
+inorder(FILE *fp, BST *tree, BSTNODE *root)
+{
+	if (root == 0)
+	{
+		return;
+	}
+
+	inorder(fp, tree, root->left);
+	fprintf(fp, "[ ");
+	tree->display(fp, root->key, root->value);
+	fprintf(fp, " ]");
+	inorder(fp, tree, root->right);
+}
+
 void 
 displayBST(FILE *fp, BST *tree)
 {
@@ -99,5 +171,7 @@ displayBST(FILE *fp, BST *tree)
 	An empty tree is displayed as []. To display a node in the tree, the cached display function is passed the key and the value stored at the node. 
 	No characters are to be printed after the last closing bracket.
 	*/
-
+	fprintf(fp,"[");
+	inorder(fp, tree, tree->root);
+	fprintf(fp,"]");
 }
