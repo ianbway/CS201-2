@@ -6,14 +6,14 @@
 #include <string.h>
 #include "bst.h"
 
-struct BSTNODE
+typedef struct BSTNODE
 {
 	struct BSTNODE *left;
 	struct BSTNODE *right;
 	struct BSTNODE *parent;
 	void *key;
 	void *value;
-};
+} BSTNODE;
 
 struct BST 
 {

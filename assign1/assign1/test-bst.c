@@ -6,7 +6,6 @@
 #include "string.h"
 #include "real.h"
 #include "integer.h"
-#include "comparator.h"
 
 int main()
 {
