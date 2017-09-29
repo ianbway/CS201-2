@@ -9,5 +9,6 @@ extern REAL *newREAL(double);
 extern double getREAL(REAL *);
 extern double setREAL(REAL *,double);
 extern void displayREAL(FILE *,void *);
+extern int compareREAL(void *, void *);
 
 #endif

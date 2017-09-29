@@ -37,3 +37,13 @@ displaySTRING(FILE *fp, void *v)
 {
 	fprintf(fp, "%s", getSTRING(v));
 }
+
+int
+compareSTRING(void *v, void *w)
+{
+	STRING *s1 = (STRING*)v;
+	STRING *s2 = (STRING*)w;
+	char* c1 = (char *)s1->value;
+	char* c2 = (char *)s2->value;
+	return strcmp(c1, c2);
+}

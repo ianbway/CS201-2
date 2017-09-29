@@ -17,7 +17,7 @@ struct BSTNODE
 
 struct BST 
 {
-	BSTNODE *root;
+	struct BSTNODE *root;
 	int size;
 	void(*display) (FILE *, void *, void *);
 	int(*compare) (void *, void *);
