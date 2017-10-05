@@ -3,7 +3,7 @@
 #include <limits.h>
 #include "real.h"
 
-struct real
+struct REAL
     {
     double value;
     };

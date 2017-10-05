@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-typedef struct string STRING;
+typedef struct STRING STRING;
 
 extern STRING *newSTRING(char*);
 extern char* getSTRING(STRING *);

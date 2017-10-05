@@ -33,7 +33,7 @@ setINTEGER(INTEGER * v, int x)
 }
 
 void
-displayINTEGER(FILE * fp, void *v, void *w)
+displayINTEGER(FILE * fp, void *v)
 {
 	fprintf(fp, "%d", getINTEGER((INTEGER *)v));
 }

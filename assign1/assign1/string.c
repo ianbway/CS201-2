@@ -4,7 +4,7 @@
 #include <limits.h>
 #include "string.h"
 
-struct string
+struct STRING
 {
 	char* value;
 };

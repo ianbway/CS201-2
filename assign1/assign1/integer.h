@@ -13,7 +13,7 @@ typedef struct INTEGER
 extern INTEGER *newINTEGER(int);
 extern int getINTEGER(INTEGER *);
 extern int setINTEGER(INTEGER *, int);
-extern void displayINTEGER(FILE *, void *, void *);
+extern void displayINTEGER(FILE *, void *);
 extern int compareINTEGER(void *, void *);
 extern void freeINTEGER(INTEGER *);
 

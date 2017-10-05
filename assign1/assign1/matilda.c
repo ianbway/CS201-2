@@ -76,7 +76,16 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-void printAuthor()
+void 
+printAuthor()
 {
 	printf("Ian W. Braudaway\n");
+}
+
+void
+displayMATILDA(FILE *fp, void* key, void* value)
+{
+	displaySTRING(fp, key);
+	fprintf(fp, " = ");
+	displayREAL(fp, value);
 }

@@ -42,6 +42,30 @@ newBST(void(*d) (FILE *, void *, void *), int(*comparator) (void *, void *))
 	return tree;
 }
 
+void
+insertHelper(BST *tree, BSTNODE *spot, void *key, void *value)
+{
+
+	int result = tree->compare(key, spot->key);
+
+	if (result < 0 && spot->left != NULL)
+	{
+		insertHelper(tree, spot->left, key, value);
+	}
+	else if(result < 0)
+	{
+		spot->left = 
+	}
+	else if (spot->right != NULL)
+	{
+		insertHelper(tree, spot->right, key, value);
+	}
+	else
+	{
+		spot->right = 
+	}
+}
+
 void 
 insertBST(BST *tree, void *key, void *value)
 {
@@ -53,8 +77,6 @@ insertBST(BST *tree, void *key, void *value)
 	assert(tree != 0);
 
 	BSTNODE *node = malloc(sizeof(BSTNODE));
-	BSTNODE *current = 0;
-	BSTNODE *parent = 0;
 
 	assert(node != 0);
 
@@ -71,37 +93,7 @@ insertBST(BST *tree, void *key, void *value)
 
 	else
 	{
-		current = tree->root;
-		parent = 0;
-	}
-
-	while(1)
-	{
-		parent = current;
-		printf("Failing at beginning of loop\n");
-		//go to the left of the tree
-		if (tree->compare(node->key, parent->key))
-		{
-			printf("Failing at left set\n");
-			current = current->left;
-			printf("Failing after compare\n");
-			if (current == 0)
-			{
-				parent->left = node;
-				break;
-			}	
-		}	
-		//go to the right of the tree
-		else
-		{
-			current = current->right;
-
-			if (current == 0)
-			{
-				parent->right = node;
-				break;
-			}
-		}
+		insertHelper(tree, tree->root, key, value);
 	}
 
 	tree->size++;

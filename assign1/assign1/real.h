@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-typedef struct real REAL;
+typedef struct REAL REAL;
 
 extern REAL *newREAL(double);
 extern double getREAL(REAL *);
