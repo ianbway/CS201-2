@@ -33,7 +33,7 @@ setINTEGER(INTEGER * v, int x)
 }
 
 void
-displayINTEGER(FILE * fp, void *v)
+displayINTEGER(FILE * fp, void *v, void *w)
 {
 	fprintf(fp, "%d", getINTEGER((INTEGER *)v));
 }
@@ -41,7 +41,7 @@ displayINTEGER(FILE * fp, void *v)
 int
 compareINTEGER(void *v, void *w)
 {
-	return ((INTEGER *)v)->value - ((INTEGER *)w)->value;
+	return (((INTEGER *)v)->value - ((INTEGER *)w)->value);
 }
 
 void

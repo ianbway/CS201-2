@@ -66,6 +66,7 @@ insertBST(BST *tree, void *key, void *value)
 	if (tree->root == 0)
 	{
 		tree->root = node;
+		printf("root set to node\n");
 	}
 
 	else
@@ -77,11 +78,13 @@ insertBST(BST *tree, void *key, void *value)
 	while(1)
 	{
 		parent = current;
+		printf("Failing at beginning of loop\n");
 		//go to the left of the tree
 		if (tree->compare(node->key, parent->key))
 		{
+			printf("Failing at left set\n");
 			current = current->left;
-
+			printf("Failing after compare\n");
 			if (current == 0)
 			{
 				parent->left = node;
@@ -158,7 +161,7 @@ inorder(FILE *fp, BST *tree, BSTNODE *root)
 	inorder(fp, tree, root->left);
 	fprintf(fp, "[ ");
 	tree->display(fp, root->key, root->value);
-	fprintf(fp, " ]");
+	fprintf(fp, "]");
 	inorder(fp, tree, root->right);
 }
 
