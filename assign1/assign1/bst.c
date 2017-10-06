@@ -154,12 +154,25 @@ inorder(FILE *fp, BST *tree, BSTNODE *root)
 	{
 		return;
 	}
+	
+	fprintf(fp, "[");
 
-	inorder(fp, tree, root->left);
-	fprintf(fp, " [");
+	if (root->left != 0)
+	{
+		inorder(fp, tree, root->left);
+		fprintf(fp, " ");
+	}
+
 	tree->display(fp, root->key, root->value);
+
+	if (root->right != 0)
+	{
+		fprintf(fp, " ");
+		inorder(fp, tree, root->right);
+	}
+	
 	fprintf(fp, "]");
-	inorder(fp, tree, root->right);
+	
 }
 
 void 
@@ -171,7 +184,11 @@ displayBST(FILE *fp, BST *tree)
 	An empty tree is displayed as []. To display a node in the tree, the cached display function is passed the key and the value stored at the node. 
 	No characters are to be printed after the last closing bracket.
 	*/
-	fprintf(fp,"[");
+	if (tree->root == 0)
+	{
+		fprintf(fp, "[");
+		fprintf(fp, "]");
+	}
+
 	inorder(fp, tree, tree->root);
-	fprintf(fp,"]");
 }

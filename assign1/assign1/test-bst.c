@@ -11,7 +11,7 @@ void
 displayMATILDA(FILE *fp, void *key, void *value)
 {
 	displaySTRING(fp, key);
-	fprintf(fp, " = ");
+	fprintf(fp, "=");
 	displayREAL(fp, value);
 }
 
@@ -23,10 +23,10 @@ int main()
 	displayBST(stdout, tree);
 	printf("\n");	
 	
-	insertBST(tree, newSTRING("1"), newREAL(1.000));
-	insertBST(tree, newSTRING("0"), newREAL(0.000));
-	insertBST(tree, newSTRING("2"), newREAL(2.000));
-	insertBST(tree, newSTRING("3"), newREAL(3.000));
+	insertBST(tree, newSTRING("b"), newREAL(1.000));
+	insertBST(tree, newSTRING("a"), newREAL(0.000));
+	insertBST(tree, newSTRING("c"), newREAL(2.000));
+	insertBST(tree, newSTRING("d"), newREAL(3.000));
 
 	findBST(tree, newSTRING("0"));
 	

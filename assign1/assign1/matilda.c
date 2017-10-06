@@ -86,6 +86,6 @@ void
 displayMATILDA(FILE *fp, void* key, void* value)
 {
 	displaySTRING(fp, key);
-	fprintf(fp, " = ");
+	fprintf(fp, "=");
 	displayREAL(fp, value);
 }
