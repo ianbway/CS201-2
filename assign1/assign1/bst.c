@@ -23,6 +23,21 @@ struct BST
 	int(*compare) (void *, void *);
 };
 
+static BSTNODE *
+newBSTNODE(void *key, void *value)
+{
+	BSTNODE *node = malloc(sizeof(BSTNODE));
+
+	assert(node != 0);
+
+	node->value = value;
+	node->key = key;
+	node->left = 0;
+	node->right = 0;
+
+	return node;
+}
+
 BST *
 newBST(void(*d) (FILE *, void *, void *), int(*comparator) (void *, void *))
 {
@@ -42,7 +57,7 @@ newBST(void(*d) (FILE *, void *, void *), int(*comparator) (void *, void *))
 	return tree;
 }
 
-void
+static void
 insertHelper(BST *tree, BSTNODE *spot, void *key, void *value)
 {
 
@@ -54,7 +69,7 @@ insertHelper(BST *tree, BSTNODE *spot, void *key, void *value)
 	}
 	else if(result < 0)
 	{
-		spot->left = 
+		spot->left = newBSTNODE(key, value);
 	}
 	else if (spot->right != NULL)
 	{
@@ -62,7 +77,7 @@ insertHelper(BST *tree, BSTNODE *spot, void *key, void *value)
 	}
 	else
 	{
-		spot->right = 
+		spot->right = newBSTNODE(key, value);
 	}
 }
 
@@ -76,19 +91,9 @@ insertBST(BST *tree, void *key, void *value)
 
 	assert(tree != 0);
 
-	BSTNODE *node = malloc(sizeof(BSTNODE));
-
-	assert(node != 0);
-
-	node->value = value;
-	node->key = key;
-	node->left = 0;
-	node->right = 0;
-
 	if (tree->root == 0)
 	{
-		tree->root = node;
-		printf("root set to node\n");
+		tree->root = newBSTNODE(key, value);
 	}
 
 	else
@@ -151,7 +156,7 @@ inorder(FILE *fp, BST *tree, BSTNODE *root)
 	}
 
 	inorder(fp, tree, root->left);
-	fprintf(fp, "[ ");
+	fprintf(fp, " [");
 	tree->display(fp, root->key, root->value);
 	fprintf(fp, "]");
 	inorder(fp, tree, root->right);

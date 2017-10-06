@@ -23,9 +23,10 @@ int main()
 	displayBST(stdout, tree);
 	printf("\n");	
 	
+	insertBST(tree, newSTRING("1"), newREAL(1.000));
 	insertBST(tree, newSTRING("0"), newREAL(0.000));
-	//insertBST(tree, 1, 1);
-	//insertBST(tree, 2, 2);
+	insertBST(tree, newSTRING("2"), newREAL(2.000));
+	insertBST(tree, newSTRING("3"), newREAL(3.000));
 
 	findBST(tree, newSTRING("0"));
 	
