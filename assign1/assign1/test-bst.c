@@ -23,13 +23,38 @@ int main()
 	displayBST(stdout, tree);
 	printf("\n");	
 	
-	insertBST(tree, newSTRING("b"), newREAL(1.000));
-	insertBST(tree, newSTRING("a"), newREAL(0.000));
-	insertBST(tree, newSTRING("c"), newREAL(2.000));
-	insertBST(tree, newSTRING("d"), newREAL(3.000));
+	STRING *a = newSTRING("a");
+	STRING *b = newSTRING("b");
+	STRING *c = newSTRING("c");
+	STRING *d = newSTRING("d");
+	STRING *e = newSTRING("e");
 
-	findBST(tree, newSTRING("0"));
+	printf("Inserting key/value pairs...\n");
+	insertBST(tree, b, newREAL(1.000));
+	insertBST(tree, a, newREAL(0.000));
+	insertBST(tree, d, newREAL(3.000));
+	insertBST(tree, c, newREAL(2.000));
+	insertBST(tree, e, newREAL(4.000));
+
+	printf("Finding values...\n");
+	void* foundValA = findBST(tree, a);
+	void* foundValB = findBST(tree, b);
+	void* foundValC = findBST(tree, c);
+	void* foundValD = findBST(tree, d);
+	void* foundValE = findBST(tree, e);
 	
+	printf("Found all values, time to display them...\n");
+	displayMATILDA(stdout, a, foundValA);
+	printf("\n");
+	displayMATILDA(stdout, b, foundValB);
+	printf("\n");
+	displayMATILDA(stdout, c, foundValC);
+	printf("\n");
+	displayMATILDA(stdout, d, foundValD);
+	printf("\n");
+	displayMATILDA(stdout, e, foundValE);
+	printf("\n");
+
 	int size = sizeBST(tree);
 	printf("The size is: %d. \n", size);
 

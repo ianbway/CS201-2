@@ -104,6 +104,24 @@ insertBST(BST *tree, void *key, void *value)
 	tree->size++;
 }
 
+static BSTNODE *
+findHelper(BSTNODE *node, void *key)
+{
+	if (node == 0)
+	{
+		return 0;
+	}
+	else if (node->key == key)
+	{
+		return node->value;
+	}
+	else
+	{
+		BSTNODE *left = findHelper(node->left, key);
+		return left ? left : findHelper(node->right, key);
+	}
+}
+
 void *
 findBST(BST *tree, void *key)
 {
@@ -111,30 +129,10 @@ findBST(BST *tree, void *key)
 	The find method returns the value associated with the given key. 
 	The method returns a null pointer if the key is not in the tree.
 	*/
-	BSTNODE *current = tree->root;
 
-	while(current->key != key)
-	{
-		if (current != 0)
-		{
-			//go to the left tree
-			if (tree->compare(current->key, key))
-			{
-				current = current->left;
-			}
-			//go to the right tree
-			else
-			{
-				current = current->right;
-			}
-			//not found
-			if (current == 0)
-			{
-				return 0;
-			}
-		}
-	}
-	return current->value;
+	BSTNODE *node = tree->root;
+
+	return findHelper(node, key);
 }
 
 int 
