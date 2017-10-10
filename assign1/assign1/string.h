@@ -1,3 +1,6 @@
+// Ian Braudaway
+// String header file
+
 #ifndef __STRING_INCLUDED__
 #define __STRING_INCLUDED__
 

@@ -1,5 +1,6 @@
 // Ian Braudaway, based off of Dr. Lusth's integer class and header
 // Implementation file for integer class
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>

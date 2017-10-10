@@ -1,3 +1,6 @@
+// Ian Braudaway
+// Real class
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>

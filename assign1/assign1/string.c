@@ -1,3 +1,6 @@
+// Ian Braudaway
+// String class
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

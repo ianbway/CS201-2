@@ -1,3 +1,6 @@
+// Ian Braudaway
+// Real header file
+
 #ifndef __REAL_INCLUDED__
 #define __REAL_INCLUDED__
 
