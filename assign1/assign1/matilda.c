@@ -33,6 +33,8 @@ int main(int argc, char **argv)
 	char type;
 	FILE *input;
 
+	BST *bst = newBST(displayMATILDA, compareSTRING);
+
 	while (argIndex < argc)
 	{
 		arg = argv[argIndex];
@@ -74,6 +76,18 @@ int main(int argc, char **argv)
 		return 0;
 	}
 
+	if (fileName)
+	{
+		input = fopen(fileName, "r");
+		if (input == NULL)
+		{
+			Fatal("could not open %s file\n", fileName);
+		}
+	}
+
+	//process input
+	processFile(input, bst);
+
 	if (originalInputOption)
 	{
 		//print the original input to evaluating the expression
@@ -99,24 +113,9 @@ int main(int argc, char **argv)
 	{
 		//print the BST holding variable values
 		//before evaluating the expression
-		bstPrint();
+		bstPrint(stdout, bst);
 		return 0;
 	}
-
-	if (fileName)
-	{
-		input = fopen(fileName, "r");
-		if (input == NULL)
-		{
-			Fatal("could not open %s file\n", fileName);
-		}
-	}
-	else
-	{
-		input = stdin;
-	}
-
-	processFile(input, type);
 
 	return 0;
 }
@@ -150,19 +149,19 @@ bstPrint(FILE *output, BST *bst)
 }
 
 void
-processFile(FILE *input, char type)
+processFile(FILE *input, BST *bst)
 {
-
-	BST *bst = newBST(displayMATILDA, compareSTRING);
-
 	FILE *file = fopen( "r", input);
+	char line[256];
 
-	while (readToken(file) != 0)
+	while (fgets(line, sizeof(line), file))
 	{
-		char *token = readToken(file);
+		char *token = readToken(line);
 		if (token == "var")
 		{
-			insertBST(bst, readToken(file), readToken(file));
+			char *keyToken = readToken(line);
+			char *valToken = readToken(line);
+			insertBST(bst, keyToken, valToken);
 		}
 	}
 
