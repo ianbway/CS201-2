@@ -57,7 +57,7 @@ main(int argc, char **argv)
 	}
 
 	QUEUE *inputQueue = processFile(argv[argIndex]);
-	displayQUEUE(stdout, inputQueue);
+	
 	//if (bstFlag == 1)
 	//{
 	//	printBST(varDeclarations);
@@ -71,13 +71,11 @@ main(int argc, char **argv)
 	printf("postfixFlag is %s\n", postfixFlag == 0 ? "false" : "true");
 	printf("bstFlag is %s\n", bstFlag == 0 ? "false" : "true");
 
-	if (argIndex == argc)
-		printf("No arguments\n");
-	else
+	if (argc - argIndex > 1)
 	{
 		int i;
-		printf("Remaining arguments:\n");
-		for (i = argIndex; i < argc; ++i)
+		printf("Too many arguments:\n");
+		for (i = argIndex + 1; i < argc; ++i)
 			printf("    %s\n", argv[i]);
 	}
 
@@ -181,7 +179,7 @@ processFile(char *file)
 		Fatal("Could not open %s file.\n", input);
 	}
 
-	QUEUE *inputQueue = newQUEUE(displaySTRING);
+	QUEUE *inputQueue = newQUEUE(NULL);
 	char *token = readToken(input);
 
 	while ((!feof(input)))
