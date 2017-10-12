@@ -5,14 +5,21 @@ CDA_OBJS = integer.o real.o string.o cda.o
 STACK_OBJS = integer.o real.o string.o da.o stack.o
 QUEUE_OBJS = integer.o real.o string.o cda.o queue.o
 BST_OBJS = integer.o real.o string.o bst.o test-bst.o
+MATILDA_OBJS = integer.o real.o string.o scanner.o da.o cda.o stack.o queue.o bst.o 
 OPTS = -Wall -Wextra -std=c99 -g -c 
 LOPTS = -Wall -Wextra -std=c99 -g
 CC = gcc
 
 all : test-bst
 
+matilda : $(MATILDA_OBJS)
+	$(CC) $(LOPTS) $(MATILDA_OBJS) -o matilda
+
 test-bst : $(BST_OBJS)
 	$(CC) $(LOPTS) $(BST_OBJS) -o test-bst
+
+scanner.o : scanner.c scanner.h
+	$(CC) $(OPTS) scanner.c
 
 real.o : real.c real.h
 	$(CC) $(OPTS) real.c 
@@ -39,7 +46,7 @@ bst.o : bst.c bst.h
 	$(CC) $(OPTS) bst.c
 
 clean :
-	rm -f $(DA_OBJS) $(STACK_OBJS) $(CDA_OBJS) $(QUEUE_OBJS) $(BST_OBJS) ./test-bst
+	rm -f $(DA_OBJS) $(STACK_OBJS) $(CDA_OBJS) $(QUEUE_OBJS) $(BST_OBJS) $(MATILDA_OBJS) ./test-bst ./matilda
 
 test :
 	./test-bst 

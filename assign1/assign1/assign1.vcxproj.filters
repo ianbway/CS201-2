@@ -80,5 +80,8 @@
     <ClCompile Include="test-bst.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test-file-input-queue.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

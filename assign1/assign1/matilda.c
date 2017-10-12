@@ -19,29 +19,54 @@
 //int Number = 0;     /* option -n XXXX */
 //char* Name = 0;     /* option -N YYYY */
 
-int authorFlag = 0;    /* option -v      */
-int inputFlag = 0;    /* option -i      */
-int postfixFlag = 0;    /* option -p      */
-int bstFlag = 0;    /* option -b      */
+int inputFlag = 0;    /* option -i FILENAME */
+int postfixFlag = 0;    /* option -p FILENAME */
+int bstFlag = 0;    /* option -b FILENAME */
 
 static int processOptions(int, char **);
 void Fatal(char *, ...);
-void printAuthor();
+QUEUE *processFile(char *);
+void displayMATILDA(FILE*, void*, void*);
+void printBST(BST *tree);
+
 
 int
 main(int argc, char **argv)
 {
 	int argIndex;
+	BST *varDeclarations;
 
-	if ((argc == 1) && (authorFlag == 0)) Fatal("%d arguments!\n", argc - 1);
+	// Executable must have arguments
+	if (argc == 1) Fatal("%d arguments!\n", argc - 1);
 
+	// Before doing anything, check to see if name argument exists and print that out, exiting program.
+	if (strcmp(argv[1], "-v") == 0)
+	{
+		printf("Ian W. Braudaway\n");
+		return 0;
+	}
+
+	// Process the options given, could have multiple. i, p, or b.
 	argIndex = processOptions(argc, argv);
+	
+	// If a valid option is given but there is no filename afterwards to read input from we cannot proceed.
+	if (argv[argIndex] == 0) 
+	{
+		printf("Must have filename after option.\n");
+		return 0;
+	}
+
+	QUEUE *inputQueue = processFile(argv[argIndex]);
+	displayQUEUE(stdout, inputQueue);
+	//if (bstFlag == 1)
+	//{
+	//	printBST(varDeclarations);
+	//}
 
 	//printf("Special is %s\n", Special == 0 ? "false" : "true");
 	//printf("Number is %d\n", Number);
 	//printf("Name is %s\n", Name == 0 ? "missing" : Name);
 
-	printf("authorFlag is %s\n", authorFlag == 0 ? "false" : "true");
 	printf("inputFlag is %s\n", inputFlag == 0 ? "false" : "true");
 	printf("postfixFlag is %s\n", postfixFlag == 0 ? "false" : "true");
 	printf("bstFlag is %s\n", bstFlag == 0 ? "false" : "true");
@@ -123,18 +148,16 @@ processOptions(int argc, char **argv)
 			*         break;
 			*/
 
-		//case 'n':
-		//	Number = atoi(arg);
-		//	argUsed = 1;
-		//	break;
-		case 'v':
-			authorFlag = 1;
-			printAuthor();
+		case 'i':
+			inputFlag = 1;
 			break;
-		//case 'N':
-		//	Name = strdup(arg);
-		//	argUsed = 1;
-		//	break;
+		case 'p':
+			postfixFlag = 1;
+			break;
+		case 'b':
+			bstFlag = 1;
+			break;
+
 		default:
 			Fatal("option %s not understood\n", argv[argIndex]);
 		}
@@ -148,9 +171,41 @@ processOptions(int argc, char **argv)
 	return argIndex;
 }
 
-void
-printAuthor()
+QUEUE *
+processFile(char *file)
 {
-	//give author's name and exit
-	printf("Ian W. Braudaway\n");
+	FILE *input = fopen(file, "r");
+	// Does file even exist.
+	if (input == NULL)
+	{
+		Fatal("Could not open %s file.\n", input);
+	}
+
+	QUEUE *inputQueue = newQUEUE(displaySTRING);
+	char *token = readToken(input);
+
+	while ((!feof(input)))
+	{
+		printf("Token is: %s.\n", token);
+		enqueue(inputQueue, token);
+		token = readToken(input);
+	}
+
+	fclose(input);
+
+	return inputQueue;
+}
+
+void
+displayMATILDA(FILE *fp, void *key, void *value)
+{
+	displaySTRING(fp, key);
+	fprintf(fp, "=");
+	displayREAL(fp, value);
+}
+
+void
+printBST(BST *tree)
+{
+	displayBST(stdout, tree);
 }

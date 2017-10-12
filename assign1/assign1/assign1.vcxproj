@@ -103,6 +103,7 @@
     <ClCompile Include="stack.c" />
     <ClCompile Include="string.c" />
     <ClCompile Include="test-bst.c" />
+    <ClCompile Include="test-file-input-queue.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
