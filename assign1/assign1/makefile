@@ -10,10 +10,10 @@ OPTS = -Wall -Wextra -std=c99 -g -c
 LOPTS = -Wall -Wextra -std=c99 -g
 CC = gcc
 
-all : test-bst
+all : matilda
 
-matilda : $(MATILDA_OBJS)
-	$(CC) $(LOPTS) $(MATILDA_OBJS) -o matilda
+matilda : matilda.o $(MATILDA_OBJS)
+	$(CC) $(LOPTS) matilda.o $(MATILDA_OBJS) -o matilda
 
 test-bst : $(BST_OBJS)
 	$(CC) $(LOPTS) $(BST_OBJS) -o test-bst
@@ -49,4 +49,4 @@ clean :
 	rm -f $(DA_OBJS) $(STACK_OBJS) $(CDA_OBJS) $(QUEUE_OBJS) $(BST_OBJS) $(MATILDA_OBJS) ./test-bst ./matilda
 
 test :
-	./test-bst 
+	./matilda
