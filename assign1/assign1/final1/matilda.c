@@ -29,7 +29,7 @@ static int processOptions(int, char **);
 void Fatal(char *, ...);
 QUEUE *processFileIntoQueue(char *);
 BST *makeVarBST(char *);
-QUEUE *createPostfixQueue(QUEUE *);
+QUEUE *createPostfixQueue(QUEUE *, QUEUE *);
 char *evaluateExpression(QUEUE *, BST *);
 void displayMATILDA(FILE*, void*, void*);
 static void printInput(char*);
@@ -66,8 +66,8 @@ main(int argc, char **argv)
 
 	QUEUE *inputQueue = processFileIntoQueue(argv[argIndex]);
 	BST *varBST = makeVarBST(argv[argIndex]);
-	QUEUE *postfixQueue = createPostfixQueue(inputQueue);
-	QUEUE *dummyPrintQ = postfixQueue;
+	QUEUE *dummyPrintQ = newQUEUE(displaySTRING);
+	QUEUE *postfixQueue = createPostfixQueue(inputQueue, dummyPrintQ);
 	char* answer = evaluateExpression(postfixQueue, varBST);
 
 	if (inputFlag == 1)
@@ -264,7 +264,7 @@ makeVarBST(char *inputFile)
 	return variableBST;
 }
 
-QUEUE *createPostfixQueue(QUEUE *infixQueue)
+QUEUE *createPostfixQueue(QUEUE *infixQueue, QUEUE *dummyQueue)
 {
 	STACK* operatorStack = newSTACK(displaySTRING);
 	QUEUE* postfixQueue = newQUEUE(displaySTRING);
@@ -280,6 +280,7 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue)
 		if (isalnum(val[0]))
 		{
 			enqueue(postfixQueue, newSTRING(val));
+			enqueue(dummyQueue, newSTRING(val));
 		}
 		
 		// Push open parenthesis on to operator stack.
@@ -299,6 +300,7 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue)
 				while (strcmp(op, "(") != 0)
 				{
 					enqueue(postfixQueue, peekSTACK(operatorStack));
+					enqueue(dummyQueue, peekSTACK(operatorStack));
 					pop(operatorStack);
 					op = getSTRING(peekSTACK(operatorStack));
 				}
@@ -319,6 +321,7 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue)
 		else if ((precedence(val) <= precedence(getSTRING(peekSTACK(operatorStack)))) && (precedence(val) != -1))
 		{
 			enqueue(postfixQueue, peekSTACK(operatorStack));
+			enqueue(dummyQueue, peekSTACK(operatorStack));
 			pop(operatorStack);
 			push(operatorStack, newSTRING(val));
 		}
@@ -336,6 +339,7 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue)
 			while (sizeSTACK(operatorStack) > 0)
 			{
 				enqueue(postfixQueue, peekSTACK(operatorStack));
+				enqueue(dummyQueue, peekSTACK(operatorStack));
 				pop(operatorStack);
 			}
 		}
@@ -373,7 +377,7 @@ evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 		{
 			char *val = getSTRING(peekQUEUE(postfixQueue));
 			// find var value in bst, if not in tree print error
-			if (findBST(varTree, val) == NULL) 
+			if (findBST(varTree, val) == NULL)
 			{
 				printf("Cannot find variable in tree.\n");
 				exit(0);
@@ -383,18 +387,20 @@ evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 			dequeue(postfixQueue);
 		}
 		// Else must be operator
-		else 
+		else
 		{
 			char *val = getSTRING(peekQUEUE(postfixQueue));
 			double firstVal = getREAL(peekSTACK(evaluateStack));
 			pop(evaluateStack);
 			double secondVal = getREAL(peekSTACK(evaluateStack));
 			pop(evaluateStack);
-			STRING *solvedVal = evaluate(firstVal,secondVal,val);
+			STRING *solvedVal = evaluate(firstVal, secondVal, val);
 			push(evaluateStack, solvedVal);
 		}
-		
+
 	}
+	//displaySTACK(stdout, evaluateStack);
+	//printf("\n");
 	// After loop is finished this should be the final answer
 	return getSTRING(peekSTACK(evaluateStack));
 }
@@ -438,10 +444,18 @@ printLastPostfix(QUEUE *dummyPrintQ)
 	int size = sizeQUEUE(dummyPrintQ);
 	for (i = 0; i < size; i++)
 	{
-		printf("%s ", getSTRING(peekQUEUE(dummyPrintQ)));
-		dequeue(dummyPrintQ);
+		if (i < size - 1)
+		{
+			printf("%s ", getSTRING(peekQUEUE(dummyPrintQ)));
+			dequeue(dummyPrintQ);
+		}
+		// No space at the end, need newline
+		else
+		{
+			printf("%s\n", getSTRING(peekQUEUE(dummyPrintQ)));
+			dequeue(dummyPrintQ);
+		}
 	}
-	printf("\n");
 }
 
 static void
@@ -485,7 +499,7 @@ precedence(char* op)
 
 STRING *evaluate(double firstVal, double secondVal, char *op) {
 	double resultingVal;
-	char *str = malloc(sizeof(char *));
+	char *buffString = malloc(sizeof(char *));
 
 	if (strcmp(op, "+") == 0)
 	{
@@ -511,9 +525,13 @@ STRING *evaluate(double firstVal, double secondVal, char *op) {
 	{
 		resultingVal = pow(secondVal, firstVal);
 	}
+	else
+	{
+		printf("Operator not defined in spec.\n");
+	}
 
-	sprintf(str, "%lf", resultingVal);
-	STRING *resultString = newSTRING(str);
+	sprintf(buffString, "%lf", resultingVal);
+	STRING *resultString = newSTRING(buffString);
 
 	return resultString;
 }
