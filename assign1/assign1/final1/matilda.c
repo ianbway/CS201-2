@@ -395,8 +395,6 @@ evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 		}
 		
 	}
-	//displaySTACK(stdout, evaluateStack);
-	//printf("\n");
 	// After loop is finished this should be the final answer
 	return getSTRING(peekSTACK(evaluateStack));
 }
