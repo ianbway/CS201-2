@@ -30,6 +30,7 @@ void Fatal(char *, ...);
 QUEUE *processFileIntoQueue(char *);
 BST *makeVarBST(char *);
 QUEUE *createPostfixQueue(QUEUE *);
+static QUEUE* createSecondPfixQueue(QUEUE *);
 char *evaluateExpression(QUEUE *, BST *);
 void displayMATILDA(FILE*, void*, void*);
 static void printInput(char*);
@@ -67,7 +68,7 @@ main(int argc, char **argv)
 	QUEUE *inputQueue = processFileIntoQueue(argv[argIndex]);
 	BST *varBST = makeVarBST(argv[argIndex]);
 	QUEUE *postfixQueue = createPostfixQueue(inputQueue);
-	QUEUE *dummyPrintQ = postfixQueue;
+	QUEUE *dummyPrintQ = createSecondPfixQueue(postfixQueue);
 	char* answer = evaluateExpression(postfixQueue, varBST);
 
 	if (inputFlag == 1)
@@ -353,6 +354,19 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue)
 	return postfixQueue;
 }
 
+static QUEUE*
+createSecondPfixQueue(QUEUE *original)
+{
+	QUEUE *dummyQueue = newQUEUE(displaySTRING);
+	while (sizeQUEUE(original) < 0)
+	{
+		char* val = getSTRING(peekQUEUE(original));
+		enqueue(dummyQueue, newSTRING(val));
+		dequeue(dummyQueue);
+	}
+	return dummyQueue;
+}
+
 char * 
 evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 {
@@ -440,10 +454,19 @@ printLastPostfix(QUEUE *dummyPrintQ)
 	int size = sizeQUEUE(dummyPrintQ);
 	for (i = 0; i < size; i++)
 	{
-		printf("%s ", getSTRING(peekQUEUE(dummyPrintQ)));
-		dequeue(dummyPrintQ);
+		if (i < size - 1)
+		{
+			printf("%s ", getSTRING(peekQUEUE(dummyPrintQ)));
+			dequeue(dummyPrintQ);
+		}
+		// No space at the end, need newline
+		else
+		{
+			printf("%s\n", getSTRING(peekQUEUE(dummyPrintQ)));
+			dequeue(dummyPrintQ);
+		}
 	}
-	printf("\n");
+	//printf("\n");
 }
 
 static void
