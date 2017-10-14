@@ -29,11 +29,13 @@ void Fatal(char *, ...);
 QUEUE *processFileIntoQueue(char *);
 BST *makeVarBST(char *);
 QUEUE *createPostfixQueue(QUEUE *);
+double evaluateExpression(QUEUE *, BST *);
 void displayMATILDA(FILE*, void*, void*);
 static void printInput(char*);
+static void printLastPostfix(QUEUE*);
 static void printBST(BST *tree);
 static int precedence(char*);
-STRING *evaluate(double firstVal, double secondVal, char op);
+STRING *evaluate(double firstVal, double secondVal, char *op);
 
 
 int
@@ -63,23 +65,26 @@ main(int argc, char **argv)
 
 	QUEUE *inputQueue = processFileIntoQueue(argv[argIndex]);
 	BST *varBST = makeVarBST(argv[argIndex]);
-	printf("made bst\n");
 	QUEUE *postfixQueue = createPostfixQueue(inputQueue);
+	QUEUE *dummyPrintQ = postfixQueue;
+	double answer = evaluateExpression(postfixQueue, varBST);
 
 	if (inputFlag == 1)
 	{
 		printInput(argv[argIndex]);
 	}
 
-	//if (postfixFlag == 1)
-	//{
-	//	printLastPostfix();
-	//}
+	if (postfixFlag == 1)
+	{
+		printLastPostfix(dummyPrintQ);
+	}
 
 	if (bstFlag == 1)
 	{
 		printBST(varBST);
 	}
+
+	printf("%s", answer);
 
 	printf("inputFlag is %s\n", inputFlag == 0 ? "false" : "true");
 	printf("postfixFlag is %s\n", postfixFlag == 0 ? "false" : "true");
@@ -259,7 +264,6 @@ makeVarBST(char *inputFile)
 
 QUEUE *createPostfixQueue(QUEUE *infixQueue)
 {
-	printf("in postfix method\n");
 	STACK* operatorStack = newSTACK(displaySTRING);
 	QUEUE* postfixQueue = newQUEUE(displaySTRING);
 	
@@ -267,73 +271,127 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue)
 
 	while (sizeQUEUE(infixQueue) > 0)
 	{
+		
 		val = getSTRING(dequeue(infixQueue));
-		printf("inside loop\n");
+		
 		// Number or variable, add to queue.
 		if (isalnum(val[0]))
 		{
-			printf("condition 1\n");
 			enqueue(postfixQueue, newSTRING(val));
-			printf("%s\n", val);
 		}
+		
 		// Push open parenthesis on to operator stack.
 		else if (strcmp(val, "(") == 0)
 		{
-			printf("condition 2\n");
 			push(operatorStack, newSTRING(val));
-			printf("%s\n", val);
 		}
+		
 		// If close parenthesis, pop all operators off of stack
 		// up to open parenthesis and put them on postfix queue.
 		else if (strcmp(val, ")") == 0)
 		{
-			printf("condition 3\n");
-			char *op = getSTRING(peekSTACK(operatorStack));
-			while (strcmp(op, "(") != 0)
+			if (sizeSTACK(operatorStack) > 0)
 			{
-				enqueue(postfixQueue, op);
+				char *op = getSTRING(peekSTACK(operatorStack));
+				
+				while (strcmp(op, "(") != 0)
+				{
+					enqueue(postfixQueue, peekSTACK(operatorStack));
+					pop(operatorStack);
+					op = getSTRING(peekSTACK(operatorStack));
+				}
+				
 				pop(operatorStack);
-				op = getSTRING(peekSTACK(operatorStack));
 			}
-			pop(operatorStack);	
-			printf("%s\n", val);
 		}
+		
 		// Stack is empty and it is an operator, put on stack
 		else if ((precedence(val) != -1) && sizeSTACK(operatorStack) == 0)
 		{
-			printf("condition 4\n");
-			push(operatorStack, val);
-			printf("%s\n", val);
+			push(operatorStack, newSTRING(val));
 		}
+		
 		// Operator on top of stack has higher precedence than one being read,
 		// pop from stack and enqueue to postfix queue, then push new symbol.
-		else if (precedence(val) < precedence(peekSTACK(operatorStack)) && precedence(val ) != -1)
+		// This also covers equality by left association.
+		else if ((precedence(val) <= precedence(getSTRING(peekSTACK(operatorStack)))) && (precedence(val) != -1))
 		{
-			printf("condition 5\n");
-			enqueue(postfixQueue, pop(operatorStack));
-			push(operatorStack, val);
-			printf("%s\n", val);
+			enqueue(postfixQueue, peekSTACK(operatorStack));
+			pop(operatorStack);
+			push(operatorStack, newSTRING(val));
 		}
+
+		// Else value being read has higher precendence than what is on top of stack,
+		// so put it on the stack.
+		else if ((precedence(val) > precedence(getSTRING(peekSTACK(operatorStack)))) && (precedence(val) != -1))
+		{
+			push(operatorStack, newSTRING(val));
+		}
+		
 		// Else it is a semicolon. End of expression
 		else if (strcmp(val, ";") == 0)
 		{
-			printf("condition 6\n");
 			while (sizeSTACK(operatorStack) > 0)
 			{
 				enqueue(postfixQueue, peekSTACK(operatorStack));
 				pop(operatorStack);
 			}
-			printf("made it through condition 6\n");
 		}
+		
 		// Else character not defined in spec.
 		else
 		{
-			printf("Unknown character.");
+			printf("Unknown character.\n");
 		}
 	}
-	//displayQUEUE(stdout, postfixQueue);
+
+	displayQUEUE(stdout, postfixQueue);
 	printf("\n");
+
 	return postfixQueue;
+}
+
+double 
+evaluateExpression(QUEUE *postfixQueue, BST *varTree)
+{
+	STACK *evaluateStack = newSTACK(displaySTRING);
+
+	while (sizeQUEUE(postfixQueue) > 0)
+	{
+		// Take val off postfix queue
+		// Its a number
+		if (getREAL(peekQUEUE(postfixQueue)))
+		{
+			double val = getREAL(peekQUEUE(postfixQueue));
+			push(evaluateStack, newREAL(val));
+			dequeue(postfixQueue);
+		}
+		// Its a string
+		else if (getSTRING(peekQUEUE(postfixQueue)))
+		{
+			char *val = getSTRING(peekQUEUE(postfixQueue));
+			// find var value in bst, if not in tree print error
+			if (findBST(varTree, val) == NULL) 
+			{
+				printf("Cannot find variable in tree.\n");
+				exit(0);
+			}
+			double dVal = getREAL(findBST(varTree, val));
+			push(evaluateStack, newREAL(dVal));
+			dequeue(postfixQueue);
+		}
+
+		else if (precedence(val) != -1)
+		{
+			char *firstVal = getSTRING(peekSTACK(evaluateStack));
+			pop(evaluateStack);
+			char *secondVal = getSTRING(peekSTACK(evaluateStack));
+			pop(evaluateStack);
+			char *solvedVal = evaluate(firstVal,secondVal,val);
+			push(evaluateStack, solvedVal);
+		}
+		
+	}
 }
 
 void
@@ -366,6 +424,20 @@ printInput(char* inputFile)
 	}
 
 	fclose(input);
+}
+
+static void 
+printLastPostfix(QUEUE *dummyPrintQ)
+{
+	int i;
+	int size = sizeQUEUE(dummyPrintQ);
+
+	for (i = 0; i < size; i = i + 1)
+	{
+		printf("%s ", getSTRING(peekQUEUE(dummyPrintQ)));
+		dequeue(dummyPrintQ);
+	}
+	printf("\n");
 }
 
 static void
@@ -404,9 +476,40 @@ precedence(char* op)
 	{
 		return 6;
 	}
-	else
+	return -1;
+}
+
+STRING *evaluate(double firstVal, double secondVal, char *op) {
+	double resultingVal;
+	char *str = malloc(sizeof(char *));
+
+	if (strcmp(op, "+") == 0)
 	{
-		return -1;
+		resultingVal = secondVal + firstVal;
+	}
+	else if (strcmp(op, "-") == 0)
+	{
+		resultingVal = secondVal - firstVal;
+	}
+	else if (strcmp(op, "*") == 0)
+	{
+		resultingVal = secondVal * firstVal;
+	}
+	else if (strcmp(op, "/") == 0)
+	{
+		resultingVal = secondVal / firstVal;
+	}
+	else if (strcmp(op, "%") == 0)
+	{
+		resultingVal = fmod(secondVal, firstVal);
+	}
+	else if (strcmp(op, "^") == 0)
+	{
+		resultingVal = pow(secondVal, firstVal);
 	}
 
+	sprintf(str, "%lf", resultingVal);
+	STRING *resultString = newSTRING(str);
+
+	return resultString;
 }

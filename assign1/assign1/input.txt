@@ -1,4 +1,6 @@
 var bacon = 4.0 ; 
 var albatross = 3 ; 
 var cavern = 600 ; 
-bacon * albatross + cavern ; 
+var dinosaur = 2.5 ;
+var edison = 500.3 ;
+bacon * ( albatross ^ 2 + cavern ) / edison - dinosaur ; 

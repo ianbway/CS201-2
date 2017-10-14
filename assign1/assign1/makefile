@@ -13,7 +13,7 @@ CC = gcc
 all : matilda
 
 matilda : matilda.o $(MATILDA_OBJS)
-	$(CC) $(LOPTS) matilda.o $(MATILDA_OBJS) -o matilda
+	$(CC) $(LOPTS) matilda.o $(MATILDA_OBJS) -lm -o matilda
 
 test-bst : $(BST_OBJS)
 	$(CC) $(LOPTS) $(BST_OBJS) -o test-bst
