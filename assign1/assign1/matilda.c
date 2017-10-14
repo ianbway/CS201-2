@@ -29,7 +29,7 @@ void Fatal(char *, ...);
 QUEUE *processFileIntoQueue(char *);
 BST *makeVarBST(char *);
 QUEUE *createPostfixQueue(QUEUE *);
-double evaluateExpression(QUEUE *, BST *);
+char *evaluateExpression(QUEUE *, BST *);
 void displayMATILDA(FILE*, void*, void*);
 static void printInput(char*);
 static void printLastPostfix(QUEUE*);
@@ -67,7 +67,7 @@ main(int argc, char **argv)
 	BST *varBST = makeVarBST(argv[argIndex]);
 	QUEUE *postfixQueue = createPostfixQueue(inputQueue);
 	QUEUE *dummyPrintQ = postfixQueue;
-	double answer = evaluateExpression(postfixQueue, varBST);
+	char* answer = evaluateExpression(postfixQueue, varBST);
 
 	if (inputFlag == 1)
 	{
@@ -83,12 +83,13 @@ main(int argc, char **argv)
 	{
 		printBST(varBST);
 	}
-
+	
 	printf("%s", answer);
+	printf("\n");
 
-	printf("inputFlag is %s\n", inputFlag == 0 ? "false" : "true");
-	printf("postfixFlag is %s\n", postfixFlag == 0 ? "false" : "true");
-	printf("bstFlag is %s\n", bstFlag == 0 ? "false" : "true");
+	//printf("inputFlag is %s\n", inputFlag == 0 ? "false" : "true");
+	//printf("postfixFlag is %s\n", postfixFlag == 0 ? "false" : "true");
+	//printf("bstFlag is %s\n", bstFlag == 0 ? "false" : "true");
 
 	if (argc - argIndex > 1)
 	{
@@ -351,7 +352,7 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue)
 	return postfixQueue;
 }
 
-double 
+char * 
 evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 {
 	STACK *evaluateStack = newSTACK(displaySTRING);
@@ -388,13 +389,13 @@ evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 			pop(evaluateStack);
 			double secondVal = getREAL(peekSTACK(evaluateStack));
 			pop(evaluateStack);
-			char *solvedVal = evaluate(firstVal,secondVal,val);
+			STRING *solvedVal = evaluate(firstVal,secondVal,val);
 			push(evaluateStack, solvedVal);
 		}
 		
 	}
 	// After loop is finished this should be the final answer
-	return getREAL(peekSTACK(evaluateStack));
+	return getSTRING(peekSTACK(evaluateStack));
 }
 
 void
@@ -434,8 +435,7 @@ printLastPostfix(QUEUE *dummyPrintQ)
 {
 	int i;
 	int size = sizeQUEUE(dummyPrintQ);
-
-	for (i = 0; i < size; i = i + 1)
+	for (i = 0; i < size; i++)
 	{
 		printf("%s ", getSTRING(peekQUEUE(dummyPrintQ)));
 		dequeue(dummyPrintQ);
@@ -461,23 +461,23 @@ precedence(char* op)
 	}
 	else if (strcmp(op, "-") == 0)
 	{
-		return 2;
+		return 1;
 	}
 	else if (strcmp(op, "*") == 0)
 	{
-		return 3;
+		return 2;
 	}
 	else if (strcmp(op, "/") == 0)
 	{
-		return 4;
+		return 2;
 	}
 	else if (strcmp(op, "%") == 0)
 	{
-		return 5;
+		return 2;
 	}
 	else if (strcmp(op, "^") == 0)
 	{
-		return 6;
+		return 3;
 	}
 	return -1;
 }
