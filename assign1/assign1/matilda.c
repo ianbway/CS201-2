@@ -380,18 +380,21 @@ evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 			push(evaluateStack, newREAL(dVal));
 			dequeue(postfixQueue);
 		}
-
-		else if (precedence(val) != -1)
+		// Else must be operator
+		else 
 		{
-			char *firstVal = getSTRING(peekSTACK(evaluateStack));
+			char *val = getSTRING(peekQUEUE(postfixQueue));
+			double firstVal = getREAL(peekSTACK(evaluateStack));
 			pop(evaluateStack);
-			char *secondVal = getSTRING(peekSTACK(evaluateStack));
+			double secondVal = getREAL(peekSTACK(evaluateStack));
 			pop(evaluateStack);
 			char *solvedVal = evaluate(firstVal,secondVal,val);
 			push(evaluateStack, solvedVal);
 		}
 		
 	}
+	// After loop is finished this should be the final answer
+	return getREAL(peekSTACK(evaluateStack));
 }
 
 void
