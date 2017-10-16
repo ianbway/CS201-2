@@ -361,23 +361,34 @@ char *
 evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 {
 	STACK *evaluateStack = newSTACK(displaySTRING);
+	
+	displayBST(stdout, varTree);
+	printf("\n");
+	if (findBST(varTree, newSTRING("bacon")) == 0)
+	{
+		printf("Cannot find variable in tree.\n");
+		exit(0);
+	}
+	printf("\n");
 
 	while (sizeQUEUE(postfixQueue) > 0)
 	{
+		printf("front of queue: %s\n", getSTRING(peekQUEUE(postfixQueue)));
 		// Take val off postfix queue
 		// Its a number
-		if (getREAL(peekQUEUE(postfixQueue)))
+		if (atoi(getSTRING(peekQUEUE(postfixQueue))))
 		{
 			double val = getREAL(peekQUEUE(postfixQueue));
 			push(evaluateStack, newREAL(val));
 			dequeue(postfixQueue);
 		}
 		// Its a string
-		else if (getSTRING(peekQUEUE(postfixQueue)))
+		else if (isalpha(getSTRING(peekQUEUE(postfixQueue))[0]))
 		{
+			printf("Made it past isalpha.\n");
 			char *val = getSTRING(peekQUEUE(postfixQueue));
 			// find var value in bst, if not in tree print error
-			if (findBST(varTree, val) == NULL)
+			if (findBST(varTree, val) == 0)
 			{
 				printf("Cannot find variable in tree.\n");
 				exit(0);
@@ -390,6 +401,7 @@ evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 		else
 		{
 			char *val = getSTRING(peekQUEUE(postfixQueue));
+			dequeue(postfixQueue);
 			double firstVal = getREAL(peekSTACK(evaluateStack));
 			pop(evaluateStack);
 			double secondVal = getREAL(peekSTACK(evaluateStack));
