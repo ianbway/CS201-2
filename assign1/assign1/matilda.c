@@ -30,13 +30,14 @@ void Fatal(char *, ...);
 QUEUE *processFileIntoQueue(char *);
 BST *makeVarBST(char *);
 QUEUE *createPostfixQueue(QUEUE *, QUEUE *);
+static int isNumber(STRING *);
 char *evaluateExpression(QUEUE *, BST *);
 void displayMATILDA(FILE*, void*, void*);
 static void printInput(char*);
 static void printLastPostfix(QUEUE*);
 static void printBST(BST *tree);
 static int precedence(char*);
-STRING *evaluate(double firstVal, double secondVal, char *op);
+REAL *evaluate(double firstVal, double secondVal, STRING *op);
 
 
 int
@@ -357,10 +358,37 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue, QUEUE *dummyQueue)
 	return postfixQueue;
 }
 
+static int
+isNumber(STRING *value)
+{
+	// This method determines if the string value pulled off of the postfixQueue is a number
+	
+	if (getSTRING(value)[0] == '-') 
+	{
+		return 1;
+	}
+	
+	else if (getSTRING(value)[0] = '.')
+	{
+		return 1;
+	}
+	
+	else if (isdigit(getSTRING(value)[0]))
+	{
+		return 1;
+	}
+
+	// String did not start with "-", ".", or a number. Therefore it is not a number.
+	else
+	{
+		return 0;
+	}
+}
+
 char * 
 evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 {
-	STACK *evaluateStack = newSTACK(displaySTRING);
+	STACK *evaluateStack = newSTACK(displayREAL);
 	
 	displayBST(stdout, varTree);
 	printf("\n");
@@ -373,43 +401,39 @@ evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 
 	while (sizeQUEUE(postfixQueue) > 0)
 	{
-		printf("front of queue: %s\n", getSTRING(peekQUEUE(postfixQueue)));
-		// Take val off postfix queue
+		// Take val from postfix queue and look at it
+		STRING *val = newSTRING(peekQUEUE(postfixQueue));
 		// Its a number
-		if (atoi(getSTRING(peekQUEUE(postfixQueue))))
+		if (isNumber(val))
 		{
-			double val = getREAL(peekQUEUE(postfixQueue));
-			push(evaluateStack, newREAL(val));
+			double realVal = atof(getSTRING(val));
+			push(evaluateStack, newREAL(realVal));
 			dequeue(postfixQueue);
 		}
 		// Its a string
-		else if (isalpha(getSTRING(peekQUEUE(postfixQueue))[0]))
+		else if (isalpha(getSTRING(val)[0]))
 		{
-			printf("Made it past isalpha.\n");
-			char *val = getSTRING(peekQUEUE(postfixQueue));
 			// find var value in bst, if not in tree print error
 			if (findBST(varTree, val) == 0)
 			{
 				printf("Cannot find variable in tree.\n");
 				exit(0);
 			}
-			double dVal = getREAL(findBST(varTree, val));
-			push(evaluateStack, newREAL(dVal));
+			double returnedVal = getREAL(findBST(varTree, val));
+			push(evaluateStack, newREAL(returnedVal));
 			dequeue(postfixQueue);
 		}
 		// Else must be operator
 		else
 		{
-			char *val = getSTRING(peekQUEUE(postfixQueue));
-			dequeue(postfixQueue);
 			double firstVal = getREAL(peekSTACK(evaluateStack));
 			pop(evaluateStack);
 			double secondVal = getREAL(peekSTACK(evaluateStack));
 			pop(evaluateStack);
-			STRING *solvedVal = evaluate(firstVal, secondVal, val);
+			REAL *solvedVal = evaluate(firstVal, secondVal, val);
 			push(evaluateStack, solvedVal);
 		}
-
+		dequeue(postfixQueue);
 	}
 	//displaySTACK(stdout, evaluateStack);
 	//printf("\n");
@@ -509,31 +533,31 @@ precedence(char* op)
 	return -1;
 }
 
-STRING *evaluate(double firstVal, double secondVal, char *op) {
+REAL *evaluate(double firstVal, double secondVal, STRING *op) {
+	
 	double resultingVal;
-	char *buffString = malloc(sizeof(char *));
 
-	if (strcmp(op, "+") == 0)
+	if (strcmp(getSTRING(op), "+") == 0)
 	{
 		resultingVal = secondVal + firstVal;
 	}
-	else if (strcmp(op, "-") == 0)
+	else if (strcmp(getSTRING(op), "-") == 0)
 	{
 		resultingVal = secondVal - firstVal;
 	}
-	else if (strcmp(op, "*") == 0)
+	else if (strcmp(getSTRING(op), "*") == 0)
 	{
 		resultingVal = secondVal * firstVal;
 	}
-	else if (strcmp(op, "/") == 0)
+	else if (strcmp(getSTRING(op), "/") == 0)
 	{
 		resultingVal = secondVal / firstVal;
 	}
-	else if (strcmp(op, "%") == 0)
+	else if (strcmp(getSTRING(op), "%") == 0)
 	{
 		resultingVal = fmod(secondVal, firstVal);
 	}
-	else if (strcmp(op, "^") == 0)
+	else if (strcmp(getSTRING(op), "^") == 0)
 	{
 		resultingVal = pow(secondVal, firstVal);
 	}
@@ -542,8 +566,7 @@ STRING *evaluate(double firstVal, double secondVal, char *op) {
 		printf("Operator not defined in spec.\n");
 	}
 
-	sprintf(buffString, "%lf", resultingVal);
-	STRING *resultString = newSTRING(buffString);
+	REAL *resultReal = newREAL(resultingVal);
 
-	return resultString;
+	return resultReal;
 }
