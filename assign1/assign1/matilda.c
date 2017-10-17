@@ -433,6 +433,7 @@ evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 			REAL *solvedVal = evaluate(firstVal, secondVal, val);
 			push(evaluateStack, solvedVal);
 		}
+		// THIS IS THROWING ASSERTION ERROR
 		dequeue(postfixQueue);
 	}
 	//displaySTACK(stdout, evaluateStack);
