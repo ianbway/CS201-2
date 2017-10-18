@@ -27,11 +27,11 @@ int bstFlag = 0;    /* option -b FILENAME */
 
 static int processOptions(int, char **);
 void Fatal(char *, ...);
-QUEUE *processFileIntoQueue(char *);
-BST *makeVarBST(char *);
+QUEUE *processFileIntoQueue(FILE *);
+BST *makeVarBST(FILE *);
 QUEUE *createPostfixQueue(QUEUE *, QUEUE *);
 static int isNumber(STRING *);
-char *evaluateExpression(QUEUE *, BST *);
+REAL *evaluateExpression(QUEUE *, BST *);
 void displayMATILDA(FILE*, void*, void*);
 static void printInput(char*);
 static void printLastPostfix(QUEUE*);
@@ -65,11 +65,13 @@ main(int argc, char **argv)
 		return 0;
 	}
 
-	QUEUE *inputQueue = processFileIntoQueue(argv[argIndex]);
-	BST *varBST = makeVarBST(argv[argIndex]);
+	FILE *inputFile = fopen(argv[argIndex], "r");
+	QUEUE *inputQueue = processFileIntoQueue(inputFile);
+	BST *varBST = makeVarBST(inputFile);
+	fclose(inputFile);
 	QUEUE *dummyPrintQ = newQUEUE(displaySTRING);
 	QUEUE *postfixQueue = createPostfixQueue(inputQueue, dummyPrintQ);
-	char* answer = evaluateExpression(postfixQueue, varBST);
+	REAL *answer = evaluateExpression(postfixQueue, varBST);
 
 	if (inputFlag == 1)
 	{
@@ -86,7 +88,7 @@ main(int argc, char **argv)
 		printBST(varBST);
 	}
 	
-	printf("%s", answer);
+	displayREAL(stdout, answer);
 	printf("\n");
 
 	//printf("inputFlag is %s\n", inputFlag == 0 ? "false" : "true");
@@ -192,10 +194,9 @@ processOptions(int argc, char **argv)
 }
 
 QUEUE *
-processFileIntoQueue(char *file)
+processFileIntoQueue(FILE *input)
 {
 	// This queue will contain the expression, or everything after variable declarations.
-	FILE *input = fopen(file, "r");
 	// Does file even exist.
 	if (input == NULL)
 	{
@@ -225,19 +226,16 @@ processFileIntoQueue(char *file)
 		
 	}
 
-	//displayQUEUE(stdout, inputQueue);
-	//printf("\n");
-
-	fclose(input);
+	displayQUEUE(stdout, inputQueue);
+	printf("\n");
 
 	return inputQueue;
 }
 
 BST *
-makeVarBST(char *inputFile)
+makeVarBST(FILE *input)
 {
 	BST *variableBST = newBST(displayMATILDA, compareSTRING);
-	FILE *input = fopen(inputFile, "r");
 	STRING *key;
 	REAL *val;
 	// Does file even exist.
@@ -254,13 +252,11 @@ makeVarBST(char *inputFile)
 			key = newSTRING(token);
 			readToken(input);
 			token = readToken(input);
-			val = newREAL(strtod(token,NULL));
+			val = newREAL(atof(token));
 			insertBST(variableBST, key, val);
 		}
 		token = readToken(input);
 	}
-
-	fclose(input);
 
 	return variableBST;
 }
@@ -300,8 +296,8 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue, QUEUE *dummyQueue)
 				
 				while (strcmp(op, "(") != 0)
 				{
-					enqueue(postfixQueue, peekSTACK(operatorStack));
-					enqueue(dummyQueue, peekSTACK(operatorStack));
+					enqueue(postfixQueue, newSTRING(peekSTACK(operatorStack)));
+					enqueue(dummyQueue, newSTRING(peekSTACK(operatorStack)));
 					pop(operatorStack);
 					op = getSTRING(peekSTACK(operatorStack));
 				}
@@ -321,8 +317,8 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue, QUEUE *dummyQueue)
 		// This also covers equality by left association.
 		else if ((precedence(val) <= precedence(getSTRING(peekSTACK(operatorStack)))) && (precedence(val) != -1))
 		{
-			enqueue(postfixQueue, peekSTACK(operatorStack));
-			enqueue(dummyQueue, peekSTACK(operatorStack));
+			enqueue(postfixQueue, newSTRING(peekSTACK(operatorStack)));
+			enqueue(dummyQueue, newSTRING(peekSTACK(operatorStack)));
 			pop(operatorStack);
 			push(operatorStack, newSTRING(val));
 		}
@@ -339,8 +335,8 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue, QUEUE *dummyQueue)
 		{
 			while (sizeSTACK(operatorStack) > 0)
 			{
-				enqueue(postfixQueue, peekSTACK(operatorStack));
-				enqueue(dummyQueue, peekSTACK(operatorStack));
+				enqueue(postfixQueue, newSTRING(peekSTACK(operatorStack)));
+				enqueue(dummyQueue, newSTRING(peekSTACK(operatorStack)));
 				pop(operatorStack);
 			}
 		}
@@ -352,8 +348,8 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue, QUEUE *dummyQueue)
 		}
 	}
 
-	//displayQUEUE(stdout, postfixQueue);
-	//printf("\n");
+	displayQUEUE(stdout, postfixQueue);
+	printf("\n");
 
 	return postfixQueue;
 }
@@ -385,33 +381,23 @@ isNumber(STRING *value)
 	}
 }
 
-char * 
+REAL * 
 evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 {
 	STACK *evaluateStack = newSTACK(displayREAL);
-	
-	displayBST(stdout, varTree);
-	printf("\n");
-	if (findBST(varTree, newSTRING("bacon")) == 0)
-	{
-		printf("Cannot find variable in tree.\n");
-		exit(0);
-	}
-	printf("\n");
 
 	while (sizeQUEUE(postfixQueue) > 0)
 	{
 		// Take val from postfix queue and look at it
-		STRING *val = newSTRING(peekQUEUE(postfixQueue));
+		STRING *val = newSTRING(dequeue(postfixQueue));
 		// Its a number
-		if (isNumber(val))
+		if (isNumber(val) != 0)
 		{
-			double realVal = atof(getSTRING(val));
-			push(evaluateStack, newREAL(realVal));
-			dequeue(postfixQueue);
+			REAL *realVal = newREAL(atof(getSTRING(val)));
+			push(evaluateStack, realVal);
 		}
 		// Its a string
-		else if (isalpha(getSTRING(val)[0]))
+		else if (isalpha(getSTRING(val)[0]) != 0)
 		{
 			// find var value in bst, if not in tree print error
 			if (findBST(varTree, val) == 0)
@@ -419,27 +405,22 @@ evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 				printf("Cannot find variable in tree.\n");
 				exit(0);
 			}
-			double returnedVal = getREAL(findBST(varTree, val));
-			push(evaluateStack, newREAL(returnedVal));
-			dequeue(postfixQueue);
+			REAL *returnedVal = newREAL(getREAL(findBST(varTree, val)));
+			push(evaluateStack, returnedVal);
 		}
 		// Else must be operator
 		else
 		{
-			double firstVal = getREAL(peekSTACK(evaluateStack));
-			pop(evaluateStack);
-			double secondVal = getREAL(peekSTACK(evaluateStack));
-			pop(evaluateStack);
+			double firstVal = getREAL(pop(evaluateStack));
+			double secondVal = getREAL(pop(evaluateStack));
 			REAL *solvedVal = evaluate(firstVal, secondVal, val);
 			push(evaluateStack, solvedVal);
 		}
-		// THIS IS THROWING ASSERTION ERROR
-		dequeue(postfixQueue);
 	}
-	//displaySTACK(stdout, evaluateStack);
-	//printf("\n");
+	displaySTACK(stdout, evaluateStack);
+	printf("\n");
 	// After loop is finished this should be the final answer
-	return getSTRING(peekSTACK(evaluateStack));
+	return pop(evaluateStack);
 }
 
 void

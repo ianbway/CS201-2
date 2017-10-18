@@ -107,31 +107,30 @@ insertBST(BST *tree, void *key, void *value)
 static void *
 findHelper(BST *tree, BSTNODE *node, void *key)
 {
+	// nothing left, return null
+	if (node == 0)
+	{
+		return 0;
+	}
+
 	// we found it, it's equal
-	if (tree->compare(node->key, key) == 0)
+	else if (tree->compare(key, node->key) == 0)
 	{
 		return node->value;
 	}
 
 	// else it is negative, go left
-	else if (tree->compare(node->key, key) < 0)
+	else if (tree->compare(key, node->key) < 0)
 	{
-		findHelper(tree, node->left, key);
+		return findHelper(tree, node->left, key);
 	}
 
-	// else it is positive, go right
-	else if (tree->compare(node->key, key) > 0)
+	// else it is positive, go right 
+	// *this is the condition for right, later use: if (tree->compare(key, node->key) > 0)
+	else 
 	{
-		findHelper(tree, node->right, key);
+		return findHelper(tree, node->right, key);
 	}
-
-	// else it's not in the tree, so null
-	else
-	{
-		return 0;
-	}
-
-	return 0;
 }
 
 void *
