@@ -141,9 +141,7 @@ findBST(BST *tree, void *key)
 	The method returns a null pointer if the key is not in the tree.
 	*/
 
-	BSTNODE *node = tree->root;
-
-	return findHelper(tree, node, key);
+	return findHelper(tree, tree->root, key);
 }
 
 int 
