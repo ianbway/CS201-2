@@ -53,3 +53,25 @@ clean :
 
 test :
 	./matilda -i -p -b input.txt
+	./matilda -i -p -b mycode-0-1
+	./matilda -i -p -b mycode-0-2
+	./matilda -i -p -b mycode-0-3
+	./matilda -i -p -b mycode-0-4
+	./matilda -i -p -b mycode-0-5
+	./matilda -i -p -b mycode-0-6
+	./matilda -i -p -b mycode-0-7
+	./matilda -i -p -b mycode-0-8
+	./matilda -i -p -b yourcode-0-1
+	./matilda -i -p -b yourcode-0-2
+	./matilda -i -p -b yourcode-0-3
+	./matilda -i -p -b yourcode-0-4
+	./matilda -i -p -b yourcode-0-5
+	./matilda -i -p -b yourcode-0-6
+	./matilda -i -p -b yourcode-0-7
+	./matilda -i -p -b yourcode-0-8
+	./matilda -i -p -b yourcode-0-9
+	./matilda -i -p -b yourcode-0-10
+	./matilda -i -p -b yourcode-0-11
+	./matilda -i -p -b yourcode-0-12
+	./matilda -i -p -b yourcode-0-13
+	./matilda -i -p -b yourcode-0-14

@@ -241,7 +241,7 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue)
 		char *val = getSTRING(strVal);
 
 		// Number or variable, add to queue.
-		if (isalnum(val[0]))
+		if (isNumber(strVal) || isalpha(val[0]))
 		{
 			enqueue(postfixQueue, strVal);
 		}
@@ -361,7 +361,7 @@ evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 			// find var value in bst, if not in tree print error
 			if (findBST(varTree, val) == 0)
 			{
-				printf("Cannot find variable in tree.\n");
+				printf("variable %s not declared.\n", getSTRING(val));
 				exit(0);
 			}
 
