@@ -276,12 +276,20 @@ QUEUE *createPostfixQueue(QUEUE *infixQueue)
 			push(operatorStack, strVal);
 		}
 		
-		// Operator on top of stack has higher precedence than one being read,
+		// Operator on top of stack has higher precedence than (or equal to) one being read,
 		// pop from stack and enqueue to postfix queue, then push new symbol.
 		// This also covers equality by left association.
 		else if ((precedence(val) <= precedence(getSTRING(peekSTACK(operatorStack)))) && (precedence(val) != -1))
 		{
-			enqueue(postfixQueue, pop(operatorStack));
+
+			// While the operator stack still has something on it,
+			// and the precedence of it's top value is higher or equal to the one being read
+			// enqueue the popped top value to the postfix queue.
+			while ((sizeSTACK(operatorStack) > 0) && (precedence(val) <= precedence(getSTRING(peekSTACK(operatorStack)))))
+			{
+				enqueue(postfixQueue, pop(operatorStack));
+			}
+
 			push(operatorStack, strVal);
 		}
 
@@ -450,25 +458,28 @@ precedence(char* op)
 	}
 	else if (strcmp(op, "-") == 0)
 	{
-		return 1;
+		return 2;
 	}
 	else if (strcmp(op, "*") == 0)
 	{
-		return 2;
+		return 3;
 	}
 	else if (strcmp(op, "/") == 0)
 	{
-		return 2;
+		return 4;
 	}
 	else if (strcmp(op, "%") == 0)
 	{
-		return 2;
+		return 5;
 	}
 	else if (strcmp(op, "^") == 0)
 	{
-		return 3;
+		return 6;
 	}
-	return -1;
+	else
+	{
+		return -1;
+	}
 }
 
 REAL *evaluate(double firstVal, double secondVal, STRING *op) {
