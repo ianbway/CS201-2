@@ -369,7 +369,7 @@ evaluateExpression(QUEUE *postfixQueue, BST *varTree)
 			// find var value in bst, if not in tree print error
 			if (findBST(varTree, val) == 0)
 			{
-				printf("variable %s not declared.\n", getSTRING(val));
+				printf("variable %s was not declared\n", getSTRING(val));
 				exit(0);
 			}
 
@@ -407,11 +407,15 @@ printInput(QUEUE* input)
 	int i;
 	for (i = 0; i < sizeQUEUE(input); i++)
 	{
-		printf("%s ", getSTRING(peekQUEUE(input)));
-		
-		if (strcmp(getSTRING(peekQUEUE(input)), ";") == 0)
+
+		if (strcmp(getSTRING(peekQUEUE(input)), ";") != 0)
 		{
-			printf("\n");
+			printf("%s ", getSTRING(peekQUEUE(input)));
+		}
+		
+		else if (strcmp(getSTRING(peekQUEUE(input)), ";") == 0)
+		{
+			printf("%s\n", getSTRING(peekQUEUE(input)));
 		}
 
 		enqueue(input, dequeue(input));
