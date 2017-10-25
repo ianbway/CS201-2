@@ -6,7 +6,7 @@
 #include <string.h>
 #include "bst.h"
 
-typedef struct BSTNODE
+typedef struct bstnode
 {
 	struct BSTNODE *left;
 	struct BSTNODE *right;
@@ -15,38 +15,86 @@ typedef struct BSTNODE
 	void *value;
 } BSTNODE;
 
-struct BST 
+void *
+getBSTNODE(BSTNODE *n)
+{
+
+}
+
+void
+setBSTNODE(BSTNODE *n, void *value)
+{
+
+}
+
+BSTNODE *
+getBSTNODEleft(BSTNODE *n)
+{
+
+}
+
+void
+setBSTNODEleft(BSTNODE *n, BSTNODE *replacement)
+{
+
+}
+
+BSTNODE *
+getBSTNODEright(BSTNODE *n)
+{
+
+}
+
+void
+setBSTNODEright(BSTNODE *n, BSTNODE *replacement)
+{
+
+}
+
+BSTNODE *
+getBSTNODEparent(BSTNODE *n)
+{
+
+}
+
+void
+setBSTNODEparent(BSTNODE *n, BSTNODE *replacement)
+{
+
+}
+
+typedef struct bst 
 {
 	struct BSTNODE *root;
 	int size;
 	void(*display) (FILE *, void *, void *);
 	int(*compare) (void *, void *);
-};
+} BST;
 
-static BSTNODE *
-newBSTNODE(void *key, void *value)
-{
-	BSTNODE *node = malloc(sizeof(BSTNODE));
+//static BSTNODE *
+//newBSTNODE(void *key, void *value)
+//{
+//	BSTNODE *node = malloc(sizeof(BSTNODE));
+//
+//	assert(node != 0);
+//
+//	node->value = value;
+//	node->key = key;
+//	node->left = 0;
+//	node->right = 0;
+//
+//	return node;
+//}
 
-	assert(node != 0);
-
-	node->value = value;
-	node->key = key;
-	node->left = 0;
-	node->right = 0;
-
-	return node;
-}
-
-BST *
-newBST(void(*d) (FILE *, void *, void *), int(*comparator) (void *, void *))
+BST * 
+newBST(void(*d)(FILE *, void *), int(*comparator)(void *, void *))
 {
 	/*
-	The constructor is passed two functions: one that knows how to display the generic key-value pair stored in the tree and one that knows how to compare two generic keys. 
+	The constructor is passed two functions: one that knows how to display the generic key-value pair stored in the tree and one that knows how to compare two generic keys.
 	*/
 
 	BST *tree = malloc(sizeof(BST));
-	
+
 	assert(tree != 0);
 
 	tree->root = 0;
@@ -55,6 +103,18 @@ newBST(void(*d) (FILE *, void *, void *), int(*comparator) (void *, void *))
 	tree->size = 0;
 
 	return tree;
+}
+
+void
+setBSTroot(BST *t, BSTNODE *replacement)
+{
+
+}
+
+BSTNODE *
+getBSTroot(BST *t)
+{
+
 }
 
 static void
@@ -81,8 +141,8 @@ insertHelper(BST *tree, BSTNODE *spot, void *key, void *value)
 	}
 }
 
-void 
-insertBST(BST *tree, void *key, void *value)
+BSTNODE *
+insertBST(BST *tree, void *value)
 {
 	/*
 	The insert method adds a leaf to the tree in the proper location, based upon the comparator passed to the constructor. 
@@ -144,6 +204,24 @@ findBST(BST *tree, void *key)
 	return findHelper(tree, tree->root, key);
 }
 
+BSTNODE *
+deleteBST(BST *t, void *value)
+{
+
+}
+
+BSTNODE *
+swapToLeafBST(BST *t, BSTNODE *node)
+{
+
+}
+
+void
+pruneLeafBST(BST *t, BSTNODE *leaf)
+{
+
+}
+
 int 
 sizeBST(BST *tree)
 {
@@ -180,6 +258,12 @@ inorder(FILE *fp, BST *tree, BSTNODE *root)
 	
 	fprintf(fp, "]");
 	
+}
+
+void
+statisticsBST(FILE *fp, BST *t)
+{
+
 }
 
 void 
