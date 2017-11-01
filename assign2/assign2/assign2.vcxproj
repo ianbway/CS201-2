@@ -82,13 +82,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bst.h" />
+    <ClInclude Include="cda.h" />
     <ClInclude Include="gt.h" />
+    <ClInclude Include="integer.h" />
+    <ClInclude Include="queue.h" />
     <ClInclude Include="rbt.h" />
+    <ClInclude Include="real.h" />
+    <ClInclude Include="scanner.h" />
+    <ClInclude Include="string.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bst.c" />
+    <ClCompile Include="cda.c" />
     <ClCompile Include="gt.c" />
+    <ClCompile Include="integer.c" />
+    <ClCompile Include="queue.c" />
     <ClCompile Include="rbt.c" />
+    <ClCompile Include="real.c" />
+    <ClCompile Include="scanner.c" />
+    <ClCompile Include="string.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -20,7 +20,8 @@ typedef struct bst BST;
 
 extern BST *newBST(
 	void(*)(FILE *, void *),           //display
-	int(*)(void *, void *));           //comparator
+	int(*)(void *, void *),            //comparator
+	void(*)(BSTNODE *, BSTNODE *));    //swapper
 extern void    setBSTroot(BST *t, BSTNODE *replacement);
 extern BSTNODE *getBSTroot(BST *t);
 extern BSTNODE *insertBST(BST *t, void *value);
