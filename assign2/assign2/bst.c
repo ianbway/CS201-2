@@ -9,15 +9,15 @@
 
 struct bstnode
 {
-	struct BSTNODE *left;
-	struct BSTNODE *right;
-	struct BSTNODE *parent;
+	struct bstnode *left;
+	struct bstnode *right;
+	struct bstnode *parent;
 	void *value;
 };
 
 struct bst
 {
-	struct BSTNODE *root;
+	struct bstnode *root;
 	int size;
 	void(*display) (FILE *, void *);
 	int(*compare) (void *, void *);
@@ -34,8 +34,28 @@ newBSTNODE(void *value)
 	node->value = value;
 	node->left = 0;
 	node->right = 0;
+	node->parent = 0;
 
 	return node;
+}
+
+BST *
+newBST(void(*d)(FILE *, void *), int(*comparator)(void *, void *), void(*swapper)(BSTNODE *, BSTNODE *))
+{
+	// The constructor is passed three functions, one that knows how to display the generic value stored in a node, 
+	// one that can compare two generic values, and one that knows how to swap the two generic values held by BSTNODEs (the swapper function is used by swapToLeafBST). 
+
+	BST *tree = malloc(sizeof(BST));
+
+	assert(tree != 0);
+
+	tree->root = 0;
+	tree->display = d;
+	tree->compare = comparator;
+	tree->swap = swapper;
+	tree->size = 0;
+
+	return tree;
 }
 
 void *
@@ -55,56 +75,37 @@ setBSTNODE(BSTNODE *n, void *value)
 BSTNODE *
 getBSTNODEleft(BSTNODE *n)
 {
-	return n->left;
+	return getBSTNODE(n->left);
 }
 
 void
 setBSTNODEleft(BSTNODE *n, BSTNODE *replacement)
 {
-	n->left = replacement;
+	n->left = getBSTNODE(replacement);
 }
 
 BSTNODE *
 getBSTNODEright(BSTNODE *n)
 {
-	return n->right;
+	return getBSTNODE(n->right);
 }
 
 void
 setBSTNODEright(BSTNODE *n, BSTNODE *replacement)
 {
-	n->right = replacement;
+	n->right = getBSTNODE(replacement);
 }
 
 BSTNODE *
 getBSTNODEparent(BSTNODE *n)
 {
-	return n->parent;
+	return getBSTNODE(n->parent);
 }
 
 void
 setBSTNODEparent(BSTNODE *n, BSTNODE *replacement)
 {
-	n->parent = replacement;
-}
-
-BST * 
-newBST(void(*d)(FILE *, void *), int(*comparator)(void *, void *), void(*swapper)(BSTNODE *, BSTNODE *))
-{
-	// The constructor is passed three functions, one that knows how to display the generic value stored in a node, 
-	// one that can compare two generic values, and one that knows how to swap the two generic values held by BSTNODEs (the swapper function is used by swapToLeafBST). 
-
-	BST *tree = malloc(sizeof(BST));
-
-	assert(tree != 0);
-
-	tree->root = 0;
-	tree->display = d;
-	tree->compare = comparator;
-	tree->swap = swapper;
-	tree->size = 0;
-
-	return tree;
+	n->parent = getBSTNODE(replacement);
 }
 
 void
@@ -121,9 +122,11 @@ getBSTroot(BST *t)
 	return t->root;
 }
 
-static void
+static BSTNODE *
 insertHelper(BST *tree, BSTNODE *spot, void *value)
 {
+
+	BSTNODE *returnSpot;
 
 	int result = tree->compare(value, spot->value);
 
@@ -134,6 +137,8 @@ insertHelper(BST *tree, BSTNODE *spot, void *value)
 	else if(result < 0)
 	{
 		spot->left = newBSTNODE(value);
+		tree->size++;
+		returnSpot = spot->left;
 	}
 	else if (spot->right != NULL)
 	{
@@ -142,7 +147,11 @@ insertHelper(BST *tree, BSTNODE *spot, void *value)
 	else
 	{
 		spot->right = newBSTNODE(value);
+		tree->size++;
+		returnSpot = spot->right;
 	}
+
+	return returnSpot;
 }
 
 BSTNODE *
@@ -150,7 +159,7 @@ insertBST(BST *tree, void *value)
 {
 	/*
 	The insert method adds a leaf to the tree in the proper location, based upon the comparator passed to the constructor. 
-	It is passed a generic key value (upon which comparisons are made) and a generic value that is to be associated with the key. 
+	It is passed a generic value that is to be the key and value. 
 	*/
 
 	assert(tree != 0);
@@ -158,17 +167,18 @@ insertBST(BST *tree, void *value)
 	if (tree->root == 0)
 	{
 		tree->root = newBSTNODE(value);
+		tree->size++;
+		return tree->root;
 	}
 
 	else
 	{
-		insertHelper(tree, tree->root, value);
+		return insertHelper(tree, tree->root, value);
 	}
 
-	tree->size++;
 }
 
-static void *
+BSTNODE *
 findHelper(BST *tree, BSTNODE *node, void *value)
 {
 	// nothing left, return null
@@ -197,7 +207,7 @@ findHelper(BST *tree, BSTNODE *node, void *value)
 	}
 }
 
-void *
+BSTNODE *
 findBST(BST *tree, void *value)
 {
 	// This method returns the node that holds the searched-for value. If the value is not in the tree, the method should return null. 
@@ -212,7 +222,13 @@ deleteBST(BST *t, void *value)
 	// This method is implemented with a call to the swap-to-leaf method followed by a call to the prune-leaf method, returning the pruned node. 
 	// It should run in linear time for a green tree and logarithmic time for a red-black tree. 
 
+	swapToLeafBST(t, getBSTNODE(value));
 
+	BSTNODE *returnVal = getBSTNODE(value);
+
+	pruneLeafBST(t, getBSTNODE(value));
+
+	return returnVal;
 }
 
 BSTNODE *
@@ -222,13 +238,55 @@ swapToLeafBST(BST *t, BSTNODE *node)
 	// It calls the BST’s swapper function to actually accomplish the swap, sending the two nodes whose values need to be swapped. 
 	// If the swapper function is NULL, then the method should just swap the values as normal.
 
+	// There is a swap function
+	if (t->swap != NULL)
+	{
+		// Less than or equal to, prefers predecessor, go left
+		if (node->value <= node->left->value)
+		{
+			t->swap(node->value, node->left->value);
+			swapToLeafBST(t, node);
+		}
 
+		// Greater than go right
+		else
+		{
+			t->swap(node->value, node->right->value);
+			swapToLeafBST(t, node);
+		}
+	}
+
+	// There is no swap function
+	else
+	{
+		// Less than or equal to, prefers predecessor, go left
+		if (node->value <= node->left->value)
+		{
+			void *tempValue = node->left->value;
+			node->left->value = node->value;
+			node->value = tempValue;
+			swapToLeafBST(t, node);
+		}
+
+		// Greater than go right
+		else
+		{
+			void *tempValue = node->right->value;
+			node->right->value = node->value;
+			node->value = tempValue;
+			swapToLeafBST(t, node);
+		}
+	}
+
+	return node;
 }
 
 void
 pruneLeafBST(BST *t, BSTNODE *leaf)
 {
+	leaf->value = NULL;
 
+	--t->size;
 }
 
 int 
@@ -243,32 +301,32 @@ void
 statisticsBST(FILE *fp, BST *t)
 {
 	// This method should display the number of nodes in the tree as well as the minimum and maximum heights of the tree. It should run in linear time. 
-
+	fprintf(fp, "%d\n", t->size);
 
 }
 
 static void
-inorder(FILE *fp, BST *tree, BSTNODE *root)
+displayHelper(FILE *fp, BST *tree, BSTNODE *root)
 {
-	if (root == 0)
-	{
-		return;
-	}
+
+	QUEUE *displayQUEUE = newQUEUE(NULL);
 
 	fprintf(fp, "[");
 
 	if (root->left != 0)
 	{
-		inorder(fp, tree, root->left);
+		enqueue(displayQUEUE, root->left);
+		displayHelper(fp, tree, root->left);
 		fprintf(fp, " ");
 	}
 
-	tree->display(fp, root->value);
+	tree->display(fp, dequeue(displayQUEUE));
 
 	if (root->right != 0)
 	{
 		fprintf(fp, " ");
-		inorder(fp, tree, root->right);
+		enqueue(displayQUEUE, root->right);
+		displayHelper(fp, tree, root->right);
 	}
 
 	fprintf(fp, "]");
@@ -280,7 +338,7 @@ displayBST(FILE *fp, BST *tree)
 {
 	// The display method performs an in-order traversal of the tree. At any given node, the method displays the left and right subtrees, each enclosed with brackets, but only if they exist. 
 	// A space is placed between any existing subtree (e.g. after the bracket for a left subtree) and the node value. 
-	// An empty tree is displayed as []. To display a node in the tree, the cached display function is passed the key and the value stored at the node. 
+	// An empty tree is displayed as []. To display a node in the tree, the cached display function is passed the value stored at the node. 
 	// No characters are to be printed after the last closing bracket.
 	// This method should run in linear time. 
 	
@@ -288,7 +346,9 @@ displayBST(FILE *fp, BST *tree)
 	{
 		fprintf(fp, "[");
 		fprintf(fp, "]");
+
+		return;
 	}
 
-	inorder(fp, tree, tree->root);
+	displayHelper(fp, tree, tree->root);
 }

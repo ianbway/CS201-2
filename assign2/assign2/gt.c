@@ -29,6 +29,8 @@ insertGT(GT *tree, void *value)
 	// The insert method adds a leaf to the tree in the proper location, based upon the comparator passed to the constructor.
 	// It is passed a generic value.
 
+	insertBST(tree, value);
+
 }
 
 int 
@@ -36,6 +38,8 @@ findGT(GT *tree, void *value)
 {
 	// This method returns the frequency of the searched-for value. 
 	// If the value is not in the tree, the method should return zero. 
+
+	findBST(tree, value);
 
 }
 
@@ -53,6 +57,7 @@ sizeGT(GT *tree)
 	// This method returns the number of nodes currently in the tree. 
 	// It should run in amortized constant time.
 
+	return tree->size;
 }
 
 int 
@@ -77,4 +82,5 @@ displayGT(FILE *file, GT *tree)
 {
 	// Calls underlying display BST method.
 
+	displayBST(file, tree);
 }

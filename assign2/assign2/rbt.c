@@ -54,6 +54,7 @@ sizeRBT(RBT *tree)
 	// This method returns the number of nodes currently in the tree. 
 	// It should run in amortized constant time. 
 
+	return tree->size;
 }
 
 int 
@@ -76,4 +77,6 @@ void
 displayRBT(FILE *file, RBT *tree)
 {
 	// Calls displayBST on underlying tree.
+
+	displayBST(file, tree);
 }

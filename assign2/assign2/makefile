@@ -2,14 +2,17 @@
 # makefile for assignment 2
 CDA_OBJS = integer.o real.o string.o cda.o
 QUEUE_OBJS = integer.o real.o string.o cda.o queue.o
-BST_OBJS = integer.o real.o string.o bst.o
-GT_OBJS = integer.o real.o string.o bst.o gt.o
-RBT_OBJS = integer.o real.o string.o bst.o rbt.o
+BST_OBJS = integer.o real.o string.o cda.o queue.o bst.o test-bst.o
+GT_OBJS = integer.o real.o string.o cda.o queue.o bst.o gt.o
+RBT_OBJS = integer.o real.o string.o cda.o queue.o bst.o rbt.o
 OPTS = -Wall -Wextra -std=c99 -g -c 
 LOPTS = -Wall -Wextra -std=c99 -g
 CC = gcc
 
-all : 
+all : test-bst
+
+test-bst : $(BST_OBJS)
+	$(CC) $(LOPTS) $(BST_OBJS) -o test-bst
 
 scanner.o : scanner.c scanner.h
 	$(CC) $(OPTS) scanner.c
@@ -39,6 +42,7 @@ rbt.o : rbt.c rbt.h
 	$(CC) $(OPTS) rbt.c
 	
 clean :
-	rm -f $(CDA_OBJS) $(QUEUE_OBJS) $(BST_OBJS) $(GT_OBJS) $(RBT_OBJS)
+	rm -f $(CDA_OBJS) $(QUEUE_OBJS) $(BST_OBJS) $(GT_OBJS) $(RBT_OBJS) ./test-bst
 
 test :
+	./test-bst

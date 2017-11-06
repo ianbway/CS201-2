@@ -101,6 +101,7 @@
     <ClCompile Include="real.c" />
     <ClCompile Include="scanner.c" />
     <ClCompile Include="string.c" />
+    <ClCompile Include="test-bst.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
