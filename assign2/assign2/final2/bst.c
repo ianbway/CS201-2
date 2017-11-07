@@ -301,65 +301,54 @@ void
 statisticsBST(FILE *fp, BST *t)
 {
 	// This method should display the number of nodes in the tree as well as the minimum and maximum heights of the tree. It should run in linear time. 
-	fprintf(fp, "Nodes: %d\n", t->size);
+	fprintf(fp, "%d\n", t->size);
+
+}
+
+static void
+displayHelper(FILE *fp, BST *tree, BSTNODE *root)
+{
+
+	QUEUE *displayQUEUE = newQUEUE(NULL);
+
+	fprintf(fp, "[");
+
+	if (root->left != 0)
+	{
+		enqueue(displayQUEUE, root->left);
+		displayHelper(fp, tree, root->left);
+		fprintf(fp, " ");
+	}
+
+	tree->display(fp, dequeue(displayQUEUE));
+
+	if (root->right != 0)
+	{
+		fprintf(fp, " ");
+		enqueue(displayQUEUE, root->right);
+		displayHelper(fp, tree, root->right);
+	}
+
+	fprintf(fp, "]");
 
 }
 
 void 
 displayBST(FILE *fp, BST *tree)
 {
-	// When showing the tree, display the nodes with a breadth-first (left-first) traversal. 
-	// All nodes at a given level should be on the same line of output. 
-	// The level number should precede the display of the nodes at that level. 
-	// Display each node according to the following format: 
-	// an equals sign if the node is a leaf, followed by
-	// the node value, which may include a frequency count (if the count is greater than one) and a color, followed by
-	// a parenthesized display of the parent's value (which again may include a frequency count and color), followed by
-	// a - if the node is the root, a -l if the node is a left child, and a -r otherwise
+	// The display method performs an in-order traversal of the tree. At any given node, the method displays the left and right subtrees, each enclosed with brackets, but only if they exist. 
+	// A space is placed between any existing subtree (e.g. after the bracket for a left subtree) and the node value. 
+	// An empty tree is displayed as []. To display a node in the tree, the cached display function is passed the value stored at the node. 
+	// No characters are to be printed after the last closing bracket.
 	// This method should run in linear time. 
 	
-	QUEUE *displayQUEUE = newQUEUE(tree->display);
-	int levelCounter = 0;
-
-	// Empty tree
 	if (tree->root == 0)
 	{
-		fprintf(fp, "EMPTY\n");
+		fprintf(fp, "[");
+		fprintf(fp, "]");
+
 		return;
 	}
 
-	else
-	{
-		fprintf(fp, "%d: ", levelCounter);
-		tree->display(fp, tree->root->value);
-		fprintf(fp, "(");
-		tree->display(fp, tree->root->value);
-		fprintf(fp, ")-\n");
-		++levelCounter;
-		enqueue(displayQUEUE, tree->root->left);
-		enqueue(displayQUEUE, tree->root->right);
-	}
-
-	while (sizeQUEUE(displayQUEUE) > 0)
-	{
-		BSTNODE *dqVal = dequeue(displayQUEUE);
-		fprintf(fp, "%d: ", levelCounter);
-		tree->display(fp, dqVal->value);
-		fprintf(fp, "(");
-		tree->display(fp, dqVal->parent->value);
-		fprintf(fp, ")-");
-		++levelCounter;
-
-		if (tree->root->left)
-		{
-			enqueue(displayQUEUE, tree->root->left);
-		}
-
-		else if (tree->root->right)
-		{
-			enqueue(displayQUEUE, tree->root->right);
-		}
-
-		
-	}
+	displayHelper(fp, tree, tree->root);
 }
