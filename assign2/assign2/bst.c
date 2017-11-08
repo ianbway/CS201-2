@@ -230,11 +230,9 @@ deleteBST(BST *t, void *value)
 	// This method is implemented with a call to the swap-to-leaf method followed by a call to the prune-leaf method, returning the pruned node. 
 	// It should run in linear time for a green tree and logarithmic time for a red-black tree. 
 
-	swapToLeafBST(t, getBSTNODE(value));
+	BSTNODE *returnVal = swapToLeafBST(t, findBST(t, value));
 
-	BSTNODE *returnVal = getBSTNODE(value);
-
-	pruneLeafBST(t, getBSTNODE(value));
+	pruneLeafBST(t, returnVal);
 
 	return returnVal;
 }
@@ -246,11 +244,17 @@ swapToLeafBST(BST *t, BSTNODE *node)
 	// It calls the BST’s swapper function to actually accomplish the swap, sending the two nodes whose values need to be swapped. 
 	// If the swapper function is NULL, then the method should just swap the values as normal.
 
+	// We have reached the end, It has been swapped to leaf
+	if ((node->left == NULL) && (node->right == NULL))
+	{
+		return node;
+	}
+
 	// There is a swap function
 	if (t->swap != NULL)
 	{
 		// Less than or equal to, prefers predecessor, go left
-		if (node->value <= node->left->value)
+		if (t->compare(node->value, node->left->value) <= 0)
 		{
 			t->swap(node->value, node->left->value);
 			swapToLeafBST(t, node);
@@ -268,7 +272,7 @@ swapToLeafBST(BST *t, BSTNODE *node)
 	else
 	{
 		// Less than or equal to, prefers predecessor, go left
-		if (node->value <= node->left->value)
+		if (t->compare(node->value, node->left->value) <= 0)
 		{
 			void *tempValue = node->left->value;
 			node->left->value = node->value;
