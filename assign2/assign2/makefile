@@ -14,6 +14,9 @@ all : test-bst
 test-bst : $(BST_OBJS)
 	$(CC) $(LOPTS) $(BST_OBJS) -o test-bst
 
+test-bst.o : test-bst.c 
+	$(CC) $(OPTS) test-bst.c
+
 scanner.o : scanner.c scanner.h
 	$(CC) $(OPTS) scanner.c
 

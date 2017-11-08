@@ -26,11 +26,11 @@ swapper(BSTNODE *a, BSTNODE *b)
 	/* note: colors are NOT swapped */
 }
 
-static void
-displayCORPUS(FILE *fp, void *value)
-{
-	displaySTRING(fp, value);
-}
+//static void
+//displayCORPUS(FILE *fp, void *value)
+//{
+//	displaySTRING(fp, value);
+//}
 
 int main()
 {
@@ -55,6 +55,13 @@ int main()
 
 	printf("Finding values...\n");
 	findBST(tree, one);
+
+	printf("The tree looks like this:\n");
+	displayBST(stdout, tree);
+	printf("\n");
+	
+	printf("Deleting values...\n");
+	deleteBST(tree, five);
 
 	printf("The tree looks like this:\n");
 	displayBST(stdout, tree);

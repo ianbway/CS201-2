@@ -83,37 +83,37 @@ setBSTNODE(BSTNODE *n, void *value)
 BSTNODE *
 getBSTNODEleft(BSTNODE *n)
 {
-	return getBSTNODE(n->left);
+	return n->left;
 }
 
 void
 setBSTNODEleft(BSTNODE *n, BSTNODE *replacement)
 {
-	n->left = getBSTNODE(replacement);
+	n->left = replacement;
 }
 
 BSTNODE *
 getBSTNODEright(BSTNODE *n)
 {
-	return getBSTNODE(n->right);
+	return n->right;
 }
 
 void
 setBSTNODEright(BSTNODE *n, BSTNODE *replacement)
 {
-	n->right = getBSTNODE(replacement);
+	n->right = replacement;
 }
 
 BSTNODE *
 getBSTNODEparent(BSTNODE *n)
 {
-	return getBSTNODE(n->parent);
+	return n->parent;
 }
 
 void
 setBSTNODEparent(BSTNODE *n, BSTNODE *replacement)
 {
-	n->parent = getBSTNODE(replacement);
+	n->parent = replacement;
 }
 
 void
@@ -292,7 +292,14 @@ swapToLeafBST(BST *t, BSTNODE *node)
 void
 pruneLeafBST(BST *t, BSTNODE *leaf)
 {
-	leaf->value = NULL;
+	if (leaf->parent->left == leaf)
+	{
+		leaf->parent->left = NULL;
+	}
+	else
+	{
+		leaf->parent->right = NULL;
+	}
 
 	--t->size;
 }
@@ -344,23 +351,24 @@ displayBST(FILE *fp, BST *tree)
 	while (sizeQUEUE(q) > 0)
 	{
 		
+		// Dequeue something, save it
+		BSTNODE *dqVal = dequeue(q);
+
 		// If we dequeue a NULL
-		if (peekQUEUE(q) == NULL)
+		if (dqVal == NULL)
 		{
-			dequeue(q);
 			if (sizeQUEUE(q) == 0)
 			{
 				return;
 			}
+			dqVal = dequeue(q);
 			++levelCounter;
 			fprintf(fp, "\n");
 			fprintf(fp, "%d: ", levelCounter);
 			enqueue(q, NULL);
 		}
 
-		// Dequeue something, save it
-		BSTNODE *dqVal = dequeue(q);
-
+		//printf("Dequeued address is %p\n", dqVal);
 		// If there is a left child enqueue it
 		if (dqVal->left != NULL)
 		{
