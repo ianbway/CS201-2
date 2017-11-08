@@ -333,46 +333,44 @@ displayBST(FILE *fp, BST *tree)
 		return;
 	}
 
-	QUEUE *displayQUEUE = newQUEUE(tree->display);
+	QUEUE *q = newQUEUE(tree->display);
 	int levelCounter = 0;
 
 	// Enqueue the root after verifying it's existence and a NULL value
-	enqueue(displayQUEUE, tree->root);
-	enqueue(displayQUEUE, NULL);
+	enqueue(q, tree->root);
+	enqueue(q, NULL);
 	fprintf(fp, "%d: ", levelCounter);
 	// While the queue is not empty
-	while (sizeQUEUE(displayQUEUE) > 0)
+	while (sizeQUEUE(q) > 0)
 	{
 		
 		// If we dequeue a NULL
-		if (peekQUEUE(displayQUEUE) == NULL)
+		if (peekQUEUE(q) == NULL)
 		{
-			dequeue(displayQUEUE);
-			if (sizeQUEUE(displayQUEUE) == 0)
+			dequeue(q);
+			if (sizeQUEUE(q) == 0)
 			{
 				return;
 			}
 			++levelCounter;
 			fprintf(fp, "\n");
 			fprintf(fp, "%d: ", levelCounter);
-			enqueue(displayQUEUE, NULL);
+			enqueue(q, NULL);
 		}
 
-		//fprintf(fp, "%d: ", levelCounter);
-
 		// Dequeue something, save it
-		BSTNODE *dqVal = dequeue(displayQUEUE);
+		BSTNODE *dqVal = dequeue(q);
 
 		// If there is a left child enqueue it
 		if (dqVal->left != NULL)
 		{
-			enqueue(displayQUEUE, dqVal->left);
+			enqueue(q, dqVal->left);
 		}
 
 		// If there is a right child enqueue it
 		if (dqVal->right != NULL)
 		{
-			enqueue(displayQUEUE, dqVal->right);
+			enqueue(q, dqVal->right);
 		}
 
 		// It's a leaf, and not root
@@ -390,7 +388,7 @@ displayBST(FILE *fp, BST *tree)
 			tree->display(fp, dqVal->value);
 		}
 
-		// Else it is a child
+		// Else it is a child, so display parent in parens
 		else 
 		{
 			tree->display(fp, dqVal->parent->value);
@@ -416,10 +414,9 @@ displayBST(FILE *fp, BST *tree)
 		}
 		
 		// We are not at the end of the level yet
-		if (peekQUEUE(displayQUEUE) != NULL)
+		if (peekQUEUE(q) != NULL)
 		{
 			fprintf(fp, " ");
 		}
-
 	}
 }
