@@ -34,19 +34,27 @@ displayCORPUS(FILE *fp, void *value)
 
 int main()
 {
-	BST *tree = newBST(displayCORPUS, compareSTRING, swapper);
+	BST *tree = newBST(displaySTRING, compareSTRING, swapper);
 
 	printf("The tree looks like this:\n");
 	displayBST(stdout, tree);
 	printf("\n");	
 
-	STRING *test = newSTRING("test");
+	STRING *one = newSTRING("1");
+	STRING *two = newSTRING("2");
+	STRING *three = newSTRING("3");
+	STRING *four = newSTRING("4");
+	STRING *five = newSTRING("5");
 
 	printf("Inserting values...\n");
-	insertBST(tree, test);
+	insertBST(tree, three);
+	insertBST(tree, two);
+	insertBST(tree, one);
+	insertBST(tree, four);
+	insertBST(tree, five);
 
 	printf("Finding values...\n");
-	findBST(tree, test);
+	findBST(tree, one);
 
 	printf("The tree looks like this:\n");
 	displayBST(stdout, tree);

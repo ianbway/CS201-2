@@ -25,16 +25,24 @@ struct bst
 };
 
 static BSTNODE *
-newBSTNODE(void *value)
+newBSTNODE(BSTNODE *parent, void *value)
 {
 	BSTNODE *node = malloc(sizeof(BSTNODE));
 
 	assert(node != 0);
 
+	if (parent == NULL)
+	{
+		node->parent = node;
+	}
+	else
+	{
+		node->parent = parent;
+	}
+
 	node->value = value;
 	node->left = 0;
 	node->right = 0;
-	node->parent = 0;
 
 	return node;
 }
@@ -136,7 +144,7 @@ insertHelper(BST *tree, BSTNODE *spot, void *value)
 	}
 	else if(result < 0)
 	{
-		spot->left = newBSTNODE(value);
+		spot->left = newBSTNODE(spot, value);
 		tree->size++;
 		returnSpot = spot->left;
 	}
@@ -146,7 +154,7 @@ insertHelper(BST *tree, BSTNODE *spot, void *value)
 	}
 	else
 	{
-		spot->right = newBSTNODE(value);
+		spot->right = newBSTNODE(spot, value);
 		tree->size++;
 		returnSpot = spot->right;
 	}
@@ -166,7 +174,7 @@ insertBST(BST *tree, void *value)
 
 	if (tree->root == 0)
 	{
-		tree->root = newBSTNODE(value);
+		tree->root = newBSTNODE(NULL, value);
 		tree->size++;
 		return tree->root;
 	}
@@ -318,48 +326,100 @@ displayBST(FILE *fp, BST *tree)
 	// a - if the node is the root, a -l if the node is a left child, and a -r otherwise
 	// This method should run in linear time. 
 	
-	QUEUE *displayQUEUE = newQUEUE(tree->display);
-	int levelCounter = 0;
-
 	// Empty tree
-	if (tree->root == 0)
+	if (tree->size == 0)
 	{
 		fprintf(fp, "EMPTY\n");
 		return;
 	}
 
-	else
-	{
-		fprintf(fp, "%d: ", levelCounter);
-		tree->display(fp, tree->root->value);
-		fprintf(fp, "(");
-		tree->display(fp, tree->root->value);
-		fprintf(fp, ")-\n");
-		++levelCounter;
-		enqueue(displayQUEUE, tree->root->left);
-		enqueue(displayQUEUE, tree->root->right);
-	}
+	QUEUE *displayQUEUE = newQUEUE(tree->display);
+	int levelCounter = 0;
 
+	// Enqueue the root after verifying it's existence and a NULL value
+	enqueue(displayQUEUE, tree->root);
+	enqueue(displayQUEUE, NULL);
+	fprintf(fp, "%d: ", levelCounter);
+	// While the queue is not empty
 	while (sizeQUEUE(displayQUEUE) > 0)
 	{
+		
+		// If we dequeue a NULL
+		if (peekQUEUE(displayQUEUE) == NULL)
+		{
+			dequeue(displayQUEUE);
+			if (sizeQUEUE(displayQUEUE) == 0)
+			{
+				return;
+			}
+			++levelCounter;
+			fprintf(fp, "\n");
+			fprintf(fp, "%d: ", levelCounter);
+			enqueue(displayQUEUE, NULL);
+		}
+
+		//fprintf(fp, "%d: ", levelCounter);
+
+		// Dequeue something, save it
 		BSTNODE *dqVal = dequeue(displayQUEUE);
-		fprintf(fp, "%d: ", levelCounter);
+
+		// If there is a left child enqueue it
+		if (dqVal->left != NULL)
+		{
+			enqueue(displayQUEUE, dqVal->left);
+		}
+
+		// If there is a right child enqueue it
+		if (dqVal->right != NULL)
+		{
+			enqueue(displayQUEUE, dqVal->right);
+		}
+
+		// It's a leaf, and not root
+		if ((dqVal->left == NULL) && (dqVal->right == NULL) && (dqVal != tree->root))
+		{
+			fprintf(fp, "=");
+		}
+
 		tree->display(fp, dqVal->value);
 		fprintf(fp, "(");
-		tree->display(fp, dqVal->parent->value);
-		fprintf(fp, ")-");
-		++levelCounter;
 
-		if (tree->root->left)
+		// It's root, so print itself for parent
+		if (dqVal->parent == NULL)
 		{
-			enqueue(displayQUEUE, tree->root->left);
+			tree->display(fp, dqVal->value);
 		}
 
-		else if (tree->root->right)
+		// Else it is a child
+		else 
 		{
-			enqueue(displayQUEUE, tree->root->right);
+			tree->display(fp, dqVal->parent->value);
+		}
+		fprintf(fp, ")");
+
+		// It's the root
+		if (dqVal == tree->root)
+		{
+			fprintf(fp, "-");
 		}
 
+		// It's a left child
+		if ((dqVal->parent) && (getBSTNODE(dqVal) == getBSTNODEleft(dqVal->parent)))
+		{
+			fprintf(fp, "-l");
+		}
+
+		// It's a right child
+		if ((dqVal->parent) && (getBSTNODE(dqVal) == getBSTNODEright(dqVal->parent)))
+		{
+			fprintf(fp, "-r");
+		}
 		
+		// We are not at the end of the level yet
+		if (peekQUEUE(displayQUEUE) != NULL)
+		{
+			fprintf(fp, " ");
+		}
+
 	}
 }
