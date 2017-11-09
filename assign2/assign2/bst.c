@@ -237,6 +237,19 @@ deleteBST(BST *t, void *value)
 	return returnVal;
 }
 
+static void
+swapper(BSTNODE *a, BSTNODE *b)
+{
+	void *nodeAVal = getBSTNODE(a);
+	void *nodeBVal = getBSTNODE(b);
+
+	/* swap the values stored in the BST value objects */
+	void *vtemp = nodeAVal;
+	nodeAVal = nodeBVal;
+	nodeBVal = vtemp;
+
+}
+
 static BSTNODE *
 predecessor(BSTNODE *node)
 {
@@ -278,7 +291,7 @@ swapToLeafBST(BST *t, BSTNODE *node)
 	if (t->swap != NULL)
 	{
 		// Less than or equal to, prefers predecessor, go left
-		if (t->compare(node->value, node->left->value) <= 0)
+		if (predecessor(node))
 		{
 			t->swap(node->value, node->left->value);
 			swapToLeafBST(t, node);
