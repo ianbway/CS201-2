@@ -18,24 +18,13 @@ swapper(BSTNODE *a, BSTNODE *b)
 	nodeAVal = nodeBVal;
 	nodeBVal = vtemp;
 
-	/* swap the counts stored in the BST value objects */
-	//int ctemp = a->count;
-	//a->count = b->count;
-	//b->count = ctemp;
-
-	/* note: colors are NOT swapped */
 }
-
-//static void
-//displayCORPUS(FILE *fp, void *value)
-//{
-//	displaySTRING(fp, value);
-//}
 
 int main()
 {
 	BST *tree = newBST(displaySTRING, compareSTRING, swapper);
 
+	printf("An empty tree...\n");
 	printf("The tree looks like this:\n");
 	displayBST(stdout, tree);
 	printf("\n");	
@@ -55,47 +44,29 @@ int main()
 
 	printf("Finding values...\n");
 	findBST(tree, one);
+	findBST(tree, two);
+	findBST(tree, three);
+	findBST(tree, four);
+	findBST(tree, five);
+
+	printf("Finding size...\n");
+	int size = sizeBST(tree);
+	printf("The size is: %d. \n", size);
 
 	printf("The tree looks like this:\n");
 	displayBST(stdout, tree);
 	printf("\n");
 	
+	printf("Statistics...\n");
+	statisticsBST(stdout, tree);
+	printf("\n");
+
 	printf("Deleting values...\n");
 	deleteBST(tree, five);
 
 	printf("The tree looks like this:\n");
 	displayBST(stdout, tree);
 	printf("\n");
-	//insertBST(tree, a, newREAL(0.000));
-	//insertBST(tree, d, newREAL(3.000));
-	//insertBST(tree, c, newREAL(2.000));
-	//insertBST(tree, e, newREAL(4.000));
-
-	//printf("Finding values...\n");
-	//void* foundValA = findBST(tree, a);
-	//void* foundValB = findBST(tree, b);
-	//void* foundValC = findBST(tree, c);
-	//void* foundValD = findBST(tree, d);
-	//void* foundValE = findBST(tree, e);
-	
-	//printf("Found all values, time to display them...\n");
-	//displayMATILDA(stdout, a, foundValA);
-	//printf("\n");
-	//displayMATILDA(stdout, b, foundValB);
-	//printf("\n");
-	//displayMATILDA(stdout, c, foundValC);
-	//printf("\n");
-	//displayMATILDA(stdout, d, foundValD);
-	//printf("\n");
-	//displayMATILDA(stdout, e, foundValE);
-	//printf("\n");
-
-	//int size = sizeBST(tree);
-	//printf("The size is: %d. \n", size);
-
-	//printf("The tree looks like this:\n");
-	//displayBST(stdout, tree);
-	//printf("\n");	
 
 	return 0;
 }

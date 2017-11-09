@@ -7,6 +7,10 @@
 #include "bst.h"
 #include "queue.h"
 
+//macros for min/max
+#define min(a,b) (a<b?a:b)
+#define max(a,b) (a>b?a:b)
+
 struct bstnode
 {
 	struct bstnode *left;
@@ -238,40 +242,25 @@ deleteBST(BST *t, void *value)
 }
 
 static void
-swapper(BSTNODE *a, BSTNODE *b)
+swapper(BST *tree, BSTNODE *a, BSTNODE *b)
 {
-	void *nodeAVal = getBSTNODE(a);
-	void *nodeBVal = getBSTNODE(b);
-
-	/* swap the values stored in the BST value objects */
-	void *vtemp = nodeAVal;
-	nodeAVal = nodeBVal;
-	nodeBVal = vtemp;
-
-}
-
-static BSTNODE *
-predecessor(BSTNODE *node)
-{
-	BSTNODE *leftOne = node->left;
-	BSTNODE *rightOne;
-	while (leftOne->right)
+	// There is a swap method in constructor
+	if (tree->swap != NULL)
 	{
-		rightOne = leftOne->right;
+		tree->swap(a, b);
 	}
-	return rightOne;
-}
 
-static BSTNODE *
-successor(BSTNODE *node)
-{
-	BSTNODE *rightOne = node->right;
-	BSTNODE *leftOne;
-	while (rightOne->left)
+	// No swap method in constructor
+	else
 	{
-		leftOne = rightOne->left;
+		void *nodeAVal = getBSTNODE(a);
+		void *nodeBVal = getBSTNODE(b);
+
+		/* swap the values stored in the BST value objects */
+		void *vtemp = nodeAVal;
+		nodeAVal = nodeBVal;
+		nodeBVal = vtemp;
 	}
-	return leftOne;
 }
 
 BSTNODE *
@@ -281,62 +270,55 @@ swapToLeafBST(BST *t, BSTNODE *node)
 	// It calls the BST’s swapper function to actually accomplish the swap, sending the two nodes whose values need to be swapped. 
 	// If the swapper function is NULL, then the method should just swap the values as normal.
 
-	// We have reached the end, It has been swapped to leaf
-	if ((node->left == NULL) && (node->right == NULL))
+	BSTNODE *hold;
+
+	// its already a leaf node
+	if (node->left == NULL && node->right == NULL)
 	{
 		return node;
 	}
 
-	// There is a swap function
-	if (t->swap != NULL)
+	if (node->left != NULL)//if n has a left child
 	{
-		// Less than or equal to, prefers predecessor, go left
-		if (predecessor(node))
+		hold = node->left;//hold value for later swap
+
+		while (hold->right != NULL)//after going left, search all the way right
 		{
-			t->swap(node->value, node->left->value);
-			swapToLeafBST(t, node);
+			//only gets us part way in some cases, need recursive call
+			hold = hold->right;
 		}
 
-		// Greater than go right
-		else
-		{
-			t->swap(node->value, node->right->value);
-			swapToLeafBST(t, node);
-		}
+		//after you've reached the end of the left childs rightmost child
+		//swap the original value for the value in the leaf
+		swapper(t, node, hold);
+
+		return swapToLeafBST(t, hold);//recursive call to go all the way to the leaf
 	}
 
-	// There is no swap function
 	else
 	{
-		// Less than or equal to, prefers predecessor, go left
-		if (t->compare(node->value, node->left->value) <= 0)
+		hold = node->right;
+
+		while (hold->left != NULL)
 		{
-			void *tempValue = node->left->value;
-			node->left->value = node->value;
-			node->value = tempValue;
-			swapToLeafBST(t, node);
+			hold = hold->left;
 		}
 
-		// Greater than go right
-		else
-		{
-			void *tempValue = node->right->value;
-			node->right->value = node->value;
-			node->value = tempValue;
-			swapToLeafBST(t, node);
-		}
+		swapper(t, node, hold);
+
+		return swapToLeafBST(t, hold);
 	}
-
-	return node;
 }
 
 void
 pruneLeafBST(BST *t, BSTNODE *leaf)
 {
+
 	if (leaf->parent->left == leaf)
 	{
 		leaf->parent->left = NULL;
 	}
+
 	else
 	{
 		leaf->parent->right = NULL;
@@ -353,12 +335,47 @@ sizeBST(BST *tree)
 	return tree->size;
 }
 
+static int
+getMinDepth(BSTNODE *node)
+{
+	if (node == 0)
+	{
+		return 0;
+	}
+
+	else
+	{
+		int depth = min(getMinDepth(node->left), getMinDepth(node->right));
+		return ++depth;
+	}
+}
+
+static int 
+getMaxDepth(BSTNODE *node)
+{
+	if (node == 0)
+	{
+		return 0;
+	}
+
+	int depth = 0;
+	int maxLeft = getMaxDepth(node->left);
+	int maxRight = getMaxDepth(node->right);
+	depth = max(maxLeft, maxRight);
+	return ++depth;
+}
+
 void
 statisticsBST(FILE *fp, BST *t)
 {
 	// This method should display the number of nodes in the tree as well as the minimum and maximum heights of the tree. It should run in linear time. 
-	fprintf(fp, "Nodes: %d\n", t->size);
+	BSTNODE *root = t->root;
+	int minDepth = getMinDepth(root);
+	int maxDepth = getMaxDepth(root);
 
+	fprintf(fp, "Nodes: %d\n", sizeBST(t));
+	fprintf(fp, "Minimum depth: %d\n", minDepth);
+	fprintf(fp, "Maximum depth: %d\n", maxDepth);
 }
 
 void 
