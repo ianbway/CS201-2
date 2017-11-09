@@ -237,6 +237,30 @@ deleteBST(BST *t, void *value)
 	return returnVal;
 }
 
+static BSTNODE *
+predecessor(BSTNODE *node)
+{
+	BSTNODE *leftOne = node->left;
+	BSTNODE *rightOne;
+	while (leftOne->right)
+	{
+		rightOne = leftOne->right;
+	}
+	return rightOne;
+}
+
+static BSTNODE *
+successor(BSTNODE *node)
+{
+	BSTNODE *rightOne = node->right;
+	BSTNODE *leftOne;
+	while (rightOne->left)
+	{
+		leftOne = rightOne->left;
+	}
+	return leftOne;
+}
+
 BSTNODE *
 swapToLeafBST(BST *t, BSTNODE *node)
 {
