@@ -63,10 +63,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <NMakeBuildCommandLine>make</NMakeBuildCommandLine>
-    <NMakeOutput>assign2.exe</NMakeOutput>
+    <NMakeOutput>test-bst</NMakeOutput>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>make</NMakeReBuildCommandLine>
+    <NMakeReBuildCommandLine>make test</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>C:\Users\ianbw_000\Documents\Classes Fall 2017\CS201\IB2\assign2\assign2;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeBuildCommandLine>make</NMakeBuildCommandLine>

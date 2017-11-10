@@ -49,6 +49,8 @@ int main()
 	findBST(tree, four);
 	findBST(tree, five);
 
+	//printf("%s\n", getSTRING(getBSTNODE(foundFive)));
+
 	printf("Finding size...\n");
 	int size = sizeBST(tree);
 	printf("The size is: %d. \n", size);

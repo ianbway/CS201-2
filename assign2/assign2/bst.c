@@ -236,6 +236,7 @@ deleteBST(BST *t, void *value)
 
 	BSTNODE *returnVal = swapToLeafBST(t, findBST(t, value));
 
+	printf("ITS NOT FAILING IN SWAP\n");
 	pruneLeafBST(t, returnVal);
 
 	return returnVal;
@@ -244,6 +245,7 @@ deleteBST(BST *t, void *value)
 static void
 swapper(BST *tree, BSTNODE *a, BSTNODE *b)
 {
+	printf("inside swapper\n");
 	// There is a swap method in constructor
 	if (tree->swap != NULL)
 	{
@@ -271,27 +273,42 @@ swapToLeafBST(BST *t, BSTNODE *node)
 	// If the swapper function is NULL, then the method should just swap the values as normal.
 
 	BSTNODE *hold;
-
+	printf("in swap to leafbst\n");
+	t->display(stdout,node);
+	printf("\n");
+	printf("%d\n", node->left == NULL);
+	printf("%d\n", node->left == 0);
+	printf("\n");
 	// its already a leaf node
-	if (node->left == NULL && node->right == NULL)
+	if ((node->left == NULL) && (node->right == NULL))
 	{
+		printf("its a leaf\n");
 		return node;
 	}
 
+	printf("NOT HITTING LEAF CHECK\n");
+
 	if (node->left != NULL)//if n has a left child
 	{
+		printf("left child check\n");
 		hold = node->left;//hold value for later swap
+		//t->display(stdout, hold);
 
 		while (hold->right != NULL)//after going left, search all the way right
 		{
+			printf("First while loop\n");
 			//only gets us part way in some cases, need recursive call
 			hold = hold->right;
+			printf("%d\n", hold == NULL);
+			printf("%d\n", hold->right == NULL);
+			printf("Set hold\n");
 		}
 
 		//after you've reached the end of the left childs rightmost child
 		//swap the original value for the value in the leaf
+		printf("about to swap\n");
 		swapper(t, node, hold);
-
+		printf("Swap worked\n");
 		return swapToLeafBST(t, hold);//recursive call to go all the way to the leaf
 	}
 
@@ -308,6 +325,8 @@ swapToLeafBST(BST *t, BSTNODE *node)
 
 		return swapToLeafBST(t, hold);
 	}
+
+	printf("fell past conditional checks?\n");
 }
 
 void
