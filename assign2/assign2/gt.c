@@ -7,13 +7,13 @@
 #include "gt.h"
 #include "bst.h"
 
-typedef struct gt
+struct gt
 {
 	struct BSTNODE *root;
 	int size;
 	void(*display) (FILE *, void *, void *);
 	int(*compare) (void *, void *);
-} GT;
+};
 
 GT *
 newGT(void(*d)(FILE *, void *), int(*comparator)(void *, void *))
@@ -21,6 +21,16 @@ newGT(void(*d)(FILE *, void *), int(*comparator)(void *, void *))
 	// The constructor is passed two functions, one that knows how to display the generic value 
 	// to be stored and one that can compare two of these generic values. 
 
+	GT *tree = malloc(sizeof(GT));
+
+	assert(tree != 0);
+
+	tree->root = 0;
+	tree->display = d;
+	tree->compare = comparator;
+	tree->size = 0;
+
+	return tree;
 }
 
 void 

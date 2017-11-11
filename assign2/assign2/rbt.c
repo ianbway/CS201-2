@@ -7,13 +7,13 @@
 #include "rbt.h"
 #include "bst.h"
 
-typedef struct rbt
+struct rbt
 {
 	struct BSTNODE *root;
 	int size;
 	void(*display) (FILE *, void *, void *);
 	int(*compare) (void *, void *);
-} RBT;
+};
 
 RBT *
 newRBT(void(*d)(FILE *, void *), int(*comparator)(void *, void *))
@@ -21,6 +21,22 @@ newRBT(void(*d)(FILE *, void *), int(*comparator)(void *, void *))
 	// The constructor is passed two functions, one that knows how to display the generic value 
 	// to be stored and one that can compare two of these generic values.
 
+	RBT *tree = malloc(sizeof(RBT));
+
+	assert(tree != 0);
+
+	tree->root = 0;
+	tree->display = d;
+	tree->compare = comparator;
+	tree->size = 0;
+
+	return tree;
+
+}
+
+static void
+insertionFixup(RBT *tree, void *value)
+{
 
 }
 
@@ -39,6 +55,12 @@ findRBT(RBT *tree, void *value)
 {
 	// This method returns the frequency of the searched-for value. 
 	// If the value is not in the tree, the method should return zero. 
+
+}
+
+static void
+deletionFixup(RBT *tree, void *value)
+{
 
 }
 
