@@ -202,7 +202,7 @@ findHelper(BST *tree, BSTNODE *node, void *value)
 	// we found it, it's equal
 	else if (tree->compare(value, node->value) == 0)
 	{
-		return node->value;
+		return node;
 	}
 
 	// else it is negative, go left
@@ -258,8 +258,8 @@ swapper(BST *tree, BSTNODE *a, BSTNODE *b)
 
 		/* swap the values stored in the BST value objects */
 		void *vtemp = nodeAVal;
-		nodeAVal = nodeBVal;
-		nodeBVal = vtemp;
+		a->value = nodeBVal;
+		b->value = vtemp;
 	}
 }
 
@@ -315,7 +315,12 @@ void
 pruneLeafBST(BST *t, BSTNODE *leaf)
 {
 
-	if (leaf->parent->left == leaf)
+	if (leaf->parent == leaf)
+	{
+		t->root = NULL;
+	}
+
+	else if (leaf->parent->left == leaf)
 	{
 		leaf->parent->left = NULL;
 	}
@@ -469,13 +474,13 @@ displayBST(FILE *fp, BST *tree)
 		}
 
 		// It's a left child
-		if ((dqVal->parent) && (getBSTNODE(dqVal) == getBSTNODEleft(dqVal->parent)))
+		if ((dqVal->parent) && (dqVal == dqVal->parent->left))
 		{
 			fprintf(fp, "-l");
 		}
 
 		// It's a right child
-		if ((dqVal->parent) && (getBSTNODE(dqVal) == getBSTNODEright(dqVal->parent)))
+		if ((dqVal->parent) && (dqVal == dqVal->parent->right))
 		{
 			fprintf(fp, "-r");
 		}
