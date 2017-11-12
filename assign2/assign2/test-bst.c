@@ -112,6 +112,19 @@ int main()
 	printf("Deleting values...\n");
 	deleteBST(tree, five);
 	deleteBST(tree, two);
+	deleteBST(tree, nine);
+	deleteBST(tree, fifteen);
+	deleteBST(tree, six);
+	deleteBST(tree, one);
+	deleteBST(tree, three);
+	deleteBST(tree, four);
+	deleteBST(tree, seven);
+	deleteBST(tree, eight);
+	deleteBST(tree, ten);
+	deleteBST(tree, eleven);
+	deleteBST(tree, twelve);
+	deleteBST(tree, thirteen);
+	deleteBST(tree, fourteen);
 
 	printf("The tree looks like this:\n");
 	displayBST(stdout, tree);

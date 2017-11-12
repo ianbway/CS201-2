@@ -3,17 +3,23 @@
 CDA_OBJS = integer.o real.o string.o cda.o
 QUEUE_OBJS = integer.o real.o string.o cda.o queue.o
 BST_OBJS = integer.o real.o string.o cda.o queue.o bst.o test-bst.o
-GT_OBJS = integer.o real.o string.o cda.o queue.o bst.o gt.o
+GT_OBJS = integer.o real.o string.o cda.o queue.o bst.o gt.o test-gt.o
 RBT_OBJS = integer.o real.o string.o cda.o queue.o bst.o rbt.o
 OPTS = -Wall -Wextra -std=c99 -g -c 
 LOPTS = -Wall -Wextra -std=c99 -g
 CC = gcc
 
-all : test-bst
+all : test-gt
 
+test-gt : $(GT_OBJS)
+	$(CC) $(LOPTS) $(GT_OBJS) -o test-gt
+	
 test-bst : $(BST_OBJS)
-	$(CC) $(LOPTS) $(BST_OBJS) -o test-bst
+	$(CC) $(LOPTS) $(BST_OBJS) -o test-bst	
 
+test-gt.o : test-gt.c 
+	$(CC) $(OPTS) test-gt.c
+	
 test-bst.o : test-bst.c 
 	$(CC) $(OPTS) test-bst.c
 
@@ -45,7 +51,7 @@ rbt.o : rbt.c rbt.h
 	$(CC) $(OPTS) rbt.c
 	
 clean :
-	rm -f $(CDA_OBJS) $(QUEUE_OBJS) $(BST_OBJS) $(GT_OBJS) $(RBT_OBJS) ./test-bst
+	rm -f $(CDA_OBJS) $(QUEUE_OBJS) $(BST_OBJS) $(GT_OBJS) $(RBT_OBJS) ./test-bst ./test-gt
 
 test :
-	./test-bst
+	./test-gt

@@ -80,5 +80,11 @@
     <ClCompile Include="trees.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test-rbt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test-gt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
