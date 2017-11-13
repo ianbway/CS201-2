@@ -146,3 +146,9 @@ processOptions(int argc, char **argv)
 
 	return argIndex;
 }
+
+static char *
+clean(char *word) 
+{
+
+}

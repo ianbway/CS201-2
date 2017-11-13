@@ -33,7 +33,7 @@ int main()
 	INTEGER *fourteen = newINTEGER(14);
 	INTEGER *fifteen = newINTEGER(15);*/
 
-	printf("Inserting values, including duplicates...");
+	printf("Inserting values, including duplicates...\n");
 	insertGT(tree, three);
 	insertGT(tree, four);
 	insertGT(tree, two);
