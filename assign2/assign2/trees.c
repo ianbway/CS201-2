@@ -150,5 +150,13 @@ processOptions(int argc, char **argv)
 static char *
 clean(char *word) 
 {
+	if (!word)
+	{
+		return NULL;
+	}
+
+	char *cleanedWord = word;
+
+	
 
 }

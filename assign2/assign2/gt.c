@@ -7,6 +7,8 @@
 #include "gt.h"
 #include "bst.h"
 
+static void swapper(BSTNODE *, BSTNODE *);
+
 struct gt
 {
 	BST *bst;
@@ -19,6 +21,8 @@ typedef struct gtvalue
 {
 	void *value;
 	int count;
+	void(*display) (FILE *, void *);
+	int(*compare) (void *, void *);
 } GTVALUE;
 
 GT *
@@ -40,13 +44,15 @@ newGT(void(*d)(FILE *, void *), int(*comparator)(void *, void *))
 }
 
 GTVALUE *
-newGTVALUE(void *value)
+newGTVALUE(GT *tree, void *value)
 {
 	GTVALUE *val = malloc(sizeof(GTVALUE));
 	assert(val != 0);
 
 	val->value = value;
 	val->count = 1;
+	val->display = tree->display;
+	val->compare = tree->compare;
 
 	return val;
 }
@@ -57,7 +63,7 @@ insertGT(GT *tree, void *value)
 	// The insert method increments the count, or if the node does not exist yet, inserts it.
 	// It is passed a generic value.
 
-	GTVALUE *mayExist = newGTVALUE(value);
+	GTVALUE *mayExist = newGTVALUE(tree, value);
 
 	// node already exists. Increase it's count by one and the overall number of words in the tree by one.
 	if (findBST(tree->bst, mayExist))
@@ -81,7 +87,7 @@ findGT(GT *tree, void *value)
 	// This method returns the frequency of the searched-for value. 
 	// If the value is not in the tree, the method should return zero. 
 
-	GTVALUE *mayExist = newGTVALUE(value);
+	GTVALUE *mayExist = newGTVALUE(tree, value);
 
 	// In tree
 	if (findBST(tree->bst, value)) 
@@ -106,14 +112,16 @@ deleteGT(GT *tree, void *value)
 	// Count of value is more than one in the tree, decrement count
 	if (findGT(tree, value) > 1)
 	{
-		GTVALUE *alreadyExists = newGTVALUE(getBSTNODE(findBST(tree->bst, value)));
+		GTVALUE *alreadyExists = newGTVALUE(tree, getBSTNODE(findBST(tree->bst, value)));
 		alreadyExists->count--;
+		tree->words--;
 	}
 
 	// Delete node from tree if count is one
 	else
 	{
 		deleteBST(tree->bst, value);
+		tree->words--;
 	}
 }
 
