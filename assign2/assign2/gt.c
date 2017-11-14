@@ -8,6 +8,8 @@
 #include "bst.h"
 
 static void swapper(BSTNODE *, BSTNODE *);
+static int compareGTvalue(void *, void *);
+static void displayGTvalue(FILE *, void *);
 
 struct gt
 {
@@ -21,8 +23,8 @@ typedef struct gtvalue
 {
 	void *value;
 	int count;
-	void(*display) (FILE *, void *);
-	int(*compare) (void *, void *);
+	void(*displayVal) (FILE *, void *);
+	int(*compareVal) (void *, void *);
 } GTVALUE;
 
 GT *
@@ -35,7 +37,7 @@ newGT(void(*d)(FILE *, void *), int(*comparator)(void *, void *))
 
 	assert(tree != 0);
 
-	tree->bst = newBST(d, comparator, swapper);
+	tree->bst = newBST(displayGTvalue, compareGTvalue, swapper);
 	tree->words = 0;
 	tree->display = d;
 	tree->compare = comparator;
@@ -47,12 +49,13 @@ GTVALUE *
 newGTVALUE(GT *tree, void *value)
 {
 	GTVALUE *val = malloc(sizeof(GTVALUE));
+
 	assert(val != 0);
 
 	val->value = value;
 	val->count = 1;
-	val->display = tree->display;
-	val->compare = tree->compare;
+	val->displayVal = tree->display;
+	val->compareVal = tree->compare;
 
 	return val;
 }
@@ -64,11 +67,14 @@ insertGT(GT *tree, void *value)
 	// It is passed a generic value.
 
 	GTVALUE *mayExist = newGTVALUE(tree, value);
-
+	printf("made value\n");
+	
 	// node already exists. Increase it's count by one and the overall number of words in the tree by one.
 	if (findBST(tree->bst, mayExist))
 	{
+		printf("it exists\n");
 		GTVALUE *alreadyExists = getBSTNODE(findBST(tree->bst, mayExist));
+		printf("already exists variable created\n");
 		alreadyExists->count++;
 		tree->words++;
 	}
@@ -77,6 +83,7 @@ insertGT(GT *tree, void *value)
 	else
 	{
 		insertBST(tree->bst, mayExist);
+		printf("inserted mayexist\n");
 		tree->words++;
 	}
 }
@@ -87,14 +94,11 @@ findGT(GT *tree, void *value)
 	// This method returns the frequency of the searched-for value. 
 	// If the value is not in the tree, the method should return zero. 
 
-	GTVALUE *mayExist = newGTVALUE(tree, value);
-
 	// In tree
 	if (findBST(tree->bst, value)) 
 	{
-		BSTNODE *inTree = findBST(tree->bst, mayExist);
-		GTVALUE *val = getBSTNODE(inTree);
-		return val->count;
+		GTVALUE *alreadyExists = getBSTNODE(findBST(tree->bst, value));
+		return alreadyExists->count;
 	}
 
 	// Not in tree
@@ -112,7 +116,7 @@ deleteGT(GT *tree, void *value)
 	// Count of value is more than one in the tree, decrement count
 	if (findGT(tree, value) > 1)
 	{
-		GTVALUE *alreadyExists = newGTVALUE(tree, getBSTNODE(findBST(tree->bst, value)));
+		GTVALUE *alreadyExists = getBSTNODE(findBST(tree->bst, value));
 		alreadyExists->count--;
 		tree->words--;
 	}
@@ -178,4 +182,24 @@ swapper(BSTNODE *a, BSTNODE *b)
 	gb->count = ctemp;
 
 	/* note: colors are NOT swapped */
+}
+
+static int
+compareGTvalue(void *valueOne, void *valueTwo)
+{
+	GTVALUE *valOne = valueOne;
+	GTVALUE *valTwo = valueTwo;
+	return valOne->compareVal(valOne->value, valTwo->value);
+}
+
+static void
+displayGTvalue(FILE *file, void *value)
+{
+	GTVALUE *gtVal = value;
+	gtVal->displayVal(file, gtVal->value);
+
+	if (gtVal->count > 1)
+	{
+		fprintf(file, "-%d", gtVal->count);
+	}
 }

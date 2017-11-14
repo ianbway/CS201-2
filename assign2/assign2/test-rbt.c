@@ -8,28 +8,42 @@
 #include "real.h"
 #include "integer.h"
 
-static void 
-swapper(BSTNODE *a, BSTNODE *b)
-{
-	RBTVALUE *ra = getBSTNODE(a);
-	RBTVALUE *rb = getBSTNODE(b);
-
-	/* swap the keys stored in the RBT value objects */
-	void *vtemp = ra->value;
-	ra->value = rb->value;
-	rb->value = vtemp;
-
-	/* swap the counts stored in the RBT value objects */
-	int ctemp = ra->count;
-	ra->count = rb->count;
-	rb->count = ctemp;
-
-	/* note: colors are NOT swapped */
-}
-
 int main()
 {
 	RBT *tree = newRBT(displaySTRING, compareSTRING);
+
+	printf("An empty tree...\n");
+	printf("The tree looks like this:\n");
+	displayRBT(stdout, tree);
+	printf("\n");
+
+	//INTEGER *one = newINTEGER(1);
+	INTEGER *two = newINTEGER(2);
+	INTEGER *three = newINTEGER(3);
+	INTEGER *four = newINTEGER(4);
+	/*INTEGER *five = newINTEGER(5);
+	INTEGER *six = newINTEGER(6);
+	INTEGER *seven = newINTEGER(7);
+	INTEGER *eight = newINTEGER(8);
+	INTEGER *nine = newINTEGER(9);
+	INTEGER *ten = newINTEGER(10);
+	INTEGER *eleven = newINTEGER(11);
+	INTEGER *twelve = newINTEGER(12);
+	INTEGER *thirteen = newINTEGER(13);
+	INTEGER *fourteen = newINTEGER(14);
+	INTEGER *fifteen = newINTEGER(15);*/
+
+	printf("Inserting values, including duplicates...\n");
+	insertRBT(tree, three);
+	insertRBT(tree, four);
+	insertRBT(tree, two);
+	insertRBT(tree, three);
+	insertRBT(tree, three);
+	insertRBT(tree, three);
+
+	printf("The tree looks like this:\n");
+	displayRBT(stdout, tree);
+	printf("\n");
 
 	return 0;
 }

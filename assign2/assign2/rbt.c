@@ -8,6 +8,8 @@
 #include "bst.h"
 
 static void swapper(BSTNODE *, BSTNODE *);
+static int compareRBTvalue(void *, void *);
+static void displayRBTvalue(FILE *, void *);
 static char color(BSTNODE *);
 static void setColor(BSTNODE *, char);
 static int isLinear(BSTNODE *);
@@ -31,8 +33,8 @@ typedef struct rbtvalue
 	void *value;
 	char color;
 	int count;
-	void(*display) (FILE *, void *);
-	int(*compare) (void *, void *);
+	void(*displayVal) (FILE *, void *);
+	int(*compareVal) (void *, void *);
 } RBTVALUE;
 
 RBT *
@@ -45,7 +47,7 @@ newRBT(void(*d)(FILE *, void *), int(*comparator)(void *, void *))
 
 	assert(tree != 0);
 
-	tree->bst = newBST(d, comparator, swapper);
+	tree->bst = newBST(displayRBTvalue, compareRBTvalue, swapper);
 	tree->words = 0;
 	tree->display = d;
 	tree->compare = comparator;
@@ -62,8 +64,8 @@ newRBTVALUE(RBT *tree, void *value)
 	val->value = value;
 	val->color = "R";
 	val->count = 1;
-	val->display = tree->display;
-	val->compare = tree->compare;
+	val->displayVal = tree->display;
+	val->compareVal = tree->compare;
 
 	return val;
 }
@@ -349,6 +351,36 @@ swapper(BSTNODE *a, BSTNODE *b)
 	rb->count = ctemp;
 
 	/* note: colors are NOT swapped */
+}
+
+static int
+compareRBTvalue(void *valueOne, void *valueTwo)
+{
+	RBTVALUE *valOne = valueOne;
+	RBTVALUE *valTwo = valueTwo;
+	return valOne->compareVal(valOne->value, valTwo->value);
+}
+
+static void
+displayRBTvalue(FILE *file, void *value)
+{
+	RBTVALUE *rbtVal = value;
+	rbtVal->displayVal(file, rbtVal->value);
+
+	if (rbtVal->count > 1)
+	{
+		fprintf(file, "-%d", rbtVal->count);
+	}
+
+	if (rbtVal->color == "R")
+	{
+		fprintf(file, "-R");
+	}
+
+	else
+	{
+		fprintf(file, "-B");
+	}
 }
 
 static char
