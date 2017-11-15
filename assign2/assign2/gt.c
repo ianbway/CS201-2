@@ -66,24 +66,23 @@ insertGT(GT *tree, void *value)
 	// The insert method increments the count, or if the node does not exist yet, inserts it.
 	// It is passed a generic value.
 
-	GTVALUE *mayExist = newGTVALUE(tree, value);
-	printf("made value\n");
+	BSTNODE *valToInsert;
+	GTVALUE *gtVal = newGTVALUE(tree, value);
+	valToInsert = findBST(tree->bst, gtVal);
 	
 	// node already exists. Increase it's count by one and the overall number of words in the tree by one.
-	if (findBST(tree->bst, mayExist))
+	if (valToInsert)
 	{
-		printf("it exists\n");
-		GTVALUE *alreadyExists = getBSTNODE(findBST(tree->bst, mayExist));
-		printf("already exists variable created\n");
-		alreadyExists->count++;
+		gtVal = getBSTNODE(valToInsert);
+		gtVal->count++;
 		tree->words++;
 	}
 
 	// node does not exist in tree yet. Add it to tree and increment the total number of words
 	else
 	{
-		insertBST(tree->bst, mayExist);
-		printf("inserted mayexist\n");
+		gtVal = newGTVALUE(tree, value);
+		valToInsert = insertBST(tree->bst, gtVal);
 		tree->words++;
 	}
 }
@@ -94,10 +93,13 @@ findGT(GT *tree, void *value)
 	// This method returns the frequency of the searched-for value. 
 	// If the value is not in the tree, the method should return zero. 
 
+	GTVALUE *alreadyExists = newGTVALUE(tree, value);
+	BSTNODE *valInTree = findBST(tree->bst, alreadyExists);
+
 	// In tree
-	if (findBST(tree->bst, value)) 
+	if (valInTree) 
 	{
-		GTVALUE *alreadyExists = getBSTNODE(findBST(tree->bst, value));
+		alreadyExists = getBSTNODE(valInTree);
 		return alreadyExists->count;
 	}
 
@@ -113,19 +115,36 @@ deleteGT(GT *tree, void *value)
 {
 	// Removes value from tree. If multiple of value reduce count by one.
 
+	BSTNODE *valToDelete;
+	GTVALUE *gtVal = newGTVALUE(tree, value);
+	valToDelete = findBST(tree->bst, gtVal);
+
 	// Count of value is more than one in the tree, decrement count
 	if (findGT(tree, value) > 1)
 	{
-		GTVALUE *alreadyExists = getBSTNODE(findBST(tree->bst, value));
-		alreadyExists->count--;
+		GTVALUE *gtVal = getBSTNODE(valToDelete);
+		gtVal->count--;
 		tree->words--;
 	}
 
 	// Delete node from tree if count is one
+	else if (findGT(tree, value) == 1)
+	{
+		valToDelete = deleteBST(tree->bst, gtVal);
+		tree->words--;
+	}
+
+	// Ignore, but report an attempt to delete something that does not exist in the tree. 
+	// Thus you ought to be able to randomly generate a large number commands and have your application run without failing. 
+	// The error message printed when attempting to delete a value not in the tree should have the form: 
+	// Value x not found.
+	// There should be no quotes around the value. Normally, one would print error messages to stderr, but for testing purposes, print them to stdout. 
+
 	else
 	{
-		deleteBST(tree->bst, value);
-		tree->words--;
+		printf("Value ");
+		tree->display(stdout, value);
+		printf(" not found.\n");
 	}
 }
 
