@@ -62,7 +62,7 @@ newRBTVALUE(RBT *tree, void *value)
 	assert(val != 0);
 
 	val->value = value;
-	val->color = "R";
+	val->color = 'R';
 	val->count = 1;
 	val->displayVal = tree->display;
 	val->compareVal = tree->compare;
@@ -83,16 +83,16 @@ insertionFixup(RBT *tree, BSTNODE *node)
 			break;
 		}
 
-		if (color(getBSTNODEparent(node)) == "B")
+		if (color(getBSTNODEparent(node)) == 'B')
 		{
 			break;
 		}
 
-		if (color(uncle(node)) == "R")
+		if (color(uncle(node)) == 'R')
 		{
-			setColor(getBSTNODEparent(node), "B");
-			setColor(uncle(node), "B");
-			setColor(getBSTNODEparent(getBSTNODEparent(node)), "R");
+			setColor(getBSTNODEparent(node), 'B');
+			setColor(uncle(node), 'B');
+			setColor(getBSTNODEparent(getBSTNODEparent(node)), 'R');
 			node = getBSTNODEparent(getBSTNODEparent(node));
 		}
 
@@ -119,8 +119,8 @@ insertionFixup(RBT *tree, BSTNODE *node)
 				parent = temp;
 			}
 
-			setColor(getBSTNODEparent(node), "B");
-			setColor(getBSTNODEparent(getBSTNODEparent(node)), "R");
+			setColor(getBSTNODEparent(node), 'B');
+			setColor(getBSTNODEparent(getBSTNODEparent(node)), 'R');
 			
 			// If parent is right child, left rotate
 			if (getBSTNODEright(getBSTNODEparent(getBSTNODEparent(node))) == getBSTNODEparent(node))
@@ -137,7 +137,7 @@ insertionFixup(RBT *tree, BSTNODE *node)
 		}
 	}
 
-	setColor(getBSTroot(tree->bst), "B");
+	setColor(getBSTroot(tree->bst), 'B');
 }
 
 void 
@@ -145,23 +145,26 @@ insertRBT(RBT *tree, void *value)
 {
 	// The insert method adds a leaf to the tree in the proper location, based upon the comparator passed to the constructor.
 	// It is passed a generic value. Uses insertionFixup for a red-black tree.
-	
-	RBTVALUE *mayExist = newRBTVALUE(tree, value);
+
+	BSTNODE *valToInsert;
+	RBTVALUE *rbtVal = newRBTVALUE(tree, value);
+	valToInsert = findBST(tree->bst, rbtVal);
 
 	// node already exists. Increase it's count by one and the overall number of words in the tree by one.
-	if (findBST(tree->bst, mayExist))
+	if (valToInsert)
 	{
-		RBTVALUE *alreadyExists = getBSTNODE(findBST(tree->bst, mayExist));
-		alreadyExists->count++;
+		rbtVal = getBSTNODE(valToInsert);
+		rbtVal->count++;
 		tree->words++;
 	}
 
 	// node does not exist in tree yet. Add it to tree and increment the total number of words. Call insertionFixup on newly inserted node.
 	else
 	{
-		insertBST(tree->bst, mayExist);
+		rbtVal = newRBTVALUE(tree, value);
+		valToInsert = insertBST(tree->bst, rbtVal);
 		tree->words++;
-		insertionFixup(tree, mayExist);
+		insertionFixup(tree, valToInsert);
 	}
 }
 
@@ -171,14 +174,14 @@ findRBT(RBT *tree, void *value)
 	// This method returns the frequency of the searched-for value. 
 	// If the value is not in the tree, the method should return zero. 
 	
-	RBTVALUE *mayExist = newRBTVALUE(tree, value);
+	RBTVALUE *alreadyExists = newRBTVALUE(tree, value);
+	BSTNODE *valInTree = findBST(tree->bst, alreadyExists);
 
 	// In tree
-	if (findBST(tree->bst, value))
+	if (valInTree)
 	{
-		BSTNODE *inTree = findBST(tree->bst, mayExist);
-		RBTVALUE *val = getBSTNODE(inTree);
-		return val->count;
+		alreadyExists = getBSTNODE(valInTree);
+		return alreadyExists->count;
 	}
 
 	// Not in tree
@@ -201,15 +204,15 @@ deletionFixup(RBT *tree, BSTNODE *node)
 			break;
 		}
 
-		if (color(node) == "R")
+		if (color(node) == 'R')
 		{
 			break;
 		}
 
-		if (color(sibling(node)) == "R")
+		if (color(sibling(node)) == 'R')
 		{
-			setColor(getBSTNODEparent(node), "R");
-			setColor(sibling(node), "B");
+			setColor(getBSTNODEparent(node), 'R');
+			setColor(sibling(node), 'B');
 			
 			// sibling is left, right rotation
 			if (getBSTNODEleft(getBSTNODEparent(sibling(node)) == sibling(node)))
@@ -225,11 +228,11 @@ deletionFixup(RBT *tree, BSTNODE *node)
 			// should have black sibling now
 		}
 
-		else if (color(nephew(node)) == "R")
+		else if (color(nephew(node)) == 'R')
 		{
 			setColor(sibling(node), color(getBSTNODEparent(node)));
-			setColor(getBSTNODEparent(node), "B");
-			setColor(nephew(node), "B");
+			setColor(getBSTNODEparent(node), 'B');
+			setColor(nephew(node), 'B');
 
 			// sibling is left, right rotation
 			if (getBSTNODEleft(getBSTNODEparent(sibling(node)) == sibling(node)))
@@ -247,11 +250,11 @@ deletionFixup(RBT *tree, BSTNODE *node)
 			break;
 		}
 
-		else if (color(niece(node)) == "R")
+		else if (color(niece(node)) == 'R')
 		{
 			// nephew must be black
-			setColor(niece(node), "B");
-			setColor(sibling(node), "R");
+			setColor(niece(node), 'B');
+			setColor(sibling(node), 'R');
 			
 			if (getBSTNODEright(sibling(node)) == niece(node))
 			{
@@ -267,34 +270,51 @@ deletionFixup(RBT *tree, BSTNODE *node)
 
 		else // sibling, niece, and nephew must be black
 		{
-			setColor(sibling(node), "R");
+			setColor(sibling(node), 'R');
 			node = getBSTNODEparent(node);
 			// this subtree is black height balanced, but the tree is not
 		}
 	}
 
-	setColor(node, "B");
+	setColor(node, 'B');
 }
 
 void 
 deleteRBT(RBT *tree, void *value)
 {
-	// Removes a value from a rbt. Uses deletion fixup. 
+	// Removes value from tree. If multiple of value reduce count by one. Uses deletion fixup.
+
+	BSTNODE *valToDelete;
+	RBTVALUE *rbtVal = newRBTVALUE(tree, value);
+	valToDelete = findBST(tree->bst, rbtVal);
 
 	// Count of value is more than one in the tree, decrement count
 	if (findRBT(tree, value) > 1)
 	{
-		RBTVALUE *alreadyExists = newRBTVALUE(tree, getBSTNODE(findBST(tree->bst, value)));
-		alreadyExists->count--;
+		RBTVALUE *rbtVal = getBSTNODE(valToDelete);
+		rbtVal->count--;
 		tree->words--;
 	}
 
 	// Delete node from tree if count is one
+	else if (findRBT(tree, value) == 1)
+	{
+		valToDelete = deleteBST(tree->bst, rbtVal);
+		tree->words--;
+		deletionFixup(tree, valToDelete);
+	}
+
+	// Ignore, but report an attempt to delete something that does not exist in the tree. 
+	// Thus you ought to be able to randomly generate a large number commands and have your application run without failing. 
+	// The error message printed when attempting to delete a value not in the tree should have the form: 
+	// Value x not found.
+	// There should be no quotes around the value. Normally, one would print error messages to stderr, but for testing purposes, print them to stdout. 
+
 	else
 	{
-		deleteBST(tree->bst, value);
-		tree->words--;
-		deletionFixup(tree, findBST(tree->bst, value));
+		printf("Value ");
+		tree->display(stdout, value);
+		printf(" not found.\n");
 	}
 }
 
@@ -372,7 +392,7 @@ displayRBTvalue(FILE *file, void *value)
 		fprintf(file, "-%d", rbtVal->count);
 	}
 
-	if (rbtVal->color == "R")
+	if (rbtVal->color == 'R')
 	{
 		fprintf(file, "-R");
 	}
@@ -389,7 +409,7 @@ color(BSTNODE *node)
 	RBTVALUE *rbtVal = getBSTNODE(node);
 	if (node == NULL)
 	{
-		return "B";
+		return 'B';
 	}
 	else
 	{

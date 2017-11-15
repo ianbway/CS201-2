@@ -10,7 +10,7 @@
 
 int main()
 {
-	RBT *tree = newRBT(displaySTRING, compareSTRING);
+	RBT *tree = newRBT(displayINTEGER, compareINTEGER);
 
 	printf("An empty tree...\n");
 	printf("The tree looks like this:\n");
@@ -18,9 +18,9 @@ int main()
 	printf("\n");
 
 	//INTEGER *one = newINTEGER(1);
-	INTEGER *two = newINTEGER(2);
-	INTEGER *three = newINTEGER(3);
-	INTEGER *four = newINTEGER(4);
+	//INTEGER *two = newINTEGER(2);
+	//INTEGER *three = newINTEGER(3);
+	//INTEGER *four = newINTEGER(4);
 	/*INTEGER *five = newINTEGER(5);
 	INTEGER *six = newINTEGER(6);
 	INTEGER *seven = newINTEGER(7);
@@ -33,17 +33,17 @@ int main()
 	INTEGER *fourteen = newINTEGER(14);
 	INTEGER *fifteen = newINTEGER(15);*/
 
-	printf("Inserting values, including duplicates...\n");
-	insertRBT(tree, three);
-	insertRBT(tree, four);
-	insertRBT(tree, two);
-	insertRBT(tree, three);
-	insertRBT(tree, three);
-	insertRBT(tree, three);
+	//printf("Inserting values, including duplicates...\n");
+	//insertRBT(tree, three);
+	//insertRBT(tree, four);
+	//insertRBT(tree, two);
+	//insertRBT(tree, three);
+	//insertRBT(tree, three);
+	//insertRBT(tree, three);
 
-	printf("The tree looks like this:\n");
-	displayRBT(stdout, tree);
-	printf("\n");
+	//printf("The tree looks like this:\n");
+	//displayRBT(stdout, tree);
+	//printf("\n");
 
 	return 0;
 }

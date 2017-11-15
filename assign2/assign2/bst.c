@@ -423,6 +423,7 @@ displayBST(FILE *fp, BST *tree)
 		{
 			if (sizeQUEUE(q) == 0)
 			{
+				fprintf(fp, "\n");
 				return;
 			}
 			dqVal = dequeue(q);
@@ -446,7 +447,7 @@ displayBST(FILE *fp, BST *tree)
 		}
 
 		// It's a leaf, and not root
-		if ((dqVal->left == NULL) && (dqVal->right == NULL) && (dqVal != tree->root))
+		if ((dqVal->left == NULL) && (dqVal->right == NULL))
 		{
 			fprintf(fp, "=");
 		}
