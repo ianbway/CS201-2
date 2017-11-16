@@ -79,19 +79,21 @@ insertionFixup(RBT *tree, BSTNODE *node)
 
 	while (1)
 	{
+		printf("before color check \n");
+		printf("%c\n", color(node));
 		// X is the root, exit
 		if (getBSTroot(tree->bst) == node)
 		{
 			printf("first condition\n");
 			break;
 		}
-
+		printf("before color of parent black check \n");
 		if (color(parent(node)) == 'B')
 		{
 			printf("second condition\n");
 			break;
 		}
-
+		printf("before color uncle red check \n");
 		if (color(uncle(node)) == 'R')
 		{
 			printf("red uncle check\n");
@@ -170,6 +172,8 @@ insertRBT(RBT *tree, void *value)
 		printf("node not in tree yet\n");
 		rbtVal = newRBTVALUE(tree, value);
 		printf("rbtval set\n");
+		tree->display(stdout, rbtVal->value);
+		printf("\n");
 		valToInsert = insertBST(tree->bst, rbtVal);
 		printf("valtoinsert set\n");
 		tree->words++;
@@ -416,13 +420,14 @@ displayRBTvalue(FILE *file, void *value)
 static char
 color(BSTNODE *node)
 {
-	RBTVALUE *rbtVal = getBSTNODE(node);
 	if (node == NULL)
 	{
 		return 'B';
 	}
+
 	else
 	{
+		RBTVALUE *rbtVal = getBSTNODE(node);
 		return rbtVal->color;
 	}
 }
