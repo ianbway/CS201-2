@@ -15,6 +15,8 @@ static void setColor(BSTNODE *, char);
 static int isLinear(BSTNODE *);
 static void leftRotate(RBT *, BSTNODE *);
 static void rightRotate(RBT *, BSTNODE *);
+static BSTNODE *parent(BSTNODE *);
+static BSTNODE *grandparent(BSTNODE *);
 static BSTNODE *uncle(BSTNODE *);
 static BSTNODE *sibling(BSTNODE *);
 static BSTNODE *nephew(BSTNODE *);
@@ -80,57 +82,61 @@ insertionFixup(RBT *tree, BSTNODE *node)
 		// X is the root, exit
 		if (getBSTroot(tree->bst) == node)
 		{
+			printf("first condition\n");
 			break;
 		}
 
-		if (color(getBSTNODEparent(node)) == 'B')
+		if (color(parent(node)) == 'B')
 		{
+			printf("second condition\n");
 			break;
 		}
 
 		if (color(uncle(node)) == 'R')
 		{
-			setColor(getBSTNODEparent(node), 'B');
+			printf("red uncle check\n");
+			setColor(parent(node), 'B');
 			setColor(uncle(node), 'B');
-			setColor(getBSTNODEparent(getBSTNODEparent(node)), 'R');
-			node = getBSTNODEparent(getBSTNODEparent(node));
+			setColor(grandparent(node), 'R');
+			node = grandparent(node);
 		}
-
+		
 		else
 		{
+			printf("black uncle check\n");
 			// uncle must be black
-			BSTNODE *parent = getBSTNODEparent(node);
+			BSTNODE *oldParent = parent(node);
 
-			if (isLinear(node) == 0)
+			if (!isLinear(node))
 			{
 				// grandparents left node is equal to parent and right node of parent is equal to node
-				if (getBSTNODEleft(getBSTNODEparent(getBSTNODEparent(node)) == getBSTNODEparent(node)) && getBSTNODEright(getBSTNODEparent(node)) == node)
+				if (getBSTNODEleft(grandparent(node)) == parent(node) && getBSTNODEright(parent(node)) == node)
 				{
-					leftRotate(tree, parent);
+					leftRotate(tree, oldParent);
 				}
 
 				else
 				{
-					rightRotate(tree, parent);
+					rightRotate(tree, oldParent);
 				}
 
 				BSTNODE *temp = node;
-				node = parent;
-				parent = temp;
+				node = oldParent;
+				oldParent = temp;
 			}
 
-			setColor(getBSTNODEparent(node), 'B');
-			setColor(getBSTNODEparent(getBSTNODEparent(node)), 'R');
+			setColor(parent(node), 'B');
+			setColor(grandparent(node), 'R');
 			
 			// If parent is right child, left rotate
-			if (getBSTNODEright(getBSTNODEparent(getBSTNODEparent(node))) == getBSTNODEparent(node))
+			if (getBSTNODEright(grandparent(node)) == parent(node))
 			{
-				leftRotate(tree, parent);
+				leftRotate(tree, oldParent);
 			}
 
 			else
 			{
-				rightRotate(tree, parent);
+				rightRotate(tree, oldParent);
 			}
 
 			break;
@@ -161,9 +167,13 @@ insertRBT(RBT *tree, void *value)
 	// node does not exist in tree yet. Add it to tree and increment the total number of words. Call insertionFixup on newly inserted node.
 	else
 	{
+		printf("node not in tree yet\n");
 		rbtVal = newRBTVALUE(tree, value);
+		printf("rbtval set\n");
 		valToInsert = insertBST(tree->bst, rbtVal);
+		printf("valtoinsert set\n");
 		tree->words++;
+		printf("iterated words\n");
 		insertionFixup(tree, valToInsert);
 	}
 }
@@ -211,11 +221,11 @@ deletionFixup(RBT *tree, BSTNODE *node)
 
 		if (color(sibling(node)) == 'R')
 		{
-			setColor(getBSTNODEparent(node), 'R');
+			setColor(parent(node), 'R');
 			setColor(sibling(node), 'B');
 			
 			// sibling is left, right rotation
-			if (getBSTNODEleft(getBSTNODEparent(sibling(node)) == sibling(node)))
+			if (getBSTNODEleft(parent(sibling(node))) == sibling(node))
 			{
 				rightRotate(tree, sibling(node));
 			}
@@ -230,12 +240,12 @@ deletionFixup(RBT *tree, BSTNODE *node)
 
 		else if (color(nephew(node)) == 'R')
 		{
-			setColor(sibling(node), color(getBSTNODEparent(node)));
-			setColor(getBSTNODEparent(node), 'B');
+			setColor(sibling(node), color(parent(node)));
+			setColor(parent(node), 'B');
 			setColor(nephew(node), 'B');
 
 			// sibling is left, right rotation
-			if (getBSTNODEleft(getBSTNODEparent(sibling(node)) == sibling(node)))
+			if (getBSTNODEleft(parent(sibling(node))) == sibling(node))
 			{
 				rightRotate(tree, sibling(node));
 			}
@@ -271,7 +281,7 @@ deletionFixup(RBT *tree, BSTNODE *node)
 		else // sibling, niece, and nephew must be black
 		{
 			setColor(sibling(node), 'R');
-			node = getBSTNODEparent(node);
+			node = parent(node);
 			// this subtree is black height balanced, but the tree is not
 		}
 	}
@@ -428,10 +438,10 @@ static int
 isLinear(BSTNODE *node)
 {
 	// node is on left side
-	if (getBSTNODEleft(getBSTNODEparent(node)) == node)
+	if (getBSTNODEleft(parent(node)) == node)
 	{
 		// Now if grandparent left child is our nodes parent, we are linear left
-		if (getBSTNODEleft(getBSTNODEparent(getBSTNODEparent(node))) == (getBSTNODEparent(node))) 
+		if (getBSTNODEleft(grandparent(node)) == (parent(node))) 
 		{
 			return 1;
 		}
@@ -443,11 +453,11 @@ isLinear(BSTNODE *node)
 		}
 	}
 
-	// node is on right side
-	else if (getBSTNODEright(getBSTNODEparent(node)) == node)
+	// node is on right side, saving off conditional: if (getBSTNODEright(parent(node)) == node)
+	else 
 	{
 		// Now if grandparent right child is our nodes parent, we are linear right
-		if (getBSTNODEright(getBSTNODEparent(getBSTNODEparent(node))) == (getBSTNODEparent(node)))
+		if (getBSTNODEright(grandparent(node)) == (parent(node)))
 		{
 			return 1;
 		}
@@ -457,12 +467,6 @@ isLinear(BSTNODE *node)
 		{
 			return 0;
 		}
-	}
-
-	// Else some other unforseen combination of nodes that is nonlinear
-	else 
-	{
-		return 0;
 	}
 }
 
@@ -479,21 +483,21 @@ leftRotate(RBT *tree, BSTNODE *node)
 		setBSTNODEparent(getBSTNODEleft(secondNode), node);
 	}
 
-	setBSTNODEparent(secondNode, getBSTNODEparent(node));
+	setBSTNODEparent(secondNode, parent(node));
 
-	if (getBSTNODEparent(node) == NULL) 
+	if (parent(node) == NULL) 
 	{
 		setBSTroot(tree->bst, secondNode);
 	}
 
-	else if (node == getBSTNODEleft(getBSTNODEparent(node))) 
+	else if (node == getBSTNODEleft(parent(node))) 
 	{
-		setBSTNODEleft(getBSTNODEparent(node), secondNode);
+		setBSTNODEleft(parent(node), secondNode);
 	}
 
 	else 
 	{
-		setBSTNODEright(getBSTNODEparent(node), secondNode);
+		setBSTNODEright(parent(node), secondNode);
 	}
 
 	setBSTNODEleft(secondNode, node);
@@ -513,40 +517,56 @@ rightRotate(RBT *tree, BSTNODE *node)
 		setBSTNODEparent(getBSTNODEright(secondNode), node);
 	}
 
-	setBSTNODEparent(secondNode, getBSTNODEparent(node));
+	setBSTNODEparent(secondNode, parent(node));
 
-	if (getBSTNODEparent(node) == NULL) 
+	if (parent(node) == NULL) 
 	{
 		setBSTroot(tree->bst, secondNode);
 	}
 
-	else if (node == getBSTNODEright(getBSTNODEparent(node))) 
+	else if (node == getBSTNODEright(parent(node))) 
 	{
-		setBSTNODEright(getBSTNODEparent(node), secondNode);
+		setBSTNODEright(parent(node), secondNode);
 	}
 
 	else 
 	{
-		setBSTNODEleft(getBSTNODEparent(node), secondNode);
+		setBSTNODEleft(parent(node), secondNode);
 	}
 
 	setBSTNODEright(secondNode, node);
 	setBSTNODEparent(node, secondNode);
 }
 
+static BSTNODE *
+parent(BSTNODE *node)
+{
+	// Return parent
+
+	return getBSTNODEparent(node);
+}
+
+static BSTNODE *
+grandparent(BSTNODE *node)
+{
+	// Return parent of parent
+
+	return parent(parent(node));
+}
+
 static BSTNODE*
 uncle(BSTNODE *node)
 {
 	// If parent is left child, return the right child of parent's parent
-	if (getBSTNODEleft(getBSTNODEparent(getBSTNODEparent(node))) == getBSTNODEparent(node))
+	if (getBSTNODEleft(grandparent(node)) == parent(node))
 	{
-		return getBSTNODEright(getBSTNODEparent(getBSTNODEparent(node)));
+		return getBSTNODEright(grandparent(node));
 	}
 
 	// Else parent is right child, return the left child of the parent's parent
 	else
 	{
-		return getBSTNODEleft(getBSTNODEparent(getBSTNODEparent(node)));
+		return getBSTNODEleft(grandparent(node));
 	}
 }
 
@@ -554,15 +574,15 @@ static BSTNODE*
 sibling(BSTNODE *node)
 {
 	// If left child, get right child
-	if (getBSTNODEleft(getBSTNODEparent(node)) == node)
+	if (getBSTNODEleft(parent(node)) == node)
 	{
-		return getBSTNODEright(getBSTNODEparent(node));
+		return getBSTNODEright(parent(node));
 	}
 
 	// Else if right child, get left child
 	else
 	{
-		return getBSTNODEleft(getBSTNODEparent(node));
+		return getBSTNODEleft(parent(node));
 	}
 }
 
@@ -570,7 +590,7 @@ static BSTNODE*
 nephew(BSTNODE *node)
 {
 	// If the sibling of the node is a left child, return its left child, the furthest child of the sibling
-	if (sibling(node) == getBSTNODEleft(getBSTNODEparent(node)))
+	if (sibling(node) == getBSTNODEleft(parent(node)))
 	{
 		return getBSTNODEleft(sibling(node));
 	}
@@ -586,7 +606,7 @@ static BSTNODE*
 niece(BSTNODE *node)
 {
 	// If the sibling of the node is a left child, return its right child, the closest child of the sibling
-	if (sibling(node) == getBSTNODEleft(getBSTNODEparent(node)))
+	if (sibling(node) == getBSTNODEleft(parent(node)))
 	{
 		return getBSTNODEright(sibling(node));
 	}

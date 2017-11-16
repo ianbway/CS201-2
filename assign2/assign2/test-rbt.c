@@ -18,32 +18,55 @@ int main()
 	printf("\n");
 
 	//INTEGER *one = newINTEGER(1);
-	//INTEGER *two = newINTEGER(2);
-	//INTEGER *three = newINTEGER(3);
+	INTEGER *two = newINTEGER(2);
+	INTEGER *three = newINTEGER(3);
 	//INTEGER *four = newINTEGER(4);
-	/*INTEGER *five = newINTEGER(5);
-	INTEGER *six = newINTEGER(6);
+	//INTEGER *five = newINTEGER(5);
+	//INTEGER *six = newINTEGER(6);
 	INTEGER *seven = newINTEGER(7);
-	INTEGER *eight = newINTEGER(8);
-	INTEGER *nine = newINTEGER(9);
-	INTEGER *ten = newINTEGER(10);
-	INTEGER *eleven = newINTEGER(11);
-	INTEGER *twelve = newINTEGER(12);
-	INTEGER *thirteen = newINTEGER(13);
-	INTEGER *fourteen = newINTEGER(14);
-	INTEGER *fifteen = newINTEGER(15);*/
+	//INTEGER *eight = newINTEGER(8);
+	//INTEGER *nine = newINTEGER(9);
+	//INTEGER *ten = newINTEGER(10);
+	//INTEGER *eleven = newINTEGER(11);
+	//INTEGER *twelve = newINTEGER(12);
+	//INTEGER *thirteen = newINTEGER(13);
+	//INTEGER *fourteen = newINTEGER(14);
+	//INTEGER *fifteen = newINTEGER(15);
 
-	//printf("Inserting values, including duplicates...\n");
-	//insertRBT(tree, three);
-	//insertRBT(tree, four);
-	//insertRBT(tree, two);
-	//insertRBT(tree, three);
-	//insertRBT(tree, three);
-	//insertRBT(tree, three);
+	printf("Inserting values, including duplicates...\n");
+	insertRBT(tree, seven);
+	printf("inserted seven fine\n");
+	insertRBT(tree, three);
+	insertRBT(tree, three);
+	insertRBT(tree, three);
+	printf("inserted three, and its duplicates, fine\n");
+	insertRBT(tree, two);
+	printf("inserted two fine\n");
+	//insertRBT(tree, one);
+	/*insertRBT(tree, four);
+	insertRBT(tree, five);
+	insertRBT(tree, fifteen);
+	insertRBT(tree, eight);
+	insertRBT(tree, nine);
+	insertRBT(tree, five);
+	insertRBT(tree, ten);
+	insertRBT(tree, six);
+	insertRBT(tree, eleven);
+	insertRBT(tree, twelve);
+	insertRBT(tree, thirteen);
+	insertRBT(tree, five);
+	insertRBT(tree, five);
+	insertRBT(tree, fourteen);
+	insertRBT(tree, three);
+	insertRBT(tree, four);
+	insertRBT(tree, two);
+	insertRBT(tree, three);
+	insertRBT(tree, three);
+	insertRBT(tree, three);*/
 
-	//printf("The tree looks like this:\n");
-	//displayRBT(stdout, tree);
-	//printf("\n");
+	printf("The tree looks like this:\n");
+	displayRBT(stdout, tree);
+	printf("\n");
 
 	return 0;
 }
