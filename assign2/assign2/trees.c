@@ -2,8 +2,11 @@
 // assign2 main file
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
+#include <assert.h>
 #include <ctype.h>
+#include <math.h>
 #include "bst.h"
 #include "gt.h"
 #include "rbt.h"
@@ -27,6 +30,13 @@ main(int argc, char **argv)
 
 	// Executable must have arguments
 	if (argc == 1) Fatal("%d arguments!\n", argc - 1);
+
+	// Before doing anything, check to see if name argument exists and print that out, exiting program.
+	if (strcmp(argv[1], "-v") == 0)
+	{
+		printf("Ian W. Braudaway\n");
+		return 0;
+	}
 
 	// Process the options given, could have multiple. i, p, or b.
 	argIndex = processOptions(argc, argv);

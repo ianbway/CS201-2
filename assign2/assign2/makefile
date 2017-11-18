@@ -1,5 +1,6 @@
 # Ian Braudaway
 # makefile for assignment 2
+TREE_OBJS = scanner.o integer.o real.o string.o cda.o queue.o bst.o rbt.o gt.o trees.o
 CDA_OBJS = integer.o real.o string.o cda.o
 QUEUE_OBJS = integer.o real.o string.o cda.o queue.o
 BST_OBJS = integer.o real.o string.o cda.o queue.o bst.o test-bst.o
@@ -9,7 +10,10 @@ OPTS = -Wall -Wextra -std=c99 -g -c
 LOPTS = -Wall -Wextra -std=c99 -g
 CC = gcc
 
-all : test-rbt
+all : trees
+
+trees : $(TREE_OBJS)
+	$(CC) $(LOPTS) $(TREE_OBJS) -o trees
 
 test-rbt : $(RBT_OBJS)
 	$(CC) $(LOPTS) $(RBT_OBJS) -o test-rbt
@@ -20,6 +24,9 @@ test-gt : $(GT_OBJS)
 test-bst : $(BST_OBJS)
 	$(CC) $(LOPTS) $(BST_OBJS) -o test-bst	
 
+trees.o : trees.c 
+	$(CC) $(OPTS) trees.c	
+	
 test-rbt.o : test-rbt.c 
 	$(CC) $(OPTS) test-rbt.c
 	
@@ -57,7 +64,7 @@ rbt.o : rbt.c rbt.h
 	$(CC) $(OPTS) rbt.c
 	
 clean :
-	rm -f $(CDA_OBJS) $(QUEUE_OBJS) $(BST_OBJS) $(GT_OBJS) $(RBT_OBJS) ./test-bst ./test-gt ./test-rbt
+	rm -f $(CDA_OBJS) $(QUEUE_OBJS) $(BST_OBJS) $(GT_OBJS) $(RBT_OBJS) $(TREE_OBJS) ./test-bst ./test-gt ./test-rbt ./trees
 
 test :
-	./test-rbt
+	./trees

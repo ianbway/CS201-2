@@ -35,13 +35,13 @@ int main()
 
 	printf("Inserting values, including duplicates...\n");
 	insertRBT(tree, seven);
-	printf("inserted seven fine\n");
+	displayRBT(stdout, tree);
 	insertRBT(tree, three);
 	insertRBT(tree, three);
 	insertRBT(tree, three);
-	printf("inserted three, and its duplicates, fine\n");
+	displayRBT(stdout, tree);
 	insertRBT(tree, two);
-	printf("inserted two fine\n");
+	displayRBT(stdout, tree);
 	//insertRBT(tree, one);
 	/*insertRBT(tree, four);
 	insertRBT(tree, five);

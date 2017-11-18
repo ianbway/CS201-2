@@ -79,11 +79,26 @@
     <ClInclude Include="..\..\assign0\assign0\da.h" />
     <ClInclude Include="..\..\assign0\assign0\queue.h" />
     <ClInclude Include="..\..\assign2\assign2\rbt.h" />
+    <ClInclude Include="bst.h" />
+    <ClInclude Include="integer.h" />
+    <ClInclude Include="real.h" />
+    <ClInclude Include="scanner.h" />
+    <ClInclude Include="set.h" />
+    <ClInclude Include="string.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\assign0\assign0\cda.c" />
     <ClCompile Include="..\..\assign0\assign0\da.c" />
     <ClCompile Include="..\..\assign0\assign0\queue.c" />
+    <ClCompile Include="bst.c" />
+    <ClCompile Include="integer.c" />
+    <ClCompile Include="kruskal.c" />
+    <ClCompile Include="rbt.c" />
+    <ClCompile Include="real.c" />
+    <ClCompile Include="scanner.c" />
+    <ClCompile Include="set.c" />
+    <ClCompile Include="string.c" />
+    <ClCompile Include="test-set.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

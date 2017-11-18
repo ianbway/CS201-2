@@ -30,6 +30,24 @@
     <ClInclude Include="..\..\assign2\assign2\rbt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scanner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="integer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="real.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\assign0\assign0\cda.c">
@@ -39,6 +57,33 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\assign0\assign0\queue.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="set.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scanner.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="integer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="real.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="string.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bst.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rbt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test-set.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="kruskal.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
