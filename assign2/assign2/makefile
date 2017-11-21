@@ -67,4 +67,4 @@ clean :
 	rm -f $(CDA_OBJS) $(QUEUE_OBJS) $(BST_OBJS) $(GT_OBJS) $(RBT_OBJS) $(TREE_OBJS) ./test-bst ./test-gt ./test-rbt ./trees
 
 test :
-	./trees
+	./trees -g trees.0 trees.1 trees.2

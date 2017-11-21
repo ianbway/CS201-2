@@ -92,12 +92,11 @@ main(int argc, char **argv)
 		processCommandsRBT(tree, commands, outputfile);
 	}
 
-
-	if (argc - argIndex > 2)
+	if (argc - argIndex > 3)
 	{
 		int i;
 		printf("Too many arguments:\n");
-		for (i = argIndex + 2; i < argc; ++i)
+		for (i = argIndex + 3; i < argc; ++i)
 			printf("    %s\n", argv[i]);
 	}
 
@@ -219,22 +218,23 @@ void processCommandsGT(GT *tree, FILE *file, FILE *output)
 
 	while (token)
 	{
+		
 		// insert word or phrase W into the tree
-		if (compareSTRING(token, "i") == 0)
+		if (strcmp(token, "i") == 0)
 		{
 			char *token = clean(readToken(file));
 			insertGT(tree, token);
 		}
 
 		// delete word or phrase W from the tree
-		else if (compareSTRING(token, "d") == 0)
+		else if (strcmp(token, "d") == 0)
 		{
 			char *token = clean(readToken(file));
 			deleteGT(tree, token);
 		}
 
 		// report the frequency of word or phrase W
-		else if (compareSTRING(token, "f") == 0)
+		else if (strcmp(token, "f") == 0)
 		{
 			char *token = clean(readToken(file));
 			int frequency = findGT(tree, token);
@@ -242,7 +242,7 @@ void processCommandsGT(GT *tree, FILE *file, FILE *output)
 		}
 
 		// show the tree
-		else if (compareSTRING(token, "s") == 0)
+		else if (strcmp(token, "s") == 0)
 		{
 			displayGT(output, tree);
 		}
@@ -274,21 +274,21 @@ void processCommandsRBT(RBT *tree, FILE *file, FILE *output)
 	while (token)
 	{
 		// insert word or phrase W into the tree
-		if (compareSTRING(token, "i") == 0)
+		if (strcmp(token, "i") == 0)
 		{
 			char *token = clean(readToken(file));
 			insertRBT(tree, token);
 		}
 
 		// delete word or phrase W from the tree
-		else if (compareSTRING(token, "d") == 0)
+		else if (strcmp(token, "d") == 0)
 		{
 			char *token = clean(readToken(file));
 			deleteRBT(tree, token);
 		}
 
 		// report the frequency of word or phrase W
-		else if (compareSTRING(token, "f") == 0)
+		else if (strcmp(token, "f") == 0)
 		{
 			char *token = clean(readToken(file));
 			int frequency = findRBT(tree, token);
@@ -296,7 +296,7 @@ void processCommandsRBT(RBT *tree, FILE *file, FILE *output)
 		}
 
 		// show the tree
-		else if (compareSTRING(token, "s") == 0)
+		else if (strcmp(token, "s") == 0)
 		{
 			displayRBT(output, tree);
 		}
@@ -337,14 +337,14 @@ clean(char *word)
 			if ((beginningLetter == 0))
 			{
 				beginningLetter = 1;
-				cleanedWord[cleanIndex] = word[i];
+				cleanedWord[cleanIndex] = tolower(word[i]);
 				cleanIndex++;
 			}
 
 			else
 			{
 				spaceBefore = 0;
-				cleanedWord[cleanIndex] = word[i];
+				cleanedWord[cleanIndex] = tolower(word[i]);
 				cleanIndex++;
 			}
 		}
