@@ -1,0 +1,12 @@
+0: now is the(now is the)-
+1: bob-2(now is the)-l time for(now is the)-r
+2: =all good students(bob-2)-l =tests(time for)-l =to pass their(time for)-r
+Frequency of bob: 2
+0: now is the(now is the)-
+1: bob(now is the)-l time for(now is the)-r
+2: =all good students(bob)-l =tests(time for)-l =to pass their(time for)-r
+Frequency of bob: 1
+Words/Phrases: 6
+Nodes: 6
+Minimum depth: 2
+Maximum depth: 3

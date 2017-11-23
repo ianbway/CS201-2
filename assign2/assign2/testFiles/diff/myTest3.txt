@@ -1,0 +1,101 @@
+RBT tester, version 1
+inserting 2
+0: 2-B(2-B)-
+
+inserting 4
+0: 2-B(2-B)-
+1: =4-R(2-B)-r
+
+inserting 7
+0: 4-B(4-B)-
+1: =2-R(4-B)-l =7-R(4-B)-r
+
+inserting 1
+0: 4-B(4-B)-
+1: 2-B(4-B)-l =7-B(4-B)-r
+2: =1-R(2-B)-l
+
+inserting 3
+0: 4-B(4-B)-
+1: 2-B(4-B)-l =7-B(4-B)-r
+2: =1-R(2-B)-l =3-R(2-B)-r
+
+inserting 8
+0: 4-B(4-B)-
+1: 2-B(4-B)-l 7-B(4-B)-r
+2: =1-R(2-B)-l =3-R(2-B)-r =8-R(7-B)-r
+
+inserting 5
+0: 4-B(4-B)-
+1: 2-B(4-B)-l 7-B(4-B)-r
+2: =1-R(2-B)-l =3-R(2-B)-r =5-R(7-B)-l =8-R(7-B)-r
+
+inserting 2
+0: 4-B(4-B)-
+1: 2-2-B(4-B)-l 7-B(4-B)-r
+2: =1-R(2-2-B)-l =3-R(2-2-B)-r =5-R(7-B)-l =8-R(7-B)-r
+
+inserting 5
+0: 4-B(4-B)-
+1: 2-2-B(4-B)-l 7-B(4-B)-r
+2: =1-R(2-2-B)-l =3-R(2-2-B)-r =5-2-R(7-B)-l =8-R(7-B)-r
+
+inserting 9
+0: 4-B(4-B)-
+1: 2-2-B(4-B)-l 7-R(4-B)-r
+2: =1-R(2-2-B)-l =3-R(2-2-B)-r =5-2-B(7-R)-l 8-B(7-R)-r
+3: =9-R(8-B)-r
+
+inserting 0
+0: 4-B(4-B)-
+1: 2-2-R(4-B)-l 7-R(4-B)-r
+2: 1-B(2-2-R)-l =3-B(2-2-R)-r =5-2-B(7-R)-l 8-B(7-R)-r
+3: =0-R(1-B)-l =9-R(8-B)-r
+
+inserting 6
+0: 4-B(4-B)-
+1: 2-2-R(4-B)-l 7-R(4-B)-r
+2: 1-B(2-2-R)-l =3-B(2-2-R)-r 5-2-B(7-R)-l 8-B(7-R)-r
+3: =0-R(1-B)-l =6-R(5-2-B)-r =9-R(8-B)-r
+
+displaying the tree...
+0: 4-B(4-B)-
+1: 2-2-R(4-B)-l 7-R(4-B)-r
+2: 1-B(2-2-R)-l =3-B(2-2-R)-r 5-2-B(7-R)-l 8-B(7-R)-r
+3: =0-R(1-B)-l =6-R(5-2-B)-r =9-R(8-B)-r
+
+printing statistics...
+Words/Phrases: 12
+Nodes: 10
+Minimum depth: 3
+Maximum depth: 4
+the frequency of 2 is 2
+the frequency of 4 is 1
+the frequency of 11 is 0
+deleting 2...
+the frequency of 2 was 2
+the frequency of 2 now is 1
+deleting 2...
+the frequency of 2 was 1
+the frequency of 2 now is 0
+the tree now is...
+0: 4-B(4-B)-
+1: 1-R(4-B)-l 7-R(4-B)-r
+2: =0-B(1-R)-l =3-B(1-R)-r 5-2-B(7-R)-l 8-B(7-R)-r
+3: =6-R(5-2-B)-r =9-R(8-B)-r
+deleting 4...
+the frequency of 4 was 1
+the frequency of 4 now is 0
+the tree now is...
+0: 3-B(3-B)-
+1: 1-B(3-B)-l 7-R(3-B)-r
+2: =0-R(1-B)-l 5-2-B(7-R)-l 8-B(7-R)-r
+3: =6-R(5-2-B)-r =9-R(8-B)-r
+deleting 7...
+the frequency of 7 was 1
+the frequency of 7 now is 0
+the tree now is...
+0: 3-B(3-B)-
+1: 1-B(3-B)-l 6-R(3-B)-r
+2: =0-R(1-B)-l =5-2-B(6-R)-l 8-B(6-R)-r
+3: =9-R(8-B)-r

@@ -1,0 +1,10 @@
+0: one-B(one-B)-
+1: hello-R(one-B)-l viisi-R(one-B)-r
+2: f-71-B(hello-R)-l kolme-B(hello-R)-r two-B(viisi-R)-l y-68-B(viisi-R)-r
+3: c-70-R(f-71-B)-l four-R(f-71-B)-r k-71-R(kolme-B)-l n-76-R(kolme-B)-r s-97-R(two-B)-l u-65-B(two-B)-r x-85-B(y-68-B)-l yksi-B(y-68-B)-r
+4: b-76-B(c-70-R)-l d-57-B(c-70-R)-r =five-B(four-R)-l h-69-B(four-R)-r i-89-B(k-71-R)-l =kaksi-B(k-71-R)-r l-86-B(n-76-R)-l nelja-B(n-76-R)-r q-91-B(s-97-R)-l three-B(s-97-R)-r =v-78-R(u-65-B)-r =w-85-R(x-85-B)-l =z-77-R(yksi-B)-r
+5: =a-74-R(b-76-B)-l =e-65-R(d-57-B)-r =g-68-R(h-69-B)-l =hei-R(h-69-B)-r =j-77-R(i-89-B)-r =m-78-R(l-86-B)-r =o-66-R(nelja-B)-r =p-79-R(q-91-B)-l =r-83-R(q-91-B)-r =t-99-R(three-B)-l
+Words/Phrases: 2012
+Nodes: 38
+Minimum depth: 4
+Maximum depth: 6

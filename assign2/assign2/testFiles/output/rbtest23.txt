@@ -1,0 +1,10 @@
+0: one-B(one-B)-
+1: hello-R(one-B)-l two-R(one-B)-r
+2: c-15-B(hello-R)-l kolme-B(hello-R)-r s-7-B(two-R)-l viisi-B(two-R)-r
+3: =a-5-B(c-15-B)-l four-R(c-15-B)-r j-9-R(kolme-B)-l nelja-B(kolme-B)-r =r-20-B(s-7-B)-l three-B(s-7-B)-r =v-10-B(viisi-B)-l =yksi-B(viisi-B)-r
+4: five-B(four-R)-l h-B(four-R)-r =i-8-B(j-9-R)-l =kaksi-B(j-9-R)-r =n-11-R(nelja-B)-l =t-21-R(three-B)-l
+5: =f-19-R(five-B)-l =hei-R(h-B)-r
+Words/Phrases: 138
+Nodes: 23
+Minimum depth: 4
+Maximum depth: 6

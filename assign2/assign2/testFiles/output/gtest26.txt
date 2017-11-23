@@ -1,0 +1,14 @@
+0: hei(hei)-
+1: four(hei)-l hello(hei)-r
+2: five(four)-l h-87(four)-r yksi(hello)-r
+3: b-81(five)-l =g-83(h-87)-l one(yksi)-l =z-86(yksi)-r
+4: =a-74(b-81)-l f-85(b-81)-r kaksi(one)-l two(one)-r
+5: c-75(f-85)-l j-75(kaksi)-l kolme(kaksi)-r three(two)-l viisi(two)-r
+6: e-92(c-75)-r =i-81(j-75)-l =k-75(j-75)-r nelja(kolme)-r p-79(three)-l v-67(viisi)-l y-85(viisi)-r
+7: =d-68(e-92)-l m-95(nelja)-l =o-81(nelja)-r q-68(p-79)-r =u-69(v-67)-l w-57(y-85)-l
+8: =l-76(m-95)-l =n-73(m-95)-r s-75(q-68)-r =x-72(w-57)-r
+9: =r-64(s-75)-l =t-77(s-75)-r
+Words/Phrases: 2012
+Nodes: 38
+Minimum depth: 2
+Maximum depth: 10

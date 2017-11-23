@@ -1,0 +1,5 @@
+0: =a(a)-
+Words/Phrases: 1
+Nodes: 1
+Minimum depth: 1
+Maximum depth: 1

@@ -1,0 +1,7 @@
+0: now is the-B(now is the-B)-
+1: =all good students-B(now is the-B)-l time for-B(now is the-B)-r
+2: =tests-R(time for-B)-l =to pass their-R(time for-B)-r
+Words/Phrases: 5
+Nodes: 5
+Minimum depth: 2
+Maximum depth: 3

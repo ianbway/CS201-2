@@ -1,0 +1,16 @@
+0: kaksi-B(kaksi-B)-
+1: hei-B(kaksi-B)-l one-B(kaksi-B)-r
+2: five-B(hei-B)-l =hello-B(hei-B)-r kolme-B(one-B)-l two-R(one-B)-r
+3: =bob-2-R(five-B)-l =four-R(five-B)-r =nelja-R(kolme-B)-r =three-B(two-R)-l yksi-B(two-R)-r
+4: =viisi-R(yksi-B)-l
+Frequency of bob: 2
+0: kaksi-B(kaksi-B)-
+1: hei-B(kaksi-B)-l one-B(kaksi-B)-r
+2: five-B(hei-B)-l =hello-B(hei-B)-r kolme-B(one-B)-l two-R(one-B)-r
+3: =bob-R(five-B)-l =four-R(five-B)-r =nelja-R(kolme-B)-r =three-B(two-R)-l yksi-B(two-R)-r
+4: =viisi-R(yksi-B)-l
+Frequency of bob: 1
+Words/Phrases: 13
+Nodes: 13
+Minimum depth: 3
+Maximum depth: 5

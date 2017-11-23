@@ -1,0 +1,113 @@
+GT tester, version 1
+inserting 2...
+0: =2(2)-
+
+inserting 4...
+0: 2(2)-
+1: =4(2)-r
+
+inserting 7...
+0: 2(2)-
+1: 4(2)-r
+2: =7(4)-r
+
+inserting 1...
+0: 2(2)-
+1: =1(2)-l 4(2)-r
+2: =7(4)-r
+
+inserting 3...
+0: 2(2)-
+1: =1(2)-l 4(2)-r
+2: =3(4)-l =7(4)-r
+
+inserting 8...
+0: 2(2)-
+1: =1(2)-l 4(2)-r
+2: =3(4)-l 7(4)-r
+3: =8(7)-r
+
+inserting 5...
+0: 2(2)-
+1: =1(2)-l 4(2)-r
+2: =3(4)-l 7(4)-r
+3: =5(7)-l =8(7)-r
+
+inserting 2...
+0: 2-2(2-2)-
+1: =1(2-2)-l 4(2-2)-r
+2: =3(4)-l 7(4)-r
+3: =5(7)-l =8(7)-r
+
+inserting 5...
+0: 2-2(2-2)-
+1: =1(2-2)-l 4(2-2)-r
+2: =3(4)-l 7(4)-r
+3: =5-2(7)-l =8(7)-r
+
+inserting 9...
+0: 2-2(2-2)-
+1: =1(2-2)-l 4(2-2)-r
+2: =3(4)-l 7(4)-r
+3: =5-2(7)-l 8(7)-r
+4: =9(8)-r
+
+inserting 0...
+0: 2-2(2-2)-
+1: 1(2-2)-l 4(2-2)-r
+2: =0(1)-l =3(4)-l 7(4)-r
+3: =5-2(7)-l 8(7)-r
+4: =9(8)-r
+
+inserting 6...
+0: 2-2(2-2)-
+1: 1(2-2)-l 4(2-2)-r
+2: =0(1)-l =3(4)-l 7(4)-r
+3: 5-2(7)-l 8(7)-r
+4: =6(5-2)-r =9(8)-r
+
+displaying the tree...
+0: 2-2(2-2)-
+1: 1(2-2)-l 4(2-2)-r
+2: =0(1)-l =3(4)-l 7(4)-r
+3: 5-2(7)-l 8(7)-r
+4: =6(5-2)-r =9(8)-r
+
+printing statistics...
+Words/Phrases: 12
+Nodes: 10
+Minimum depth: 2
+Maximum depth: 5
+the frequency of 2 is 2
+the frequency of 4 is 1
+the frequency of 11 is 0
+deleting 2...
+the frequency of 2 was 2
+the frequency of 2 now is 1
+deleting 2...
+the frequency of 2 was 1
+the frequency of 2 now is 0
+the tree now is...
+0: 1(1)-
+1: =0(1)-l 4(1)-r
+2: =3(4)-l 7(4)-r
+3: 5-2(7)-l 8(7)-r
+4: =6(5-2)-r =9(8)-r
+deleting 4...
+the frequency of 4 was 1
+the frequency of 4 now is 0
+the tree now is...
+0: 1(1)-
+1: =0(1)-l 3(1)-r
+2: 7(3)-r
+3: 5-2(7)-l 8(7)-r
+4: =6(5-2)-r =9(8)-r
+deleting 7...
+the frequency of 7 was 1
+the frequency of 7 now is 0
+the tree now is...
+0: 1(1)-
+1: =0(1)-l 3(1)-r
+2: 6(3)-r
+3: =5-2(6)-l 8(6)-r
+4: =9(8)-r

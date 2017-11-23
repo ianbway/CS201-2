@@ -1,0 +1,20 @@
+0: hei(hei)-
+1: bob-2(hei)-l hello(hei)-r
+2: four(bob-2)-r yksi(hello)-r
+3: =five(four)-l one(yksi)-l
+4: kaksi(one)-l two(one)-r
+5: kolme(kaksi)-r =three(two)-l =viisi(two)-r
+6: =nelja(kolme)-r
+Frequency of bob: 2
+0: hei(hei)-
+1: bob(hei)-l hello(hei)-r
+2: four(bob)-r yksi(hello)-r
+3: =five(four)-l one(yksi)-l
+4: kaksi(one)-l two(one)-r
+5: kolme(kaksi)-r =three(two)-l =viisi(two)-r
+6: =nelja(kolme)-r
+Frequency of bob: 1
+Words/Phrases: 13
+Nodes: 13
+Minimum depth: 2
+Maximum depth: 7
