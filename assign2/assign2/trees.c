@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <string.h>
 #include <assert.h>
 #include <ctype.h>
@@ -171,12 +172,34 @@ processFileGT(FILE *file)
 	}
 
 	GT *inputGT = newGT(displaySTRING, compareSTRING);
-	char *token = clean(readToken(file));
+	char *token;	
 
-	while (token)
+	if (stringPending(file))
 	{
-		insertGT(inputGT, newSTRING(token));
+		token = clean(readString(file));
+	}	
+
+	else
+	{
 		token = clean(readToken(file));
+	}
+
+	while (!feof(file))
+	{
+		if (token != NULL)
+		{
+			insertGT(inputGT, newSTRING(token));
+		}		
+
+		if (stringPending(file))
+		{
+			token = clean(readString(file));
+		}	
+
+		else
+		{
+			token = clean(readToken(file));
+		}
 	}
 
 	return inputGT;
@@ -191,12 +214,35 @@ processFileRBT(FILE *file)
 	}
 
 	RBT *inputRBT = newRBT(displaySTRING, compareSTRING);
-	char *token = clean(readToken(file));
+	char *token;
 
-	while (token)
+	if (stringPending(file))
 	{
-		insertRBT(inputRBT, newSTRING(token));
+		token = clean(readString(file));
+	}	
+
+	else
+	{
 		token = clean(readToken(file));
+	}
+
+	while (!feof(file))
+	{
+
+		if (token != NULL)
+		{
+			insertRBT(inputRBT, newSTRING(token));
+		}		
+
+		if (stringPending(file))
+		{
+			token = clean(readString(file));
+		}	
+
+		else
+		{
+			token = clean(readToken(file));
+		}
 	}
 
 	return inputRBT;
@@ -214,31 +260,76 @@ void processCommandsGT(GT *tree, FILE *file, FILE *output)
 		output = stdout;
 	}
 
-	char *token = clean(readToken(file));
+	char *token;
 
-	while (token)
+	if (stringPending(file))
 	{
-		
+		token = clean(readString(file));
+	}	
+
+	else
+	{
+		token = clean(readToken(file));
+	}	
+
+	while (!feof(file))
+	{
 		// insert word or phrase W into the tree
 		if (strcmp(token, "i") == 0)
-		{
-			char *token = clean(readToken(file));
-			insertGT(tree, token);
+		{	
+			if (stringPending(file))
+			{
+				token = clean(readString(file));
+			}	
+
+			else
+			{
+				token = clean(readToken(file));
+			}
+
+			if (token != NULL)
+			{
+				insertGT(tree, newSTRING(token));
+			}
 		}
 
 		// delete word or phrase W from the tree
 		else if (strcmp(token, "d") == 0)
 		{
-			char *token = clean(readToken(file));
-			deleteGT(tree, token);
+			if (stringPending(file))
+			{
+				token = clean(readString(file));
+			}	
+
+			else
+			{
+				token = clean(readToken(file));
+			}
+
+			if (token != NULL)
+			{
+				deleteGT(tree, newSTRING(token));
+			}
 		}
 
 		// report the frequency of word or phrase W
 		else if (strcmp(token, "f") == 0)
 		{
-			char *token = clean(readToken(file));
-			int frequency = findGT(tree, token);
-			fprintf(output, "Frequency of %s: %d\n", token, frequency);
+			if (stringPending(file))
+			{
+				token = clean(readString(file));
+			}	
+
+			else
+			{
+				token = clean(readToken(file));
+			}
+
+			if (token != NULL)
+			{
+				int frequency = findGT(tree, newSTRING(token));
+				fprintf(output, "Frequency of %s: %d\n", token, frequency);
+			}
 		}
 
 		// show the tree
@@ -253,7 +344,15 @@ void processCommandsGT(GT *tree, FILE *file, FILE *output)
 			statisticsGT(output, tree);
 		}
 
-		token = clean(readToken(file));
+		if (stringPending(file))
+		{
+			token = clean(readString(file));
+		}	
+
+		else
+		{
+			token = clean(readToken(file));
+		}
 	}
 }
 
@@ -269,30 +368,76 @@ void processCommandsRBT(RBT *tree, FILE *file, FILE *output)
 		output = stdout;
 	}
 
-	char *token = clean(readToken(file));
+	char *token;	
+	
+	if (stringPending(file))
+	{
+		token = clean(readString(file));
+	}	
 
-	while (token)
+	else
+	{
+		token = clean(readToken(file));
+	}	
+
+	while (!feof(file))
 	{
 		// insert word or phrase W into the tree
 		if (strcmp(token, "i") == 0)
 		{
-			char *token = clean(readToken(file));
-			insertRBT(tree, token);
+			if (stringPending(file))
+			{
+				token = clean(readString(file));
+			}	
+
+			else
+			{
+				token = clean(readToken(file));
+			}
+
+			if (token != NULL)
+			{
+				insertRBT(tree, newSTRING(token));
+			}
 		}
 
 		// delete word or phrase W from the tree
 		else if (strcmp(token, "d") == 0)
 		{
-			char *token = clean(readToken(file));
-			deleteRBT(tree, token);
+			if (stringPending(file))
+			{
+				token = clean(readString(file));
+			}	
+
+			else
+			{
+				token = clean(readToken(file));
+			}
+
+			if (token != NULL)
+			{
+				deleteRBT(tree, newSTRING(token));
+			}
 		}
 
 		// report the frequency of word or phrase W
 		else if (strcmp(token, "f") == 0)
 		{
-			char *token = clean(readToken(file));
-			int frequency = findRBT(tree, token);
-			fprintf(output, "Frequency of %s: %d\n", token, frequency);
+			if (stringPending(file))
+			{
+				token = clean(readString(file));
+			}	
+
+			else
+			{
+				token = clean(readToken(file));
+			}
+			
+			if (token != NULL)
+			{
+				int frequency = findRBT(tree, newSTRING(token));
+				fprintf(output, "Frequency of %s: %d\n", token, frequency);
+			}
 		}
 
 		// show the tree
@@ -307,78 +452,88 @@ void processCommandsRBT(RBT *tree, FILE *file, FILE *output)
 			statisticsRBT(output, tree);
 		}
 
-		token = clean(readToken(file));
+		if (stringPending(file))
+		{
+			token = clean(readString(file));
+		}	
+
+		else
+		{
+			token = clean(readToken(file));
+		}
 	}
 }
 
 static char *
 clean(char *word) 
 {
+
+	// Does word exist
 	if (word == NULL)
 	{
 		return NULL;
 	}
 
-	char *cleanedWord = word;
-	int cleanIndex = 0;
+	int i = 0;
+	int j = 0;
+	
+	bool firstLetterFlag = false;
+	bool spaceBeforeFlag = false;
 
-	int spaceBefore = 0;
-	int beginningLetter = 0;
-	int i;
-	for (i = 0; strlen(word); i++)
+	while(word[i] != '\0')
 	{
-		if (word[i] == '\0')
+
+		word[i] = tolower(word[i]);
+
+		if(firstLetterFlag == false)
 		{
-			break;
+			if(isalpha(word[i]))
+			{
+				firstLetterFlag = true;
+				word[j] = word[i];
+				j++;
+			}
 		}
 
-		else if (isalpha(word[i])) 
+		else if (isalpha(word[i]))
 		{
-			if ((beginningLetter == 0))
-			{
-				beginningLetter = 1;
-				cleanedWord[cleanIndex] = tolower(word[i]);
-				cleanIndex++;
-			}
-
-			else
-			{
-				spaceBefore = 0;
-				cleanedWord[cleanIndex] = tolower(word[i]);
-				cleanIndex++;
-			}
+			spaceBeforeFlag = false;
+			word[j] = word[i];
+			j++;
 		}
 
 		else if (isspace(word[i]))
 		{
-			if (spaceBefore == 0)
+			if(spaceBeforeFlag == false)
 			{
-				spaceBefore = 1;
-				cleanedWord[cleanIndex] = ' ';
-				cleanIndex++;
+				word[j] = ' ';
+				j++;
+				spaceBeforeFlag = true;
 			}
 		}
 
 		else
 		{
-			cleanedWord[i] = ' ';
+			word[i] = ' ';
 		}
+
+		i++;
 	}
 
-	if (cleanIndex == 0)
+	if (j == 0)
 	{
 		return NULL;
 	}
 
-	if (isspace(cleanedWord[cleanIndex - 1]))
+	if (isspace(word[j-1]))
 	{
-		cleanedWord[cleanIndex - 1] = '\0';
+		word[j-1] = '\0';
 	}
 
 	else
 	{
-		cleanedWord[cleanIndex] = '\0';
+		word[j] = '\0';
 	}
-	
-	return cleanedWord;
+
+	return word;
 }

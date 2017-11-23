@@ -200,6 +200,9 @@ deletionFixup(RBT *tree, BSTNODE *node)
 
 	while (1)
 	{
+		//fprintf(stdout, "%p\n", node);
+		//tree->display(stdout, getBSTNODE(node));
+		
 		// X is the root, exit
 		if (getBSTroot(tree->bst) == node)
 		{
@@ -271,7 +274,7 @@ deletionFixup(RBT *tree, BSTNODE *node)
 		}
 
 		else // sibling, niece, and nephew must be black
-		{
+		{	
 			setColor(sibling(node), 'R');
 			node = parent(node);
 			// this subtree is black height balanced, but the tree is not
@@ -303,6 +306,7 @@ deleteRBT(RBT *tree, void *value)
 	{
 		valToDelete = deleteBST(tree->bst, rbtVal);
 		tree->words--;
+		printf("%p\n", getBSTNODE(valToDelete));
 		deletionFixup(tree, valToDelete);
 	}
 
@@ -423,6 +427,7 @@ color(BSTNODE *node)
 static void
 setColor(BSTNODE *node, char color)
 {
+	//if (node==NULL) return;
 	RBTVALUE *rbtVal = getBSTNODE(node);
 	rbtVal->color = color;
 }
@@ -577,6 +582,11 @@ uncle(BSTNODE *node)
 static BSTNODE*
 sibling(BSTNODE *node)
 {
+	if (node == NULL)
+	{
+		return NULL;
+	}
+	
 	// If left child, get right child
 	if (getBSTNODEleft(parent(node)) == node)
 	{
@@ -593,6 +603,11 @@ sibling(BSTNODE *node)
 static BSTNODE*
 nephew(BSTNODE *node)
 {
+	if (sibling(node) == NULL)
+	{
+		return NULL;
+	}
+	
 	// If the sibling of the node is a left child, return its left child, the furthest child of the sibling
 	if (sibling(node) == getBSTNODEleft(parent(node)))
 	{
@@ -609,6 +624,11 @@ nephew(BSTNODE *node)
 static BSTNODE*
 niece(BSTNODE *node)
 {
+	if (sibling(node) == NULL)
+	{
+		return NULL;
+	}
+	
 	// If the sibling of the node is a left child, return its right child, the closest child of the sibling
 	if (sibling(node) == getBSTNODEleft(parent(node)))
 	{
