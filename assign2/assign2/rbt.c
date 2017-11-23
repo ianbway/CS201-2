@@ -199,10 +199,7 @@ deletionFixup(RBT *tree, BSTNODE *node)
 	// Based off of best pseudocode ever
 
 	while (1)
-	{
-		//fprintf(stdout, "%p\n", node);
-		//tree->display(stdout, getBSTNODE(node));
-		
+	{	
 		// X is the root, exit
 		if (getBSTroot(tree->bst) == node)
 		{
@@ -222,13 +219,13 @@ deletionFixup(RBT *tree, BSTNODE *node)
 			// sibling is left, right rotation
 			if (getBSTNODEleft(parent(sibling(node))) == sibling(node))
 			{
-				rightRotate(tree, sibling(node));
+				rightRotate(tree, parent(node));
 			}
 
 			// sibling is right, left rotation
 			else
 			{
-				leftRotate(tree, sibling(node));
+				leftRotate(tree, parent(node));
 			}
 			// should have black sibling now
 		}
@@ -242,13 +239,13 @@ deletionFixup(RBT *tree, BSTNODE *node)
 			// sibling is left, right rotation
 			if (getBSTNODEleft(parent(sibling(node))) == sibling(node))
 			{
-				rightRotate(tree, sibling(node));
+				rightRotate(tree, parent(node));
 			}
 
 			// sibling is right, left rotation
 			else
 			{
-				leftRotate(tree, sibling(node));
+				leftRotate(tree, parent(node));
 			}
 			// subtree and tree is black height balanced
 
@@ -263,12 +260,12 @@ deletionFixup(RBT *tree, BSTNODE *node)
 			
 			if (getBSTNODEright(sibling(node)) == niece(node))
 			{
-				leftRotate(tree, niece(node));
+				leftRotate(tree, sibling(node));
 			}
 
 			else
 			{
-				rightRotate(tree, niece(node));
+				rightRotate(tree, sibling(node));
 			}
 			// should have red nephew now
 		}
@@ -304,10 +301,10 @@ deleteRBT(RBT *tree, void *value)
 	// Delete node from tree if count is one
 	else if (findRBT(tree, value) == 1)
 	{
-		valToDelete = deleteBST(tree->bst, rbtVal);
+		BSTNODE *p = swapToLeafBST(tree->bst, valToDelete);
+		deletionFixup(tree, p);
+		pruneLeafBST(tree->bst, p);
 		tree->words--;
-		printf("%p\n", getBSTNODE(valToDelete));
-		deletionFixup(tree, valToDelete);
 	}
 
 	// Ignore, but report an attempt to delete something that does not exist in the tree. 
@@ -427,7 +424,6 @@ color(BSTNODE *node)
 static void
 setColor(BSTNODE *node, char color)
 {
-	//if (node==NULL) return;
 	RBTVALUE *rbtVal = getBSTNODE(node);
 	rbtVal->color = color;
 }
@@ -536,15 +532,6 @@ rightRotate(RBT *tree, BSTNODE *node)
 
 	setBSTNODEright(secondNode, node);
 	setBSTNODEparent(node, secondNode);
-
-	//printf("%p\n", getBSTNODE(node));
-	//printf("%p\n", getBSTNODE(getBSTNODEleft(node)));
-	//printf("%p\n", getBSTNODE(getBSTNODEright(node)));
-	//printf("%p\n", getBSTNODE(getBSTNODEparent(node)));
-	//printf("%p\n", getBSTNODE(secondNode));
-	//printf("%p\n", getBSTNODE(getBSTNODEleft(secondNode)));
-	//printf("%p\n", getBSTNODE(getBSTNODEright(secondNode)));
-	//printf("%p\n", getBSTNODE(getBSTNODEparent(secondNode)));
 }
 
 static BSTNODE *
