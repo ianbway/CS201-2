@@ -170,8 +170,16 @@ insertRBT(RBT *tree, void *value)
 	}
 }
 
-int 
+BSTNODE *
 findRBT(RBT *tree, void *value)
+{
+	// This method returns the node associated with the searched-for value.
+	RBTVALUE *alreadyExists = newRBTVALUE(tree, value);
+	return findBST(tree->bst, alreadyExists);
+}
+
+int 
+findRBTcount(RBT *tree, void *value)
 {
 	// This method returns the frequency of the searched-for value. 
 	// If the value is not in the tree, the method should return zero. 
@@ -199,7 +207,7 @@ deletionFixup(RBT *tree, BSTNODE *node)
 	// Based off of best pseudocode ever
 
 	while (1)
-	{
+	{	
 		// X is the root, exit
 		if (getBSTroot(tree->bst) == node)
 		{
@@ -219,13 +227,13 @@ deletionFixup(RBT *tree, BSTNODE *node)
 			// sibling is left, right rotation
 			if (getBSTNODEleft(parent(sibling(node))) == sibling(node))
 			{
-				rightRotate(tree, sibling(node));
+				rightRotate(tree, parent(node));
 			}
 
 			// sibling is right, left rotation
 			else
 			{
-				leftRotate(tree, sibling(node));
+				leftRotate(tree, parent(node));
 			}
 			// should have black sibling now
 		}
@@ -239,13 +247,13 @@ deletionFixup(RBT *tree, BSTNODE *node)
 			// sibling is left, right rotation
 			if (getBSTNODEleft(parent(sibling(node))) == sibling(node))
 			{
-				rightRotate(tree, sibling(node));
+				rightRotate(tree, parent(node));
 			}
 
 			// sibling is right, left rotation
 			else
 			{
-				leftRotate(tree, sibling(node));
+				leftRotate(tree, parent(node));
 			}
 			// subtree and tree is black height balanced
 
@@ -260,18 +268,18 @@ deletionFixup(RBT *tree, BSTNODE *node)
 			
 			if (getBSTNODEright(sibling(node)) == niece(node))
 			{
-				leftRotate(tree, niece(node));
+				leftRotate(tree, sibling(node));
 			}
 
 			else
 			{
-				rightRotate(tree, niece(node));
+				rightRotate(tree, sibling(node));
 			}
 			// should have red nephew now
 		}
 
 		else // sibling, niece, and nephew must be black
-		{
+		{	
 			setColor(sibling(node), 'R');
 			node = parent(node);
 			// this subtree is black height balanced, but the tree is not
@@ -291,7 +299,7 @@ deleteRBT(RBT *tree, void *value)
 	valToDelete = findBST(tree->bst, rbtVal);
 
 	// Count of value is more than one in the tree, decrement count
-	if (findRBT(tree, value) > 1)
+	if (findRBTcount(tree, value) > 1)
 	{
 		RBTVALUE *rbtVal = getBSTNODE(valToDelete);
 		rbtVal->count--;
@@ -299,11 +307,12 @@ deleteRBT(RBT *tree, void *value)
 	}
 
 	// Delete node from tree if count is one
-	else if (findRBT(tree, value) == 1)
+	else if (findRBTcount(tree, value) == 1)
 	{
-		valToDelete = deleteBST(tree->bst, rbtVal);
+		BSTNODE *p = swapToLeafBST(tree->bst, valToDelete);
+		deletionFixup(tree, p);
+		pruneLeafBST(tree->bst, p);
 		tree->words--;
-		deletionFixup(tree, valToDelete);
 	}
 
 	// Ignore, but report an attempt to delete something that does not exist in the tree. 
@@ -531,15 +540,6 @@ rightRotate(RBT *tree, BSTNODE *node)
 
 	setBSTNODEright(secondNode, node);
 	setBSTNODEparent(node, secondNode);
-
-	//printf("%p\n", getBSTNODE(node));
-	//printf("%p\n", getBSTNODE(getBSTNODEleft(node)));
-	//printf("%p\n", getBSTNODE(getBSTNODEright(node)));
-	//printf("%p\n", getBSTNODE(getBSTNODEparent(node)));
-	//printf("%p\n", getBSTNODE(secondNode));
-	//printf("%p\n", getBSTNODE(getBSTNODEleft(secondNode)));
-	//printf("%p\n", getBSTNODE(getBSTNODEright(secondNode)));
-	//printf("%p\n", getBSTNODE(getBSTNODEparent(secondNode)));
 }
 
 static BSTNODE *
@@ -577,6 +577,11 @@ uncle(BSTNODE *node)
 static BSTNODE*
 sibling(BSTNODE *node)
 {
+	if (node == NULL)
+	{
+		return NULL;
+	}
+	
 	// If left child, get right child
 	if (getBSTNODEleft(parent(node)) == node)
 	{
@@ -593,6 +598,11 @@ sibling(BSTNODE *node)
 static BSTNODE*
 nephew(BSTNODE *node)
 {
+	if (sibling(node) == NULL)
+	{
+		return NULL;
+	}
+	
 	// If the sibling of the node is a left child, return its left child, the furthest child of the sibling
 	if (sibling(node) == getBSTNODEleft(parent(node)))
 	{
@@ -609,6 +619,11 @@ nephew(BSTNODE *node)
 static BSTNODE*
 niece(BSTNODE *node)
 {
+	if (sibling(node) == NULL)
+	{
+		return NULL;
+	}
+	
 	// If the sibling of the node is a left child, return its right child, the closest child of the sibling
 	if (sibling(node) == getBSTNODEleft(parent(node)))
 	{
