@@ -28,7 +28,8 @@ void TopDownMergeSort(int [], int [], int);
 void TopDownSplitMerge(int [], int, int, int []);
 void TopDownMerge(int [], int, int, int, int []);
 void CopyArray(int [], int, int, int []);
-SET *kruskal(DA *);
+DA *kruskal(DA *);
+void displayTree(FILE *, DA *);
 
 typedef struct edge
 {
@@ -147,7 +148,7 @@ main(int argc, char **argv)
 		edgeDA = processIntoDA(edgeFile);
 	}
 
-	int *indexArray = malloc(sizeof(maxVertex + 1));
+	
 	
 	// Should not have more than one argument after the executable.
 	if (argc - argIndex > 1)
@@ -287,6 +288,16 @@ processIntoDA(FILE *file)
 			char *tokenOne = readToken(file);
 			char *tokenTwo = readToken(file);
 			edge = newEDGE(atoi(tokenOne), atoi(tokenTwo));
+
+			if (atoi(tokenOne) > maxVertex)
+			{
+				maxVertex = atoi(tokenOne);
+			}
+			
+			else if (atoi(tokenTwo) > maxVertex)
+			{
+				maxVertex = atoi(tokenTwo);
+			}
 			
 			token = readToken(file);
 			
@@ -358,32 +369,50 @@ CopyArray(int A[], int iBegin, int iEnd, int B[])
 		B[k] = A[k];
 }
 
-SET *
+DA *
 kruskal(DA *edgeArray)
 {
 	SET *returnSet = newSET(displayEDGE);
-
+	int *indexArray = malloc(sizeof(int) * (maxVertex + 1));
+	assert(indexArray != 0);
+	DA *kruskalEdges = newDA(displayEDGE);
 	int i;
-	for (i = 0; i < sizeDA(edgeArray); i++)
+
+	for (i = 0; i < maxVertex + 1; i++)
 	{
-		makeSET(returnSet, getDA(edgeArray, i));
+		indexArray[i] = -1;
 	}
 
-	for (i = 0; i < sizeDA(TopDownMergeSort(edgeArray, ,sizeDA(edgeArray))); i++)
-		if (findSET(returnSet, getU(getDA(edgeArray, i))) != findSET(returnSet, getV(getDA(edgeArray, i))))
-		{
-			makeSET(returnSet, getDA(edgeArray, i));
-			unionSET(returnSet, getU(getDA(edgeArray, i)), getV(getDA(edgeArray, i)));
-		}
+	for (i = 0; i < sizeDA(edgeArray); i++)
+	{
+		int index = makeSET(returnSet, getDA(edgeArray, i));
+		indexArray[getU(getDA(edgeArray, i))] = index;
+	}
 
-	return returnSet;
+	// sort here. 
+	void **arrayToSort = extractDA(edgeArray);
+	void **workArray = malloc(sizeof(DA *) * (sizeDA(edgeArray)));
+	assert(workArray != 0);
+	TopDownMergeSort(arrayToSort, workArray, sizeDA(edgeArray));
+
+	for (i = 0; i < sizeDA(edgeArray); i++)
+	{
+		int rep1 = findSET(returnSet, indexArray[getU(getDA(edgeArray, i))]);
+		int rep2 = findSET(returnSet, indexArray[getV(getDA(edgeArray, i))]);
+
+		if (rep1 != rep2)
+		{
+			unionSET(returnSet, rep1, rep2);
+			insertDA(kruskalEdges, getDA(edgeArray, i));
+		}
+	}
+
+	return kruskalEdges;
 }
 
 void
-displayTree(FILE *fp, SET *d, DA *edgeArray)
+displayTree(FILE *fp, DA *edgeArray)
 {
-	displaySET(fp, d);
-
 	int tWeight = 0;
 	int i;
 	for (i = 0; i < sizeDA(edgeArray); i++)
