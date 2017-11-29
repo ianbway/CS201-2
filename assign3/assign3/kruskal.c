@@ -111,6 +111,18 @@ getWeight(EDGE *edge)
 }
 
 int
+getU(EDGE *edge)
+{
+	return edge->u;
+}
+
+int
+getV(EDGE *edge)
+{
+	return edge->v;
+}
+
+int
 main(int argc, char **argv)
 {
 	int argIndex = 1;
@@ -357,12 +369,27 @@ kruskal(DA *edgeArray)
 		makeSET(returnSet, getDA(edgeArray, i));
 	}
 
-	/*for (i = 0; i < sizeDA(TopDownMergeSort(edgeArray, ,sizeDA(edgeArray))); i++)
-		if (findSET(returnSet, ) != findSET(returnSet, ))
+	for (i = 0; i < sizeDA(TopDownMergeSort(edgeArray, ,sizeDA(edgeArray))); i++)
+		if (findSET(returnSet, getU(getDA(edgeArray, i))) != findSET(returnSet, getV(getDA(edgeArray, i))))
 		{
 			makeSET(returnSet, getDA(edgeArray, i));
-			unionSET(returnSet, , );
-		}*/
+			unionSET(returnSet, getU(getDA(edgeArray, i)), getV(getDA(edgeArray, i)));
+		}
 
 	return returnSet;
+}
+
+void
+displayTree(FILE *fp, SET *d, DA *edgeArray)
+{
+	displaySET(fp, d);
+
+	int tWeight = 0;
+	int i;
+	for (i = 0; i < sizeDA(edgeArray); i++)
+	{
+		tWeight = tWeight + getWeight(getDA(edgeArray, i));
+	}
+
+	fprintf(fp, "total weight: %d\n", tWeight);
 }
