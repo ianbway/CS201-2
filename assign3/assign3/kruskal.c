@@ -24,6 +24,11 @@ int maxVertex = 0;
 void Fatal(char *, ...);
 RBT *processIntoRBT(FILE *);
 DA *processIntoDA(FILE *);
+void TopDownMergeSort(int [], int [], int);
+void TopDownSplitMerge(int [], int, int, int []);
+void TopDownMerge(int [], int, int, int, int []);
+void CopyArray(int [], int, int, int []);
+SET *kruskal(DA *);
 
 typedef struct edge
 {
@@ -100,6 +105,12 @@ compareVERTEX(void *firstValue, void *secondValue)
 }
 
 int
+getWeight(EDGE *edge)
+{
+	return edge->weight;
+}
+
+int
 main(int argc, char **argv)
 {
 	int argIndex = 1;
@@ -114,17 +125,17 @@ main(int argc, char **argv)
 		return 0;
 	}
 
-	RBT *edgeRBT;
+	//RBT *edgeRBT;
 	DA *edgeDA;
 	
 	if (fopen(argv[1], "r"))
 	{
 		FILE *edgeFile = fopen(argv[1], "r");
-		edgeRBT = processIntoRBT(edgeFile);
+		//edgeRBT = processIntoRBT(edgeFile);
 		edgeDA = processIntoDA(edgeFile);
 	}
-	
-	int vertexArray[maxVertex + 1];
+
+	int *indexArray = malloc(sizeof(maxVertex + 1));
 	
 	// Should not have more than one argument after the executable.
 	if (argc - argIndex > 1)
@@ -151,89 +162,89 @@ Fatal(char *fmt, ...)
 	exit(-1);
 }
 
-RBT *
-processIntoRBT(FILE *file)
-{
-	if (file == NULL)
-	{
-		Fatal("Could not open %s file.\n", file);
-	}
-	
-	RBT *inputRBT = newRBT(displayEDGE, compareEDGE);
-	char *tokenOne = readToken(file);
-	char *tokenTwo = readToken(file);
-	
-	EDGE *edge = newEDGE(atoi(tokenOne), atoi(tokenTwo));
-	
-	if (atoi(tokenOne) > maxVertex)
-	{
-		maxVertex = atoi(tokenOne);
-	}
-			
-	else if (atoi(tokenTwo) > maxVertex)
-	{
-		maxVertex = atoi(tokenTwo);
-	}
-	
-	insertRBT(inputRBT, edge);
-	char *token = readToken(file);
-	//INTEGER *vertex1;
-	//INTEGER *vertex2;
-	//INTEGER *weight = newINTEGER(1);
-	
-	while (token)
-	{
-		if (strcmp(token, ";") == 0)
-		{
-			insertRBT(inputRBT, edge);
-			token = readToken(file);
-		}
-		
-		else
-		{
-			char *tokenOne = readToken(file);
-			char *tokenTwo = readToken(file);
-			edge = newEDGE(atoi(tokenOne), atoi(tokenTwo));
-			
-			if (atoi(tokenOne) > maxVertex)
-			{
-				maxVertex = atoi(tokenOne);
-			}
-			
-			else if (atoi(tokenTwo) > maxVertex)
-			{
-				maxVertex = atoi(tokenTwo);
-			}
-			
-			token = readToken(file);
-			
-			if (strcmp(token, ";") != 0)
-			{
-				int possibleWeight = atoi(readToken(file));
-				edge->weight = possibleWeight;
-				token = readToken(file);
-			}
-			/*if (vertex1 == 0)
-			{
-				vertex1 = newINTEGER(token);
-			}
-			
-			else if (vertex2 == 0)
-			{
-				vertex2 = newINTEGER(token);
-			}
-			
-			else
-			{
-				weight = newINTEGER(token);
-			}*/
-		}
-		
-		
-	}
-
-	return inputRBT;
-}
+//RBT *
+//processIntoRBT(FILE *file)
+//{
+//	if (file == NULL)
+//	{
+//		Fatal("Could not open %s file.\n", file);
+//	}
+//	
+//	RBT *inputRBT = newRBT(displayEDGE, compareEDGE);
+//	char *tokenOne = readToken(file);
+//	char *tokenTwo = readToken(file);
+//	
+//	EDGE *edge = newEDGE(atoi(tokenOne), atoi(tokenTwo));
+//	
+//	if (atoi(tokenOne) > maxVertex)
+//	{
+//		maxVertex = atoi(tokenOne);
+//	}
+//			
+//	else if (atoi(tokenTwo) > maxVertex)
+//	{
+//		maxVertex = atoi(tokenTwo);
+//	}
+//	
+//	insertRBT(inputRBT, edge);
+//	char *token = readToken(file);
+//	//INTEGER *vertex1;
+//	//INTEGER *vertex2;
+//	//INTEGER *weight = newINTEGER(1);
+//	
+//	while (token)
+//	{
+//		if (strcmp(token, ";") == 0)
+//		{
+//			insertRBT(inputRBT, edge);
+//			token = readToken(file);
+//		}
+//		
+//		else
+//		{
+//			char *tokenOne = readToken(file);
+//			char *tokenTwo = readToken(file);
+//			edge = newEDGE(atoi(tokenOne), atoi(tokenTwo));
+//			
+//			if (atoi(tokenOne) > maxVertex)
+//			{
+//				maxVertex = atoi(tokenOne);
+//			}
+//			
+//			else if (atoi(tokenTwo) > maxVertex)
+//			{
+//				maxVertex = atoi(tokenTwo);
+//			}
+//			
+//			token = readToken(file);
+//			
+//			if (strcmp(token, ";") != 0)
+//			{
+//				int possibleWeight = atoi(readToken(file));
+//				edge->weight = possibleWeight;
+//				token = readToken(file);
+//			}
+//			/*if (vertex1 == 0)
+//			{
+//				vertex1 = newINTEGER(token);
+//			}
+//			
+//			else if (vertex2 == 0)
+//			{
+//				vertex2 = newINTEGER(token);
+//			}
+//			
+//			else
+//			{
+//				weight = newINTEGER(token);
+//			}*/
+//		}
+//		
+//		
+//	}
+//
+//	return inputRBT;
+//}
 
 DA *
 processIntoDA(FILE *file)
@@ -277,4 +288,81 @@ processIntoDA(FILE *file)
 	}
 
 	return inputDA;
+}
+
+// Array A[] has the items to sort; array B[] is a work array.
+void
+TopDownMergeSort(int A[], int B[], int n)
+{
+	CopyArray(A, 0, n, B);           // duplicate array A[] into B[]
+	TopDownSplitMerge(B, 0, n, A);   // sort data from B[] into A[]
+}
+
+// Sort the given run of array A[] using array B[] as a source.
+// iBegin is inclusive; iEnd is exclusive (A[iEnd] is not in the set).
+void
+TopDownSplitMerge(int B[], int iBegin, int iEnd, int A[])
+{
+	if (iEnd - iBegin < 2)                       // if run size == 1
+		return;                                 //   consider it sorted
+												// split the run longer than 1 item into halves
+	int iMiddle = (iEnd + iBegin) / 2;              // iMiddle = mid point
+												// recursively sort both runs from array A[] into B[]
+	TopDownSplitMerge(A, iBegin, iMiddle, B);  // sort the left  run
+	TopDownSplitMerge(A, iMiddle, iEnd, B);  // sort the right run
+											 // merge the resulting runs from array B[] into A[]
+	TopDownMerge(B, iBegin, iMiddle, iEnd, A);
+}
+
+//  Left source half is A[ iBegin:iMiddle-1].
+// Right source half is A[iMiddle:iEnd-1   ].
+// Result is            B[ iBegin:iEnd-1   ].
+void
+TopDownMerge(int A[], int iBegin, int iMiddle, int iEnd, int B[])
+{
+	int i = iBegin;
+	int j = iMiddle;
+	int k;
+	// While there are elements in the left or right runs...
+	for (k = iBegin; k < iEnd; k++) {
+		// If left run head exists and is <= existing right run head.
+		if (i < iMiddle && (j >= iEnd || A[i] <= A[j])) {
+			B[k] = A[i];
+			i = i + 1;
+		}
+		else {
+			B[k] = A[j];
+			j = j + 1;
+		}
+	}
+}
+
+void
+CopyArray(int A[], int iBegin, int iEnd, int B[])
+{
+	int k;
+
+	for (k = iBegin; k < iEnd; k++)
+		B[k] = A[k];
+}
+
+SET *
+kruskal(DA *edgeArray)
+{
+	SET *returnSet = newSET(displayEDGE);
+
+	int i;
+	for (i = 0; i < sizeDA(edgeArray); i++)
+	{
+		makeSET(returnSet, getDA(edgeArray, i));
+	}
+
+	/*for (i = 0; i < sizeDA(TopDownMergeSort(edgeArray, ,sizeDA(edgeArray))); i++)
+		if (findSET(returnSet, ) != findSET(returnSet, ))
+		{
+			makeSET(returnSet, getDA(edgeArray, i));
+			unionSET(returnSet, , );
+		}*/
+
+	return returnSet;
 }
