@@ -24,10 +24,10 @@ int maxVertex = 0;
 void Fatal(char *, ...);
 RBT *processIntoRBT(FILE *);
 DA *processIntoDA(FILE *);
-void TopDownMergeSort(int [], int [], int);
-void TopDownSplitMerge(int [], int, int, int []);
-void TopDownMerge(int [], int, int, int, int []);
-void CopyArray(int [], int, int, int []);
+void TopDownMergeSort(DA *, DA *, int);
+void TopDownSplitMerge(DA *, int, int, DA *);
+void TopDownMerge(DA *, int, int, int, DA *);
+void CopyArray(DA *, int, int, DA *);
 DA *kruskal(DA *);
 void displayTree(FILE *, DA *);
 
@@ -38,11 +38,6 @@ typedef struct edge
 	int u;
 	int v;
 } EDGE;
-
-typedef struct vertex
-{
-	int value;
-} VERTEX;
 
 EDGE *
 newEDGE(int u, int v)
@@ -58,17 +53,6 @@ newEDGE(int u, int v)
 	return edge;
 }
 
-VERTEX * 
-newVERTEX(int value)
-{
-	VERTEX *vertex = malloc(sizeof(VERTEX));
-	assert(vertex != 0);
-	
-	vertex->value = value;
-
-	return vertex;
-}
-
 void 
 displayEDGE (FILE* fp, void *value)
 {
@@ -79,14 +63,6 @@ displayEDGE (FILE* fp, void *value)
 	fprintf(fp, "%d\n", edge->weight);
 }
 
-void 
-displayVERTEX(FILE *fp, void *value)
-{
-	VERTEX *vertex = value;
-	
-	fprintf(fp, "%d", vertex->value);
-}
-
 int
 compareEDGE(void *firstValue, void *secondValue)
 {
@@ -94,15 +70,6 @@ compareEDGE(void *firstValue, void *secondValue)
 	EDGE *secondEdge = secondValue;
 	
 	return (firstEdge->weight - secondEdge->weight);
-}
-
-int
-compareVERTEX(void *firstValue, void *secondValue)
-{
-	VERTEX *vertexOne = firstValue;
-	VERTEX *vertexTwo = secondValue;
-	
-	return (vertexOne->value - vertexTwo->value);
 }
 
 int
@@ -138,17 +105,20 @@ main(int argc, char **argv)
 		return 0;
 	}
 
-	//RBT *edgeRBT;
 	DA *edgeDA;
 	
 	if (fopen(argv[1], "r"))
 	{
 		FILE *edgeFile = fopen(argv[1], "r");
-		//edgeRBT = processIntoRBT(edgeFile);
 		edgeDA = processIntoDA(edgeFile);
 	}
 
-	
+	// Sort edge array before kruskal's algorithm
+	DA *workArray = newDA(displayEDGE);
+	TopDownMergeSort(edgeDA, workArray, sizeDA(edgeDA));
+
+	// kruskal time
+	DA* mst = kruskal(edgeDA);
 	
 	// Should not have more than one argument after the executable.
 	if (argc - argIndex > 1)
@@ -175,90 +145,6 @@ Fatal(char *fmt, ...)
 	exit(-1);
 }
 
-//RBT *
-//processIntoRBT(FILE *file)
-//{
-//	if (file == NULL)
-//	{
-//		Fatal("Could not open %s file.\n", file);
-//	}
-//	
-//	RBT *inputRBT = newRBT(displayEDGE, compareEDGE);
-//	char *tokenOne = readToken(file);
-//	char *tokenTwo = readToken(file);
-//	
-//	EDGE *edge = newEDGE(atoi(tokenOne), atoi(tokenTwo));
-//	
-//	if (atoi(tokenOne) > maxVertex)
-//	{
-//		maxVertex = atoi(tokenOne);
-//	}
-//			
-//	else if (atoi(tokenTwo) > maxVertex)
-//	{
-//		maxVertex = atoi(tokenTwo);
-//	}
-//	
-//	insertRBT(inputRBT, edge);
-//	char *token = readToken(file);
-//	//INTEGER *vertex1;
-//	//INTEGER *vertex2;
-//	//INTEGER *weight = newINTEGER(1);
-//	
-//	while (token)
-//	{
-//		if (strcmp(token, ";") == 0)
-//		{
-//			insertRBT(inputRBT, edge);
-//			token = readToken(file);
-//		}
-//		
-//		else
-//		{
-//			char *tokenOne = readToken(file);
-//			char *tokenTwo = readToken(file);
-//			edge = newEDGE(atoi(tokenOne), atoi(tokenTwo));
-//			
-//			if (atoi(tokenOne) > maxVertex)
-//			{
-//				maxVertex = atoi(tokenOne);
-//			}
-//			
-//			else if (atoi(tokenTwo) > maxVertex)
-//			{
-//				maxVertex = atoi(tokenTwo);
-//			}
-//			
-//			token = readToken(file);
-//			
-//			if (strcmp(token, ";") != 0)
-//			{
-//				int possibleWeight = atoi(readToken(file));
-//				edge->weight = possibleWeight;
-//				token = readToken(file);
-//			}
-//			/*if (vertex1 == 0)
-//			{
-//				vertex1 = newINTEGER(token);
-//			}
-//			
-//			else if (vertex2 == 0)
-//			{
-//				vertex2 = newINTEGER(token);
-//			}
-//			
-//			else
-//			{
-//				weight = newINTEGER(token);
-//			}*/
-//		}
-//		
-//		
-//	}
-//
-//	return inputRBT;
-//}
-
 DA *
 processIntoDA(FILE *file)
 {
@@ -270,8 +156,19 @@ processIntoDA(FILE *file)
 	DA *inputDA = newDA(displayEDGE);
 	char *tokenOne = readToken(file);
 	char *tokenTwo = readToken(file);
-	
-	EDGE *edge = newEDGE(atoi(tokenOne), atoi(tokenTwo));
+	EDGE *edge;
+
+	// Making sure u val is smaller than v for future help
+	if (atoi(tokenOne) < atoi(tokenTwo))
+	{
+		edge = newEDGE(atoi(tokenOne), atoi(tokenTwo));
+	}
+
+	else
+	{
+		edge = newEDGE(atoi(tokenTwo), atoi(tokenOne));
+	}
+
 	insertDA(inputDA, edge);
 	char *token = readToken(file);
 	
@@ -315,7 +212,7 @@ processIntoDA(FILE *file)
 
 // Array A[] has the items to sort; array B[] is a work array.
 void
-TopDownMergeSort(int A[], int B[], int n)
+TopDownMergeSort(DA *A, DA *B, int n)
 {
 	CopyArray(A, 0, n, B);           // duplicate array A[] into B[]
 	TopDownSplitMerge(B, 0, n, A);   // sort data from B[] into A[]
@@ -324,7 +221,7 @@ TopDownMergeSort(int A[], int B[], int n)
 // Sort the given run of array A[] using array B[] as a source.
 // iBegin is inclusive; iEnd is exclusive (A[iEnd] is not in the set).
 void
-TopDownSplitMerge(int B[], int iBegin, int iEnd, int A[])
+TopDownSplitMerge(DA *B, int iBegin, int iEnd, DA *A)
 {
 	if (iEnd - iBegin < 2)                       // if run size == 1
 		return;                                 //   consider it sorted
@@ -341,7 +238,7 @@ TopDownSplitMerge(int B[], int iBegin, int iEnd, int A[])
 // Right source half is A[iMiddle:iEnd-1   ].
 // Result is            B[ iBegin:iEnd-1   ].
 void
-TopDownMerge(int A[], int iBegin, int iMiddle, int iEnd, int B[])
+TopDownMerge(DA *A, int iBegin, int iMiddle, int iEnd, DA *B)
 {
 	int i = iBegin;
 	int j = iMiddle;
@@ -349,24 +246,24 @@ TopDownMerge(int A[], int iBegin, int iMiddle, int iEnd, int B[])
 	// While there are elements in the left or right runs...
 	for (k = iBegin; k < iEnd; k++) {
 		// If left run head exists and is <= existing right run head.
-		if (i < iMiddle && (j >= iEnd || A[i] <= A[j])) {
-			B[k] = A[i];
+		if (i < iMiddle && (j >= iEnd || getDA(A, i) <= getDA(A, j))) {
+			setDA(B, k, getDA(A, i));
 			i = i + 1;
 		}
 		else {
-			B[k] = A[j];
+			setDA(B, k, getDA(A, j));
 			j = j + 1;
 		}
 	}
 }
 
 void
-CopyArray(int A[], int iBegin, int iEnd, int B[])
+CopyArray(DA *A, int iBegin, int iEnd, DA *B)
 {
 	int k;
 
 	for (k = iBegin; k < iEnd; k++)
-		B[k] = A[k];
+		setDA(B, k, getDA(A, k));
 }
 
 DA *
@@ -385,15 +282,18 @@ kruskal(DA *edgeArray)
 
 	for (i = 0; i < sizeDA(edgeArray); i++)
 	{
-		int index = makeSET(returnSet, getDA(edgeArray, i));
-		indexArray[getU(getDA(edgeArray, i))] = index;
-	}
+		int uIndex = makeSET(returnSet, newINTEGER(getU(getDA(edgeArray, i))));
+		if (indexArray[getU(getDA(edgeArray, i))] == -1)
+		{
+			indexArray[getU(getDA(edgeArray, i))] = uIndex;
+		}
 
-	// sort here. 
-	void **arrayToSort = extractDA(edgeArray);
-	void **workArray = malloc(sizeof(DA *) * (sizeDA(edgeArray)));
-	assert(workArray != 0);
-	TopDownMergeSort(arrayToSort, workArray, sizeDA(edgeArray));
+		int vIndex = makeSET(returnSet, newINTEGER(getV(getDA(edgeArray, i))));
+		if (indexArray[getV(getDA(edgeArray, i))] == -1)
+		{
+			indexArray[getV(getDA(edgeArray, i))] = vIndex;
+		}
+	}
 
 	for (i = 0; i < sizeDA(edgeArray); i++)
 	{
