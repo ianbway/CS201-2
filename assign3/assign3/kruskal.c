@@ -21,16 +21,6 @@
 
 int maxVertex = 0;
 
-void Fatal(char *, ...);
-RBT *processIntoRBT(FILE *);
-DA *processIntoDA(FILE *);
-void TopDownMergeSort(DA *, DA *, int);
-void TopDownSplitMerge(DA *, int, int, DA *);
-void TopDownMerge(DA *, int, int, int, DA *);
-void CopyArray(DA *, int, int, DA *);
-DA *kruskal(DA *);
-void displayTree(FILE *, DA *);
-
 typedef struct edge
 {
 	bool visited;
@@ -38,6 +28,25 @@ typedef struct edge
 	int u;
 	int v;
 } EDGE;
+
+void displayEDGE (FILE*, void *);
+typedef int (*Comparator)(void *, void *);
+int compareU(void *, void *);
+int compareV(void *, void *);
+int compareEDGE(void *, void *);
+int getWeight(EDGE *);
+int getU(EDGE *);
+int getV(EDGE *);
+void swapVtoU(EDGE*, int);
+void Fatal(char *, ...);
+RBT *processIntoRBT(FILE *);
+DA *processIntoDA(FILE *);
+void TopDownMergeSort(DA *, DA *, int, Comparator);
+void TopDownSplitMerge(DA *, int, int, DA *, Comparator);
+void TopDownMerge(DA *, int, int, int, DA *, Comparator);
+void CopyArray(DA *, int, int, DA *);
+DA *kruskal(DA *);
+void displayTree(FILE *, DA *);
 
 EDGE *
 newEDGE(int u, int v)
@@ -63,13 +72,55 @@ displayEDGE (FILE* fp, void *value)
 	fprintf(fp, "%d\n", edge->weight);
 }
 
+int 
+compareU(void *firstValue, void *secondValue)
+{	
+	EDGE *firstEdge = firstValue;
+	EDGE *secondEdge = secondValue;
+
+	int returnInt = getU(firstEdge) - getU(secondEdge);
+	if (getU(firstEdge) == getU(secondEdge))
+	{
+		returnInt = getV(firstEdge) - getV(secondEdge);
+	}
+
+	return returnInt;
+}
+
+int 
+compareV(void *firstValue, void *secondValue)
+{
+	EDGE *firstEdge = firstValue;
+	EDGE *secondEdge = secondValue;
+
+	int returnInt = getV(firstEdge) - getV(secondEdge);
+	if (getV(firstEdge) == getV(secondEdge))
+	{
+		returnInt = getU(firstEdge) - getU(secondEdge);
+	}
+
+	return returnInt;
+}
+
+// call compare weight
 int
 compareEDGE(void *firstValue, void *secondValue)
 {
 	EDGE *firstEdge = firstValue;
 	EDGE *secondEdge = secondValue;
-	
-	return (firstEdge->weight - secondEdge->weight);
+
+	int returnInt = firstEdge->weight - secondEdge->weight;
+
+	if (firstEdge->weight == secondEdge->weight)
+	{
+		returnInt = getU(firstEdge) - getU(secondEdge);
+		if (getU(firstEdge) == getU(secondEdge))
+		{
+			returnInt = getV(firstEdge) - getV(secondEdge);
+		}
+	}	
+
+	return returnInt;
 }
 
 int
@@ -88,6 +139,17 @@ int
 getV(EDGE *edge)
 {
 	return edge->v;
+}
+
+void
+swapVtoU(EDGE* edge, int index)
+{
+	if (getV(edge) == index)
+	{
+		int temp = getV(edge);
+		edge->v = edge->u;
+		edge->u = temp;
+	}
 }
 
 int
@@ -115,7 +177,7 @@ main(int argc, char **argv)
 
 	// Sort edge array before kruskal's algorithm
 	DA *workArray = newDA(displayEDGE);
-	TopDownMergeSort(edgeDA, workArray, sizeDA(edgeDA));
+	TopDownMergeSort(edgeDA, workArray, sizeDA(edgeDA), compareEDGE);
 
 	// kruskal time
 	DA* mst = kruskal(edgeDA);
@@ -212,33 +274,33 @@ processIntoDA(FILE *file)
 
 // Array A[] has the items to sort; array B[] is a work array.
 void
-TopDownMergeSort(DA *A, DA *B, int n)
+TopDownMergeSort(DA *A, DA *B, int n, Comparator compare)
 {
 	CopyArray(A, 0, n, B);           // duplicate array A[] into B[]
-	TopDownSplitMerge(B, 0, n, A);   // sort data from B[] into A[]
+	TopDownSplitMerge(B, 0, n, A, compare);   // sort data from B[] into A[]
 }
 
 // Sort the given run of array A[] using array B[] as a source.
 // iBegin is inclusive; iEnd is exclusive (A[iEnd] is not in the set).
 void
-TopDownSplitMerge(DA *B, int iBegin, int iEnd, DA *A)
+TopDownSplitMerge(DA *B, int iBegin, int iEnd, DA *A, Comparator compare)
 {
 	if (iEnd - iBegin < 2)                       // if run size == 1
 		return;                                 //   consider it sorted
 												// split the run longer than 1 item into halves
 	int iMiddle = (iEnd + iBegin) / 2;              // iMiddle = mid point
 												// recursively sort both runs from array A[] into B[]
-	TopDownSplitMerge(A, iBegin, iMiddle, B);  // sort the left  run
-	TopDownSplitMerge(A, iMiddle, iEnd, B);  // sort the right run
+	TopDownSplitMerge(A, iBegin, iMiddle, B, compare);  // sort the left  run
+	TopDownSplitMerge(A, iMiddle, iEnd, B, compare);  // sort the right run
 											 // merge the resulting runs from array B[] into A[]
-	TopDownMerge(B, iBegin, iMiddle, iEnd, A);
+	TopDownMerge(B, iBegin, iMiddle, iEnd, A, compare);
 }
 
 //  Left source half is A[ iBegin:iMiddle-1].
 // Right source half is A[iMiddle:iEnd-1   ].
 // Result is            B[ iBegin:iEnd-1   ].
 void
-TopDownMerge(DA *A, int iBegin, int iMiddle, int iEnd, DA *B)
+TopDownMerge(DA *A, int iBegin, int iMiddle, int iEnd, DA *B, Comparator compare)
 {
 	int i = iBegin;
 	int j = iMiddle;
@@ -246,7 +308,7 @@ TopDownMerge(DA *A, int iBegin, int iMiddle, int iEnd, DA *B)
 	// While there are elements in the left or right runs...
 	for (k = iBegin; k < iEnd; k++) {
 		// If left run head exists and is <= existing right run head.
-		if (i < iMiddle && (j >= iEnd || getDA(A, i) <= getDA(A, j))) {
+		if (i < iMiddle && (j >= iEnd || compare(getDA(A, i), getDA(A, j)) == 0 || compare(getDA(A, i), getDA(A, j)) < 0 )) {
 			setDA(B, k, getDA(A, i));
 			i = i + 1;
 		}
