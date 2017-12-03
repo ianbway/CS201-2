@@ -46,7 +46,8 @@ void TopDownSplitMerge(DA *, int, int, DA *, Comparator);
 void TopDownMerge(DA *, int, int, int, DA *, Comparator);
 void CopyArray(DA *, int, int, DA *);
 DA *kruskal(DA *);
-void displayTree(FILE *, DA *);
+DA **processIntoAdjacencyList(DA *);
+void displayTree(FILE *, DA **, DA *);
 
 EDGE *
 newEDGE(int u, int v)
@@ -69,7 +70,7 @@ displayEDGE (FILE* fp, void *value)
 	
 	fprintf(fp, "%d", edge->u);
 	fprintf(fp, "(%d)", edge->v);
-	fprintf(fp, "%d\n", edge->weight);
+	fprintf(fp, "%d", edge->weight);
 }
 
 int 
@@ -166,21 +167,24 @@ main(int argc, char **argv)
 		printf("Ian W. Braudaway\n");
 		return 0;
 	}
-
-	DA *edgeDA;
 	
-	if (fopen(argv[1], "r"))
-	{
-		FILE *edgeFile = fopen(argv[1], "r");
-		edgeDA = processIntoDA(edgeFile);
-	}
+	FILE *edgeFile = fopen(argv[1], "r");
+	DA *edgeDA = processIntoDA(edgeFile);
 
 	// Sort edge array before kruskal's algorithm
 	DA *workArray = newDA(displayEDGE);
 	TopDownMergeSort(edgeDA, workArray, sizeDA(edgeDA), compareEDGE);
 
-	// kruskal time
+	// kruskal time, sort afterwards based on U vertice
 	DA* mst = kruskal(edgeDA);
+	DA *workArrayTwo = newDA(displayEDGE);
+	TopDownMergeSort(mst, workArrayTwo, sizeDA(mst), compareU);
+	
+	// Make adjacency list from mst
+	DA **adjList = processIntoAdjacencyList(mst);
+
+	// display the tree
+	displayTree(stdout, adjList, mst);
 	
 	// Should not have more than one argument after the executable.
 	if (argc - argIndex > 1)
@@ -216,6 +220,7 @@ processIntoDA(FILE *file)
 	}
 	
 	DA *inputDA = newDA(displayEDGE);
+	// Save off first two vertices
 	char *tokenOne = readToken(file);
 	char *tokenTwo = readToken(file);
 	EDGE *edge;
@@ -231,8 +236,16 @@ processIntoDA(FILE *file)
 		edge = newEDGE(atoi(tokenTwo), atoi(tokenOne));
 	}
 
-	insertDA(inputDA, edge);
 	char *token = readToken(file);
+
+	if (strcmp(token, ";") != 0)
+	{
+		int possibleWeight = atoi(token);
+		edge->weight = possibleWeight;
+		token = readToken(file);
+	}
+
+	insertDA(inputDA, edge);
 	
 	while (token)
 	{
@@ -244,9 +257,20 @@ processIntoDA(FILE *file)
 		
 		else
 		{
-			char *tokenOne = readToken(file);
+			// save off both vertice tokens
+			char *tokenOne = token;
 			char *tokenTwo = readToken(file);
-			edge = newEDGE(atoi(tokenOne), atoi(tokenTwo));
+
+			// Making sure u val is smaller than v for future help
+			if (atoi(tokenOne) < atoi(tokenTwo))
+			{
+				edge = newEDGE(atoi(tokenOne), atoi(tokenTwo));
+			}
+
+			else
+			{
+				edge = newEDGE(atoi(tokenTwo), atoi(tokenOne));
+			}
 
 			if (atoi(tokenOne) > maxVertex)
 			{
@@ -258,14 +282,16 @@ processIntoDA(FILE *file)
 				maxVertex = atoi(tokenTwo);
 			}
 			
+			// possible weight read
 			token = readToken(file);
-			
+
 			if (strcmp(token, ";") != 0)
 			{
-				int possibleWeight = atoi(readToken(file));
+				int possibleWeight = atoi(token);
 				edge->weight = possibleWeight;
 				token = readToken(file);
 			}
+			insertDA(inputDA, edge);
 		}
 	}
 
@@ -372,14 +398,50 @@ kruskal(DA *edgeArray)
 	return kruskalEdges;
 }
 
-void
-displayTree(FILE *fp, DA *edgeArray)
+DA **
+processIntoAdjacencyList(DA *mst)
 {
+	DA **adjList = malloc(sizeof(DA *) * (maxVertex + 1));
+	int i;
+
+	for (i = 0; i < maxVertex + 1; i++)
+	{
+		adjList[i] = newDA(displayEDGE);
+	}
+
+	for (i = 0; i < sizeDA(mst); i++)
+	{
+		int uIndex = getU(getDA(mst, i));
+		insertDA(adjList[uIndex], getDA(mst, i));
+		int vIndex = getV(getDA(mst, i));
+		insertDA(adjList[vIndex], getDA(mst, i));
+	}
+
+	return adjList;
+}
+
+void
+displayTree(FILE *fp, DA **adjList, DA *mst)
+{
+	QUEUE *q = newQUEUE(displayEDGE);
+	int levelCounter = 0;
+	
+	enqueue(q, getU(getDA(mst, 0)));
+	enqueue(q, NULL);
+	
+	while (1)
+	{
+		fprintf(fp, "%d: ", levelCounter);
+		levelCounter++;
+
+	}
+
+	// Total weight calculation
 	int tWeight = 0;
 	int i;
-	for (i = 0; i < sizeDA(edgeArray); i++)
+	for (i = 0; i < sizeDA(mst); i++)
 	{
-		tWeight = tWeight + getWeight(getDA(edgeArray, i));
+		tWeight = tWeight + getWeight(getDA(mst, i));
 	}
 
 	fprintf(fp, "total weight: %d\n", tWeight);
