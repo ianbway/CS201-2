@@ -69,7 +69,7 @@ displayEDGE (FILE* fp, void *value)
 {
 	EDGE *edge = value;
 	
-	fprintf(fp, "%d", edge->u);
+	fprintf(fp, " %d", edge->u);
 	fprintf(fp, "(%d)", edge->v);
 	fprintf(fp, "%d", edge->weight);
 }
@@ -129,6 +129,12 @@ int
 getWeight(EDGE *edge)
 {
 	return edge->weight;
+}
+
+bool
+getVisited(EDGE *edge)
+{
+	return edge->visited;
 }
 
 int
@@ -435,28 +441,80 @@ void
 displayTree(FILE *fp, DA **adjList, DA *mst)
 {
 	QUEUE *q = newQUEUE(displayEDGE);
-	int levelCounter = 0;
+	DA *printArray = newDA(displayEDGE);	
+	DA *workArray = newDA(displayEDGE);
+	int levelCounter;
+	int tWeight;
 	
-	enqueue(q, newINTEGER(minVertex));
-	enqueue(q, NULL);
-	
-	//while (1)
-	//{
-	//	fprintf(fp, "%d : ", levelCounter);
-	//	levelCounter++;
-
-
-
-	//}
-
-	// Total weight calculation
-	int tWeight = 0;
 	int i;
 	for (i = 0; i < sizeDA(mst); i++)
 	{
-		tWeight = tWeight + getWeight(getDA(mst, i));
-	}
+		levelCounter = 0;
+		tWeight = 0;
+		if (getVisited(getDA(mst, i)) == false)
+		{
+			enqueue(q, newINTEGER(getU(getDA(mst, i))));
+		}
+		fprintf(fp, "%d : %d\n",levelCounter++, getU(getDA(mst, i)));
+		enqueue(q, NULL);
 
-	fprintf(fp, "total weight: %d\n", tWeight);
-	fprintf(fp, "----\n");
+		while(sizeQUEUE(q) > 0)
+		{
+			void* index = dequeue(q);
+			if (index != NULL)
+			{
+				int v = getINTEGER(index);
+				int j;
+				for (j = 0; j < sizeDA(adjList[v]); j++)
+				{
+					if (getVisited(getDA(adjList[v], j)) == false)
+					{
+						EDGE *e = getDA(adjList[v], j);
+						e->visited = true;
+						tWeight += getWeight(e);
+						if (getU(getDA(adjList[v], j)) == v)
+						{
+							enqueue(q, newINTEGER(getV(getDA(adjList[v], j))));
+							insertDA(printArray, getDA(adjList[v], j));
+						}  
+
+						else if (getV(getDA(adjList[v], j)) == v)
+						{	
+							enqueue(q, newINTEGER(getU(getDA(adjList[v], j))));
+							swapVtoU(getDA(adjList[v], j), v);
+							insertDA(printArray, getDA(adjList[v], j));
+						}
+					}
+				}
+			}
+
+			else // v is NULL
+			{
+				if (sizeDA(printArray) > 0)
+				{
+					TopDownMergeSort(printArray, workArray, sizeDA(printArray), compareV);
+					fprintf(fp, "%d :", levelCounter);
+					levelCounter++;
+				
+					int storeSize = sizeDA(printArray);
+					void **store = extractDA(printArray);
+				
+					int k;
+					for (k = 0; k < storeSize; k++)
+					{
+						displayEDGE(fp, (EDGE*)store[k]);
+					}
+					fprintf(fp, "\n");
+				}
+				
+				if (sizeQUEUE(q) != 0)
+				{
+					enqueue(q, NULL);
+				}
+			}
+		}
+
+		fprintf(fp, "total weight: %d\n", tWeight);
+		fprintf(fp, "----\n");
+	}
 }
