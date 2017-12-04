@@ -20,6 +20,7 @@
 #include "scanner.h"
 
 int maxVertex = 0;
+int minVertex = 0;
 
 typedef struct edge
 {
@@ -281,6 +282,16 @@ processIntoDA(FILE *file)
 			{
 				maxVertex = atoi(tokenTwo);
 			}
+
+			if (atoi(tokenOne) < minVertex)
+			{
+				minVertex = atoi(tokenOne);
+			}
+
+			else if (atoi(tokenTwo) < minVertex)
+			{
+				minVertex = atoi(tokenTwo);
+			}
 			
 			// possible weight read
 			token = readToken(file);
@@ -426,15 +437,17 @@ displayTree(FILE *fp, DA **adjList, DA *mst)
 	QUEUE *q = newQUEUE(displayEDGE);
 	int levelCounter = 0;
 	
-	enqueue(q, getU(getDA(mst, 0)));
+	enqueue(q, newINTEGER(minVertex));
 	enqueue(q, NULL);
 	
-	while (1)
-	{
-		fprintf(fp, "%d: ", levelCounter);
-		levelCounter++;
+	//while (1)
+	//{
+	//	fprintf(fp, "%d : ", levelCounter);
+	//	levelCounter++;
 
-	}
+
+
+	//}
 
 	// Total weight calculation
 	int tWeight = 0;
@@ -445,4 +458,5 @@ displayTree(FILE *fp, DA **adjList, DA *mst)
 	}
 
 	fprintf(fp, "total weight: %d\n", tWeight);
+	fprintf(fp, "----\n");
 }
