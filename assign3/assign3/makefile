@@ -63,7 +63,7 @@ clean :
 test : kruskal
 
 	@echo Removing previous outputs.
-	#rm ./testFiles/submission0/myOutput/*
+	rm ./testFiles/submission0/myOutput/*
 	
 	
 	@echo Running submission0 tests. Very quick.
@@ -82,7 +82,7 @@ test : kruskal
 	kruskal ./testFiles/submission0/input/g-0-9 >> ./testFiles/submission0/myOutput/g-0-9
 	kruskal ./testFiles/submission0/input/g-0-10 >> ./testFiles/submission0/myOutput/g-0-10
 	
-	#rm ./testFiles/output/*
+	rm ./testFiles/output/*
 	@echo Running online inputs. Very quick.
 	kruskal ./testFiles/input/online1.txt >> ./testFiles/output/online1.txt
 	kruskal ./testFiles/input/online2.txt >> ./testFiles/output/online2.txt

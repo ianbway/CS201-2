@@ -418,7 +418,7 @@ kruskal(DA *edgeArray)
 DA **
 processIntoAdjacencyList(DA *mst)
 {
-	DA **adjList = malloc(sizeof(DA *) * (maxVertex + 1));
+	DA **adjList = malloc(sizeof(DA *) * (maxVertex + 2));
 	int i;
 
 	for (i = 0; i < maxVertex + 2; i++)
@@ -448,18 +448,26 @@ displayTree(FILE *fp, DA **adjList, DA *mst)
 	int tWeight;
 	int sizeMST = sizeDA(mst);
 	int i = 0;
+	//i < sizeMST
 	while(i < sizeMST)
 	{
 		levelCounter = 0;
 		tWeight = 0;
-		edge = getDA(mst, i);
-		while (i < (sizeMST) && getVisited(edge) == true)
+		if (i < sizeMST)
 		{
 			edge = getDA(mst, i);
+		}
+		
+		while (i < (sizeMST + 1) && getVisited(edge) == true)
+		{
+			if (i < sizeMST)
+			{
+				edge = getDA(mst, i);
+			}
 			i = i + 1;
 		}
 		
-		if (i == (sizeMST))
+		if (i == (sizeMST + 1))
 		{
 			break;
 		}
