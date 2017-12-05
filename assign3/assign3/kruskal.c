@@ -421,7 +421,7 @@ processIntoAdjacencyList(DA *mst)
 	DA **adjList = malloc(sizeof(DA *) * (maxVertex + 1));
 	int i;
 
-	for (i = 0; i < maxVertex + 1; i++)
+	for (i = 0; i < maxVertex + 2; i++)
 	{
 		adjList[i] = newDA(displayEDGE);
 	}
@@ -440,22 +440,23 @@ processIntoAdjacencyList(DA *mst)
 void
 displayTree(FILE *fp, DA **adjList, DA *mst)
 {
-	EDGE *e;
+	EDGE *edge;
 	QUEUE *q = newQUEUE(displayEDGE);
 	DA *printArray = newDA(displayEDGE);	
 	DA *workArray = newDA(displayEDGE);
 	int levelCounter;
 	int tWeight;
 	int sizeMST = sizeDA(mst);
-	int i = -1;
-	while(++i < sizeMST)
+	int i = 0;
+	while(i < sizeMST)
 	{
 		levelCounter = 0;
 		tWeight = 0;
-		e = getDA(mst, i);
-		while (i < (sizeMST - 1) && getVisited(e) == true)
+		edge = getDA(mst, i);
+		while (i < (sizeMST) && getVisited(edge) == true)
 		{
-			e = getDA(mst, ++i);
+			edge = getDA(mst, i);
+			i = i + 1;
 		}
 		
 		if (i == (sizeMST))
@@ -463,8 +464,8 @@ displayTree(FILE *fp, DA **adjList, DA *mst)
 			break;
 		}
 		
-		enqueue(q, newINTEGER(getU(e)));
-		fprintf(fp, "%d : %d\n",levelCounter++, getU(e));
+		enqueue(q, newINTEGER(getU(edge)));
+		fprintf(fp, "%d : %d\n",levelCounter++, getU(edge));
 		enqueue(q, NULL);
 
 		while(sizeQUEUE(q) > 0)
@@ -481,17 +482,17 @@ displayTree(FILE *fp, DA **adjList, DA *mst)
 						EDGE *e = getDA(adjList[v], j);
 						e->visited = true;
 						tWeight += getWeight(e);
-						if (getU(getDA(adjList[v], j)) == v)
+						if (getU(e) == v)
 						{
-							enqueue(q, newINTEGER(getV(getDA(adjList[v], j))));
-							insertDA(printArray, getDA(adjList[v], j));
+							enqueue(q, newINTEGER(getV(e)));
+							insertDA(printArray, e);
 						}  
 
-						else if (getV(getDA(adjList[v], j)) == v)
+						else if (getV(e) == v)
 						{	
-							enqueue(q, newINTEGER(getU(getDA(adjList[v], j))));
-							swapVtoU(getDA(adjList[v], j), v);
-							insertDA(printArray, getDA(adjList[v], j));
+							enqueue(q, newINTEGER(getU(e)));
+							swapVtoU(e, v);
+							insertDA(printArray, e);
 						}
 					}
 				}
