@@ -69,8 +69,8 @@ displayEDGE (FILE* fp, void *value)
 {
 	EDGE *edge = value;
 	
-	fprintf(fp, " %d", edge->u);
-	fprintf(fp, "(%d)", edge->v);
+	fprintf(fp, " %d", edge->v);
+	fprintf(fp, "(%d)", edge->u);
 	fprintf(fp, "%d", edge->weight);
 }
 
@@ -440,22 +440,31 @@ processIntoAdjacencyList(DA *mst)
 void
 displayTree(FILE *fp, DA **adjList, DA *mst)
 {
+	EDGE *e;
 	QUEUE *q = newQUEUE(displayEDGE);
 	DA *printArray = newDA(displayEDGE);	
 	DA *workArray = newDA(displayEDGE);
 	int levelCounter;
 	int tWeight;
-	
-	int i;
-	for (i = 0; i < sizeDA(mst); i++)
+	int sizeMST = sizeDA(mst);
+	int i = -1;
+	while(++i < sizeMST)
 	{
 		levelCounter = 0;
 		tWeight = 0;
-		if (getVisited(getDA(mst, i)) == false)
+		e = getDA(mst, i);
+		while (i < (sizeMST - 1) && getVisited(e) == true)
 		{
-			enqueue(q, newINTEGER(getU(getDA(mst, i))));
+			e = getDA(mst, ++i);
 		}
-		fprintf(fp, "%d : %d\n",levelCounter++, getU(getDA(mst, i)));
+		
+		if (i == (sizeMST))
+		{
+			break;
+		}
+		
+		enqueue(q, newINTEGER(getU(e)));
+		fprintf(fp, "%d : %d\n",levelCounter++, getU(e));
 		enqueue(q, NULL);
 
 		while(sizeQUEUE(q) > 0)
