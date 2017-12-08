@@ -64,7 +64,7 @@ test : kruskal
 
 	@echo Removing previous outputs.
 	rm ./testFiles/submission0/myOutput/*
-	
+	rm ./testFiles/submission2/myOutput/*
 	
 	@echo Running submission0 tests. Very quick.
 	kruskal ./testFiles/submission0/input/g0 >> ./testFiles/submission0/myOutput/g0
@@ -81,6 +81,21 @@ test : kruskal
 	kruskal ./testFiles/submission0/input/g-0-8 >> ./testFiles/submission0/myOutput/g-0-8
 	kruskal ./testFiles/submission0/input/g-0-9 >> ./testFiles/submission0/myOutput/g-0-9
 	kruskal ./testFiles/submission0/input/g-0-10 >> ./testFiles/submission0/myOutput/g-0-10
+	
+	@echo Running submission2 tests. Very quick.
+	kruskal ./testFiles/submission2/input/g1 >> ./testFiles/submission2/myOutput/g1
+	kruskal ./testFiles/submission2/input/g2 >> ./testFiles/submission2/myOutput/g2
+	kruskal ./testFiles/submission2/input/g-2-0 >> ./testFiles/submission2/myOutput/g-2-0
+	kruskal ./testFiles/submission2/input/g-2-1 >> ./testFiles/submission2/myOutput/g-2-1
+	kruskal ./testFiles/submission2/input/g-2-2 >> ./testFiles/submission2/myOutput/g-2-2
+	kruskal ./testFiles/submission2/input/g-2-3 >> ./testFiles/submission2/myOutput/g-2-3
+	kruskal ./testFiles/submission2/input/g-2-4 >> ./testFiles/submission2/myOutput/g-2-4
+	kruskal ./testFiles/submission2/input/g-2-5 >> ./testFiles/submission2/myOutput/g-2-5
+	kruskal ./testFiles/submission2/input/g-2-6 >> ./testFiles/submission2/myOutput/g-2-6
+	kruskal ./testFiles/submission2/input/g-2-7 >> ./testFiles/submission2/myOutput/g-2-7
+	kruskal ./testFiles/submission2/input/g-2-8 >> ./testFiles/submission2/myOutput/g-2-8
+	kruskal ./testFiles/submission2/input/g-2-9 >> ./testFiles/submission2/myOutput/g-2-9
+	kruskal ./testFiles/submission2/input/g-2-10 >> ./testFiles/submission2/myOutput/g-2-10
 	
 	rm ./testFiles/output/*
 	@echo Running online inputs. Very quick.
@@ -194,7 +209,7 @@ test : kruskal
 	#kruskal ./largeFiles/largeInput/random100000Input2.txt >> ./largeFiles/largeOutput/random100000Output2.txt
 	#kruskal ./largeFiles/largeInput/random100000Input3.txt >> ./largeFiles/largeOutput/random100000Output3.txt
 	
-	@echo Comparing your files to Dr. Lusths output
+	@echo Comparing your files to Dr. Lusths output, submission 0
 	diff ./testFiles/submission0/hisOutput/g0.expected ./testFiles/submission0/myOutput/g0
 	diff ./testFiles/submission0/hisOutput/g1.expected ./testFiles/submission0/myOutput/g1
 	diff ./testFiles/submission0/hisOutput/g2.expected ./testFiles/submission0/myOutput/g2
@@ -209,6 +224,21 @@ test : kruskal
 	diff ./testFiles/submission0/hisOutput/g-0-8.expected ./testFiles/submission0/myOutput/g-0-8
 	diff ./testFiles/submission0/hisOutput/g-0-9.expected ./testFiles/submission0/myOutput/g-0-9
 	diff ./testFiles/submission0/hisOutput/g-0-10.expected ./testFiles/submission0/myOutput/g-0-10	
+	
+	@echo Comparing your files to Dr. Lusths output, submission 2
+	diff ./testFiles/submission2/hisOutput/g1.expected ./testFiles/submission2/myOutput/g1
+	diff ./testFiles/submission2/hisOutput/g2.expected ./testFiles/submission2/myOutput/g2
+	diff ./testFiles/submission2/hisOutput/g-2-0.expected ./testFiles/submission2/myOutput/g-2-0
+	diff ./testFiles/submission2/hisOutput/g-2-1.expected ./testFiles/submission2/myOutput/g-2-1
+	diff ./testFiles/submission2/hisOutput/g-2-2.expected ./testFiles/submission2/myOutput/g-2-2
+	diff ./testFiles/submission2/hisOutput/g-2-3.expected ./testFiles/submission2/myOutput/g-2-3
+	diff ./testFiles/submission2/hisOutput/g-2-4.expected ./testFiles/submission2/myOutput/g-2-4
+	diff ./testFiles/submission2/hisOutput/g-2-5.expected ./testFiles/submission2/myOutput/g-2-5
+	diff ./testFiles/submission2/hisOutput/g-2-6.expected ./testFiles/submission2/myOutput/g-2-6
+	diff ./testFiles/submission2/hisOutput/g-2-7.expected ./testFiles/submission2/myOutput/g-2-7
+	diff ./testFiles/submission2/hisOutput/g-2-8.expected ./testFiles/submission2/myOutput/g-2-8
+	diff ./testFiles/submission2/hisOutput/g-2-9.expected ./testFiles/submission2/myOutput/g-2-9
+	diff ./testFiles/submission2/hisOutput/g-2-10.expected ./testFiles/submission2/myOutput/g-2-10	
 
 	diff ./testFiles/output/random10Output0.txt ./testFiles/givenOutput/random10Output0.txt 
 	diff ./testFiles/output/random10Output1.txt ./testFiles/givenOutput/random10Output1.txt 

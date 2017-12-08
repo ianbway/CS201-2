@@ -20,7 +20,6 @@
 #include "scanner.h"
 
 int maxVertex = 0;
-int minVertex = 0;
 
 typedef struct edge
 {
@@ -243,6 +242,16 @@ processIntoDA(FILE *file)
 		edge = newEDGE(atoi(tokenTwo), atoi(tokenOne));
 	}
 
+	if (atoi(tokenOne) > maxVertex)
+	{
+		maxVertex = atoi(tokenOne);
+	}
+
+	else if (atoi(tokenTwo) > maxVertex)
+	{
+		maxVertex = atoi(tokenTwo);
+	}
+
 	char *token = readToken(file);
 
 	if (strcmp(token, ";") != 0)
@@ -287,16 +296,6 @@ processIntoDA(FILE *file)
 			else if (atoi(tokenTwo) > maxVertex)
 			{
 				maxVertex = atoi(tokenTwo);
-			}
-
-			if (atoi(tokenOne) < minVertex)
-			{
-				minVertex = atoi(tokenOne);
-			}
-
-			else if (atoi(tokenTwo) < minVertex)
-			{
-				minVertex = atoi(tokenTwo);
 			}
 			
 			// possible weight read
