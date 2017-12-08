@@ -64,6 +64,7 @@ test : kruskal
 
 	@echo Removing previous outputs.
 	rm ./testFiles/submission0/myOutput/*
+	rm ./testFiles/submission1/myOutput/*
 	rm ./testFiles/submission2/myOutput/*
 	
 	@echo Running submission0 tests. Very quick.
@@ -81,6 +82,22 @@ test : kruskal
 	kruskal ./testFiles/submission0/input/g-0-8 >> ./testFiles/submission0/myOutput/g-0-8
 	kruskal ./testFiles/submission0/input/g-0-9 >> ./testFiles/submission0/myOutput/g-0-9
 	kruskal ./testFiles/submission0/input/g-0-10 >> ./testFiles/submission0/myOutput/g-0-10
+	
+	@echo Running submission1 tests. Very quick.
+	kruskal ./testFiles/submission1/input/g0 >> ./testFiles/submission1/myOutput/g0
+	kruskal ./testFiles/submission1/input/g1 >> ./testFiles/submission1/myOutput/g1
+	kruskal ./testFiles/submission1/input/g2 >> ./testFiles/submission1/myOutput/g2
+	kruskal ./testFiles/submission1/input/g-1-0 >> ./testFiles/submission1/myOutput/g-1-0
+	kruskal ./testFiles/submission1/input/g-1-1 >> ./testFiles/submission1/myOutput/g-1-1
+	kruskal ./testFiles/submission1/input/g-1-2 >> ./testFiles/submission1/myOutput/g-1-2
+	kruskal ./testFiles/submission1/input/g-1-3 >> ./testFiles/submission1/myOutput/g-1-3
+	kruskal ./testFiles/submission1/input/g-1-4 >> ./testFiles/submission1/myOutput/g-1-4
+	kruskal ./testFiles/submission1/input/g-1-5 >> ./testFiles/submission1/myOutput/g-1-5
+	kruskal ./testFiles/submission1/input/g-1-6 >> ./testFiles/submission1/myOutput/g-1-6
+	kruskal ./testFiles/submission1/input/g-1-7 >> ./testFiles/submission1/myOutput/g-1-7
+	kruskal ./testFiles/submission1/input/g-1-8 >> ./testFiles/submission1/myOutput/g-1-8
+	kruskal ./testFiles/submission1/input/g-1-9 >> ./testFiles/submission1/myOutput/g-1-9
+	kruskal ./testFiles/submission1/input/g-1-10 >> ./testFiles/submission1/myOutput/g-1-10
 	
 	@echo Running submission2 tests. Very quick.
 	kruskal ./testFiles/submission2/input/g1 >> ./testFiles/submission2/myOutput/g1
@@ -203,11 +220,11 @@ test : kruskal
 	@echo 
 	@echo They are optional. I included them seperately because they are so large. 10MB each.
 	@echo 
-	#rm ./largeFiles/largeOutput/*
-	#kruskal ./largeFiles/largeInput/random100000Input0.txt >> ./largeFiles/largeOutput/random100000Output0.txt
-	#kruskal ./largeFiles/largeInput/random100000Input1.txt >> ./largeFiles/largeOutput/random100000Output1.txt
-	#kruskal ./largeFiles/largeInput/random100000Input2.txt >> ./largeFiles/largeOutput/random100000Output2.txt
-	#kruskal ./largeFiles/largeInput/random100000Input3.txt >> ./largeFiles/largeOutput/random100000Output3.txt
+	rm ./largeFiles/largeOutput/*
+	kruskal ./largeFiles/largeInput/random100000Input0.txt >> ./largeFiles/largeOutput/random100000Output0.txt
+	kruskal ./largeFiles/largeInput/random100000Input1.txt >> ./largeFiles/largeOutput/random100000Output1.txt
+	kruskal ./largeFiles/largeInput/random100000Input2.txt >> ./largeFiles/largeOutput/random100000Output2.txt
+	kruskal ./largeFiles/largeInput/random100000Input3.txt >> ./largeFiles/largeOutput/random100000Output3.txt
 	
 	@echo Comparing your files to Dr. Lusths output, submission 0
 	diff ./testFiles/submission0/hisOutput/g0.expected ./testFiles/submission0/myOutput/g0
@@ -224,6 +241,22 @@ test : kruskal
 	diff ./testFiles/submission0/hisOutput/g-0-8.expected ./testFiles/submission0/myOutput/g-0-8
 	diff ./testFiles/submission0/hisOutput/g-0-9.expected ./testFiles/submission0/myOutput/g-0-9
 	diff ./testFiles/submission0/hisOutput/g-0-10.expected ./testFiles/submission0/myOutput/g-0-10	
+	
+	@echo Comparing your files to Dr. Lusths output, submission 1
+	diff ./testFiles/submission1/hisOutput/g0.expected ./testFiles/submission0/myOutput/g0
+	diff ./testFiles/submission1/hisOutput/g1.expected ./testFiles/submission0/myOutput/g1
+	diff ./testFiles/submission1/hisOutput/g2.expected ./testFiles/submission0/myOutput/g2
+	diff ./testFiles/submission1/hisOutput/g-1-0.expected ./testFiles/submission1/myOutput/g-1-0
+	diff ./testFiles/submission1/hisOutput/g-1-1.expected ./testFiles/submission1/myOutput/g-1-1
+	diff ./testFiles/submission1/hisOutput/g-1-2.expected ./testFiles/submission1/myOutput/g-1-2
+	diff ./testFiles/submission1/hisOutput/g-1-3.expected ./testFiles/submission1/myOutput/g-1-3
+	diff ./testFiles/submission1/hisOutput/g-1-4.expected ./testFiles/submission1/myOutput/g-1-4
+	diff ./testFiles/submission1/hisOutput/g-1-5.expected ./testFiles/submission1/myOutput/g-1-5
+	diff ./testFiles/submission1/hisOutput/g-1-6.expected ./testFiles/submission1/myOutput/g-1-6
+	diff ./testFiles/submission1/hisOutput/g-1-7.expected ./testFiles/submission1/myOutput/g-1-7
+	diff ./testFiles/submission1/hisOutput/g-1-8.expected ./testFiles/submission1/myOutput/g-1-8
+	diff ./testFiles/submission1/hisOutput/g-1-9.expected ./testFiles/submission1/myOutput/g-1-9
+	diff ./testFiles/submission1/hisOutput/g-1-10.expected ./testFiles/submission1/myOutput/g-1-10	
 	
 	@echo Comparing your files to Dr. Lusths output, submission 2
 	diff ./testFiles/submission2/hisOutput/g1.expected ./testFiles/submission2/myOutput/g1
@@ -330,9 +363,9 @@ test : kruskal
 	diff ./testFiles/output/random10000Output14.txt ./testFiles/givenOutput/random10000Output14.txt 
 	diff ./testFiles/output/random10000Output15.txt ./testFiles/givenOutput/random10000Output15.txt
 	
-	#diff ./largeFiles/largeOutput/random100000Output0.txt ./largeFiles/givenLargeOutput/random100000Output0.txt
-	#diff ./largeFiles/largeOutput/random100000Output1.txt ./largeFiles/givenLargeOutput/random100000Output1.txt
-	#diff ./largeFiles/largeOutput/random100000Output2.txt ./largeFiles/givenLargeOutput/random100000Output2.txt
-	#diff ./largeFiles/largeOutput/random100000Output3.txt ./largeFiles/givenLargeOutput/random100000Output3.txt
+	diff ./largeFiles/largeOutput/random100000Output0.txt ./largeFiles/givenLargeOutput/random100000Output0.txt
+	diff ./largeFiles/largeOutput/random100000Output1.txt ./largeFiles/givenLargeOutput/random100000Output1.txt
+	diff ./largeFiles/largeOutput/random100000Output2.txt ./largeFiles/givenLargeOutput/random100000Output2.txt
+	diff ./largeFiles/largeOutput/random100000Output3.txt ./largeFiles/givenLargeOutput/random100000Output3.txt
 	
 	@echo Testing sequence has finished. Your code matches everything.
