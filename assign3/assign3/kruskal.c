@@ -181,6 +181,8 @@ main(int argc, char **argv)
 	DA *workArray = newDA(displayEDGE);
 	TopDownMergeSort(edgeDA, workArray, sizeDA(edgeDA), compareEDGE);
 
+	//displayDA(stdout, edgeDA);
+
 	// kruskal time, sort afterwards based on U vertice
 	DA* mst = kruskal(edgeDA);
 	DA *workArrayTwo = newDA(displayEDGE);
@@ -261,7 +263,7 @@ processIntoDA(FILE *file)
 		token = readToken(file);
 	}
 
-	insertDA(inputDA, edge);
+	//insertDA(inputDA, edge);
 	
 	while (token)
 	{
@@ -307,7 +309,7 @@ processIntoDA(FILE *file)
 				edge->weight = possibleWeight;
 				token = readToken(file);
 			}
-			insertDA(inputDA, edge);
+			//insertDA(inputDA, edge);
 		}
 	}
 
@@ -386,15 +388,16 @@ kruskal(DA *edgeArray)
 
 	for (i = 0; i < sizeDA(edgeArray); i++)
 	{
-		int uIndex = makeSET(returnSet, newINTEGER(getU(getDA(edgeArray, i))));
+		
 		if (indexArray[getU(getDA(edgeArray, i))] == -1)
 		{
+			int uIndex = makeSET(returnSet, newINTEGER(getU(getDA(edgeArray, i))));
 			indexArray[getU(getDA(edgeArray, i))] = uIndex;
 		}
 
-		int vIndex = makeSET(returnSet, newINTEGER(getV(getDA(edgeArray, i))));
 		if (indexArray[getV(getDA(edgeArray, i))] == -1)
 		{
+			int vIndex = makeSET(returnSet, newINTEGER(getV(getDA(edgeArray, i))));
 			indexArray[getV(getDA(edgeArray, i))] = vIndex;
 		}
 	}
